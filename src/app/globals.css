@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --foreground-rgb: 255, 255, 255;
+        --background-start-rgb: 0, 0, 0;
+        --background-end-rgb: 0, 0, 0;
+    }
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+            to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))
+        )
+        rgb(var(--background-start-rgb));
+
+    font-family: "Pretendard", sans-serif !important;
+    line-height: normal;
+
+    @apply overflow-hidden;
+}
+
+input,
+textarea,
+button {
+    appearance: none;
+    border-radius: 0;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    @apply preventSelect;
+}
+input:focus {
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+}
+select:focus {
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+}
+
+.preventSelect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.scroll-overlay {
+    scrollbar-gutter: stable both-edges;
+}
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+
+    border-radius: 9999px;
+    transition: all 0.3s;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.45);
+}
+@media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+        background: rgba(180, 180, 180, 0.3);
+
+        border-radius: 9999px;
+        transition: all 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(180, 180, 180, 0.45);
+    }
+}
+
+.flex-center {
+    @apply items-center justify-center;
+}
+
+.height-fill {
+    height: 100vh;
+    height: -webkit-fill-available;
+}
+@supports (-webkit-touch-callout: none) {
+    height: -webkit-fill-available;
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
