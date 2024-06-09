@@ -3,8 +3,9 @@ import DBUtils from "@/utils/DBUtils"
 import { NextRequest, NextResponse } from "next/server"
 import bcryptjs from "bcryptjs"
 import ApiUtils from "@/utils/ApiUtils"
+import { NextApiRequest } from "next"
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextApiRequest) {
     const { email, password, name } = await req.json()
 
     await DBUtils.connect()

@@ -26,20 +26,26 @@ export default class ApiUtils {
             requestData = JSON.stringify(data)
         }
 
-        const response = await fetch(requestUrl, {
+        await fetch(requestUrl, {
             method: method,
             body: requestData,
             headers: {
                 "Content-Type": "application/json",
+                credentials: "include",
             },
         })
-
-        // 결과
-        statusCode = response.status
-        if (statusCode >= 200 && statusCode < 300) {
-            bResult = true
-        }
-        resultData = await response.json()
+            .then(async (response) => {
+                // 결과
+                statusCode = response.status
+                if (statusCode >= 200 && statusCode < 300) {
+                    bResult = true
+                }
+                resultData = await response.json()
+            })
+            .catch((error) => {
+                console.log(error)
+                resultData = "에러"
+            })
 
         return [bResult, statusCode, resultData]
     }

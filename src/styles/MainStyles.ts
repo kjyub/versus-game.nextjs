@@ -13,7 +13,8 @@ export const NavBox = tw.div`
 `
 export const LoginButtonContainer = tw.div`
     absolute max-sm:right-2 sm:right-4
-    
+    ${(props: StyleProps) =>
+        props.$is_show ? "opacity-100 z-10" : "opacity-0 -z-10"}
 `
 export const LoginButton = tw.button`
     flex justify-center items-center 

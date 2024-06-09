@@ -15,17 +15,15 @@ export enum LoginModalPage {
 
 export interface ILoginModal {
     isModalShow: boolean
+    setModalShow: Dispatch<SetStateAction<boolean>>
     defaultPage: LoginModalPage
 }
 const LoginModal = ({
     isModalShow,
+    setModalShow,
     defaultPage = LoginModalPage.LOGIN,
 }: ILoginModal) => {
     const [page, setPage] = useState<LoginModalPage>(LoginModalPage.LOGIN)
-
-    const { data: session, status: sessionStatus } = useSession()
-
-    console.log(session, sessionStatus)
 
     useEffect(() => {
         if (!isModalShow) {
@@ -36,7 +34,11 @@ const LoginModal = ({
     return (
         <UserStyles.LoginContainer>
             <LoginPage page={page} setPage={setPage} />
-            <RegistPage page={page} setPage={setPage} />
+            <RegistPage
+                page={page}
+                setPage={setPage}
+                setModalShow={setModalShow}
+            />
         </UserStyles.LoginContainer>
     )
 }
@@ -46,6 +48,7 @@ export default LoginModal
 export interface IPage {
     page: LoginModalPage
     setPage: Dispatch<SetStateAction<LoginModalPage>>
+    setModalShow: Dispatch<SetStateAction<boolean>>
 }
 const LoginPage = ({ page, setPage }: IPage) => {
     const [email, setEmail] = useState<string>("")
@@ -55,12 +58,18 @@ const LoginPage = ({ page, setPage }: IPage) => {
 
     const login = async () => {
         if (email === "" || password === "") {
-            console.log(12)
             setErrorMessage("이메일과 비밀번호를 입력해주세요.")
         }
 
         try {
-            // await signIn("credentials", formData)
+            const response = await signIn("credentials", {
+                email: email,
+                password: password,
+            })
+            if (response?.status === "200") {
+                alert("로그인 성공")
+                return
+            }
         } catch (error) {
             if (error instanceof AuthError) {
                 return "로그인 실패"
@@ -125,7 +134,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
         </UserStyles.LoginPageContainer>
     )
 }
-const RegistPage = ({ page, setPage }: IPage) => {
+const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [password1, setPassword1] = useState<string>("")
@@ -197,6 +206,21 @@ const RegistPage = ({ page, setPage }: IPage) => {
 
         if (bResult) {
             alert("회원가입되었습니다.")
+            try {
+                const response = await signIn("credentials", {
+                    email: email,
+                    password: password1,
+                })
+                if (response?.status === "200") {
+                    setModalShow(false)
+                    return
+                }
+            } catch (error) {
+                if (error instanceof AuthError) {
+                    return "로그인 실패"
+                }
+                throw error
+            }
         } else {
             const _message = response["message"]
             setErrorMessage(_message)

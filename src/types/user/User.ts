@@ -2,21 +2,21 @@ import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 
 export default class User extends AbsApiObject {
-    private _id: number
+    private _id: string
     private _email: string
     private _name: string
     private _profileImageUrl: string
 
     constructor() {
         super()
-        this._id = -1
+        this._id = ""
         this._email = ""
         this._name = ""
         this._profileImageUrl = ""
     }
 
     parseResponse(json: object) {
-        if (json.id) this._id = json.id
+        if (json._id) this._id = String(json._id)
         if (json.email) this._email = json.email
         if (json.name) this._name = json.name
         if (json.profile_image_url)
@@ -28,7 +28,7 @@ export default class User extends AbsApiObject {
         // this.NormalizeWeight = normalizeWeight !== undefined ? normalizeWeight : 0
     }
 
-    get id(): number {
+    get id(): string {
         return this._id
     }
     get email(): string {

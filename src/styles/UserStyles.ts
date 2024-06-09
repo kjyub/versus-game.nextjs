@@ -53,3 +53,24 @@ export const InputBox = tw.div`
     duration-300
     [&>input]:w-full [&>input]:bg-transparent [&>input]:text-stone-700 [&>input]:text-sm
 `
+
+export const MyInfoContainer = tw.div`
+    relative
+    flex flex-col w-64 h-64 p-4
+    rounded-lg bg-red-50 drop-shadow-xl
+    overflow-hidden
+`
+export const MyInfoSection = tw.div`
+    flex flex-col mb-2
+    [&>.title]:text-stone-700 [&>.title]:text-lg [&>.title]:mb-2
+`
+export const MyInfoSaveButton = tw.button`
+    flex flex-center w-full h-9 mt-1
+    rounded-full bg-blue-100 hover:bg-blue-200 text-blue-600
+    duration-200
+`
+export const LogoutButton = tw.button`
+    flex flex-center w-full h-9 mt-auto
+    rounded-full bg-red-100 hover:bg-red-200 text-red-600
+    duration-200
+`

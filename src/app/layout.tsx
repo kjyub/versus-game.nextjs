@@ -4,8 +4,8 @@ import "./globals.css"
 import Navigation from "@/components/commons/Navigation"
 import * as MainStyles from "@/styles/MainStyles"
 
-import { getServerSession } from "next-auth"
-import SessionProvider from "@/layouts/SessionProvider"
+import { auth } from "@/auth"
+import { SessionProvider } from "next-auth/react"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,7 +19,7 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    const session = await getServerSession()
+    const session = await auth()
 
     return (
         <html lang="kr">
