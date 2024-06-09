@@ -1,6 +1,11 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
+import Navigation from "@/components/commons/Navigation"
+import * as MainStyles from "@/styles/MainStyles"
+
+import { getServerSession } from "next-auth"
+import SessionProvider from "@/layouts/SessionProvider"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -9,17 +14,30 @@ export const metadata: Metadata = {
     description: "VS 게임",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode
 }>) {
+    const session = await getServerSession()
+
     return (
         <html lang="kr">
             <head>
                 <FrontHead />
             </head>
-            <body className={inter.className}>{children}</body>
+            <MainStyles.Body
+                className={`${inter.className} striped-background`}
+                style={{
+                    backgroundColor:
+                        "repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)",
+                }}
+            >
+                <SessionProvider session={session}>
+                    <Navigation />
+                    {children}
+                </SessionProvider>
+            </MainStyles.Body>
         </html>
     )
 }

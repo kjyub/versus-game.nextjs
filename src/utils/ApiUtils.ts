@@ -1,0 +1,76 @@
+import CommonUtils from "./CommonUtils"
+import { NextRequest, NextResponse } from "next/server"
+
+type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {})
+
+export default class ApiUtils {
+    // Request
+    static async request(
+        url: string,
+        method: RequestMethodTypes,
+        query: object = null,
+        data: object = null,
+    ): [boolean, number, object] {
+        let bResult: boolean = false
+        let statusCode: number = 200
+        let resultData: object = {}
+
+        let requestUrl = url
+        let requestData = null
+
+        if (query !== null) {
+            const queryString = new URLSearchParams(params).toString()
+            requestUrl = `${url}?${queryString}`
+        }
+        if (data !== null) {
+            requestData = JSON.stringify(data)
+        }
+
+        const response = await fetch(requestUrl, {
+            method: method,
+            body: requestData,
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+
+        // 결과
+        statusCode = response.status
+        if (statusCode >= 200 && statusCode < 300) {
+            bResult = true
+        }
+        resultData = await response.json()
+
+        return [bResult, statusCode, resultData]
+    }
+
+    // Response
+    static parseData(data: any = {}) {
+        if (typeof data === "string" || typeof data === "number") {
+            data = { message: data }
+        } else if (typeof data === "object") {
+            data = data
+        } else if (typeof data === "boolean") {
+            data = data
+        } else {
+            data = {}
+        }
+
+        return data
+    }
+    static response(data: any = {}) {
+        return NextResponse.json(this.parseData(data), { status: 200 })
+    }
+    static badRequest(data: any = {}, status: number = 400) {
+        return NextResponse.json(this.parseData(data), { status: 400 })
+    }
+    static notAuth(data: any = {}) {
+        return this.badRequest(data, 401)
+    }
+    static notFound(data: any = {}) {
+        return this.badRequest(data, 404)
+    }
+    static serverError(data: any = {}) {
+        return this.badRequest(data, 500)
+    }
+}

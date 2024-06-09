@@ -1,29 +1,12 @@
+@import url("https://webfontworld.github.io/pretendard/Pretendard.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
-}
-
 body {
-    color: rgb(var(--foreground-rgb));
-    background: linear-gradient(
-            to bottom,
-            transparent,
-            rgb(var(--background-end-rgb))
-        )
-        rgb(var(--background-start-rgb));
+    /* color: rgb(var(--foreground-rgb));
+    background: rgb(var(--background-rgb)); */
 
     font-family: "Pretendard", sans-serif !important;
     line-height: normal;
@@ -94,12 +77,46 @@ select:focus {
     height: 100vh;
     height: -webkit-fill-available;
 }
-@supports (-webkit-touch-callout: none) {
+/* @supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
-}
+} */
 
 @layer utilities {
     .text-balance {
         text-wrap: balance;
+    }
+}
+
+.striped-background {
+    background: radial-gradient(
+            circle,
+            transparent 20%,
+            #a43f3f 20%,
+            #a43f3f 80%,
+            transparent 80%,
+            transparent
+        ),
+        radial-gradient(
+                circle,
+                transparent 20%,
+                #a43f3f 20%,
+                #a43f3f 80%,
+                transparent 80%,
+                transparent
+            )
+            50px 50px,
+        linear-gradient(#d57f7f 1px, transparent 1px) 0 -1px,
+        linear-gradient(90deg, #d57f7f 1px, transparent 1px) -1px 0;
+    background-color: #a43f3f;
+    background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+    animation: animateStripes 10s linear infinite; /* 애니메이션 */
+}
+
+@keyframes animateStripes {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100px 100px; /* 줄무늬가 100px씩 움직임 */
     }
 }
