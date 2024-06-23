@@ -9,6 +9,7 @@ import { signOut, useSession } from "next-auth/react"
 import ApiUtils from "@/utils/ApiUtils"
 import MyInfoModal from "../users/MyInfoModal"
 import User from "@/types/user/User"
+import Link from "next/link"
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
@@ -42,6 +43,17 @@ const Navigation = ({}: INavigation) => {
     return (
         // <></>
         <MainStyles.NavBox>
+            <MainStyles.ItemAddButtonContainer ref={userRef} $is_show={true}>
+                <Link href={"/game/add"}>
+                    <MainStyles.NavButton
+                        onClick={() => {
+                            // setUserShow(!isUserShow)
+                        }}
+                    >
+                        게임 추가
+                    </MainStyles.NavButton>
+                </Link>
+            </MainStyles.ItemAddButtonContainer>
             <span className="title">Versus Game</span>
             <MainStyles.LoginButtonContainer
                 ref={userRef}
@@ -49,13 +61,18 @@ const Navigation = ({}: INavigation) => {
             >
                 <MainStyles.LoginButton
                     onClick={() => {
-                        setUserShow(!isUserShow)
+                        setUserShow(true)
                     }}
                 >
                     회원 정보
                 </MainStyles.LoginButton>
                 <MainStyles.LoginLayout $is_show={isUserShow}>
-                    <MyInfoModal isModalShow={isUserShow} userId={user.id} />
+                    {isUserShow && (
+                        <MyInfoModal
+                            isModalShow={isUserShow}
+                            userId={user.id}
+                        />
+                    )}
                 </MainStyles.LoginLayout>
             </MainStyles.LoginButtonContainer>
             <MainStyles.LoginButtonContainer
@@ -70,10 +87,12 @@ const Navigation = ({}: INavigation) => {
                     로그인
                 </MainStyles.LoginButton>
                 <MainStyles.LoginLayout $is_show={isLoginShow}>
-                    <LoginModal
-                        isModalShow={isLoginShow}
-                        setModalShow={setLoginShow}
-                    />
+                    {isLoginShow && (
+                        <LoginModal
+                            isModalShow={isLoginShow}
+                            setModalShow={setLoginShow}
+                        />
+                    )}
                 </MainStyles.LoginLayout>
             </MainStyles.LoginButtonContainer>
         </MainStyles.NavBox>

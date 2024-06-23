@@ -6,6 +6,7 @@ import UserInputText from "./inputs/UserInputs"
 import { signIn, useSession } from "next-auth/react"
 import { AuthError } from "next-auth"
 import ApiUtils from "@/utils/ApiUtils"
+import { Credentials } from "next-auth/providers/credentials"
 
 export enum LoginModalPage {
     LOGIN,
@@ -65,9 +66,20 @@ const LoginPage = ({ page, setPage }: IPage) => {
             const response = await signIn("credentials", {
                 email: email,
                 password: password,
+                redirect: false,
             })
-            if (response?.status === "200") {
+
+            const errorMessage = response?.error
+
+            // if (response?.status === "200") {
+            //     alert("로그인 성공")
+            //     return
+            // }
+            if (errorMessage === "CredentialsSignin") {
                 alert("로그인 성공")
+                return
+            } else {
+                alert("이메일 및 비밀번호를 확인해주세요.")
                 return
             }
         } catch (error) {
@@ -80,9 +92,10 @@ const LoginPage = ({ page, setPage }: IPage) => {
 
     return (
         <UserStyles.LoginPageContainer
-            className={`${
-                page === LoginModalPage.LOGIN ? "left-0" : "-left-full"
-            }`}
+            className={`
+                ${page === LoginModalPage.LOGIN ? "top-0" : "-top-full"}
+                bg-gradient-to-t from-transparent to-stone-300/70 from-10%
+            `}
         >
             <UserStyles.LoginTitleBox>
                 <div className="aspect-square h-28 mb-4 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-300"></div>
@@ -230,7 +243,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
     return (
         <UserStyles.LoginPageContainer
             className={`${
-                page === LoginModalPage.REGIST ? "left-0" : "left-full"
+                page === LoginModalPage.REGIST ? "top-0" : "top-full"
             }`}
         >
             <UserStyles.LoginPageHead>

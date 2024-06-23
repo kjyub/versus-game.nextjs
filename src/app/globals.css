@@ -33,6 +33,14 @@ select:focus {
     outline: 2px solid transparent !important;
     outline-offset: 2px !important;
 }
+button:focus {
+    outline: none !important;
+    outline-offset: none !important;
+}
+textarea:focus {
+    outline: none !important;
+    outline-offset: none !important;
+}
 
 .preventSelect {
     -webkit-user-select: none;
@@ -118,5 +126,41 @@ select:focus {
     }
     100% {
         background-position: 100px 100px; /* 줄무늬가 100px씩 움직임 */
+    }
+}
+
+.background {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ff4e50, #f92392);
+    animation: gradientShift 5s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+.background:before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(#ff6b6b 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: moveDots 10s linear infinite;
+}
+
+@keyframes moveDots {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100px 100px;
     }
 }

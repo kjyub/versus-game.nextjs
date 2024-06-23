@@ -40,9 +40,11 @@ const UserInputText = ({
     }
     return (
         <UserStyles.InputContainer>
-            <div className="flex justify-between items-center w-full px-1 mb-1">
+            <div className="label flex justify-between items-center w-full px-1 mb-1">
                 {!CommonUtils.isStringNullOrEmpty(label) && (
-                    <label className="text-sm">{label}</label>
+                    <UserStyles.InputTitle className="text-sm">
+                        {label}
+                    </UserStyles.InputTitle>
                 )}
                 {labelMessage !== null && labelMessage}
             </div>

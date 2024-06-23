@@ -1,21 +1,25 @@
-// import NextAuth from "next-auth"
-// import { authConfig } from "./auth.config"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+import { match } from "path-to-regexp"
+import { getSession } from "@/serverActions/auth" // import { auth } from '@/auth'
 
-// export default NextAuth(authConfig).auth
+const matchersForAuth = [
+    "/dashboard/:path*",
+    "/myaccount/:path*",
+    "/settings/:path*",
+    "...",
+]
 
-// export const config = {
-//     // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-//     matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-// }
+export async function middleware(request: NextRequest) {
+    if (isMatch(request.nextUrl.pathname, matchersForAuth)) {
+        return (await getSession()) // 세션 정보 확인
+            ? NextResponse.next()
+            : NextResponse.redirect(new URL("/signin", request.url))
+        // : NextResponse.redirect(new URL(`/signin?callbackUrl=${request.url}`, request.url))
+    }
+    return NextResponse.next()
+}
 
-// import { auth } from "@/auth"
-// import { privateRoutes,
-//          authRoutes,
-//          DEFAULT_REDIRECT_LOGIN_URL,
-//          DEFAULT_REDIRECT_HOME_URL } from './routes';
-
-// export const config = {
-//     matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-// }
-
-export { auth as middleware } from "@/auth"
+function isMatch(pathname: string, urls: string[]) {
+    return urls.some((url) => !!match(url)(pathname))
+}

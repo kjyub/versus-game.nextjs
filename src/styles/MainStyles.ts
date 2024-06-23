@@ -11,6 +11,23 @@ export const NavBox = tw.div`
     flex justify-center items-center w-screen h-14
     [&>.title]:text-xl [&>.title]:font-bold [&>.title]:text-black
 `
+
+export const NavButtonContainer = tw.div`
+    ${(props: StyleProps) =>
+        props.$is_show ? "opacity-100 z-10" : "opacity-0 -z-10"}
+`
+export const NavButton = tw.button`
+    flex justify-center items-center 
+    max-sm:px-2 sm:px-4 py-1
+    rounded-md hover:bg-black/10
+    text-black/70 text-base font-semibold
+    duration-200
+`
+
+export const ItemAddButtonContainer = tw(NavButtonContainer)`
+    absolute max-sm:left-2 sm:left-4
+`
+
 export const LoginButtonContainer = tw.div`
     absolute max-sm:right-2 sm:right-4
     ${(props: StyleProps) =>
@@ -18,7 +35,7 @@ export const LoginButtonContainer = tw.div`
 `
 export const LoginButton = tw.button`
     flex justify-center items-center 
-    px-6 py-2
+    max-sm:px-4 sm:px-10 py-2
     rounded-full bg-white/70 hover:bg-white/90
     text-black/70 text-base
     duration-200
@@ -31,7 +48,7 @@ export const PageLayout = tw.div`
 export const LoginLayout = tw.div`
     absolute right-0
     ${(props: StyleProps) =>
-        props.$is_show ? "top-12 z-50 opacity-100" : "top-8 -z-10 opacity-0"}
+        props.$is_show ? "top-12 z-50 opacity-100" : "top-8 -z-20 opacity-0"}
     flex flex-center
     duration-200
 `

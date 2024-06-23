@@ -6,6 +6,7 @@ import * as MainStyles from "@/styles/MainStyles"
 
 import { auth } from "@/auth"
 import { SessionProvider } from "next-auth/react"
+import BgBubbleBox from "@/components/backgrounds/BgBubbleBox"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -27,12 +28,13 @@ export default async function RootLayout({
                 <FrontHead />
             </head>
             <MainStyles.Body
-                className={`${inter.className} striped-background`}
+                className={`${inter.className} background`}
                 style={{
                     backgroundColor:
                         "repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)",
                 }}
             >
+                <BgBubbleBox />
                 <SessionProvider session={session}>
                     <Navigation />
                     {children}

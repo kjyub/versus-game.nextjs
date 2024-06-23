@@ -30,6 +30,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                             return mUser
                         }
                     }
+                    throw new Error()
                 } catch (err: any) {
                     throw new Error(err)
                 }
