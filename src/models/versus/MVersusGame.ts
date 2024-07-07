@@ -1,3 +1,4 @@
+import { ThumbnailImageTypes } from "@/types/VersusTypes"
 import mongoose from "mongoose"
 
 const { Schema } = mongoose
@@ -46,6 +47,9 @@ const schema = new Schema(
         },
         thumbnailImageUrl: {
             type: String,
+        },
+        thumbnailImageType: {
+            type: Number,
         },
         views: {
             type: Number,

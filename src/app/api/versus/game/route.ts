@@ -8,13 +8,24 @@ import { auth } from "@/auth"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import MFile from "@/models/file/MFile"
 
-export async function GET(req: NextApiRequest) {
-    const mGames = await MVersusGame.find().sort({ createdAt: -1 })
+export async function GET(req: NextRequest) {
+    let filter = {
+        isDeleted: false,
+    }
+
+    const searchValue = req.nextUrl.searchParams.get("search")
+    if (searchValue !== null) {
+        filter["title"] = new RegExp(searchValue, "i")
+    }
+
+    const mGames = await MVersusGame.find(filter).sort({
+        createdAt: -1,
+    })
 
     return ApiUtils.response(mGames)
 }
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
     const { title, content, thumbnailImageId, choices } = await req.json()
 
     await DBUtils.connect()

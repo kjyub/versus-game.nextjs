@@ -20,7 +20,7 @@ export default class ApiUtils {
         let requestData = null
 
         if (query !== null) {
-            const queryString = new URLSearchParams(params).toString()
+            const queryString = new URLSearchParams(query).toString()
             requestUrl = `${url}?${queryString}`
         }
         if (data !== null) {

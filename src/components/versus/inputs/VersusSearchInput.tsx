@@ -7,8 +7,20 @@ import * as VersusStyles from "@/styles/VersusStyles"
 export interface IVersusSearchInput {
     value: string
     setValue: Dispatch<SetStateAction<string>>
+    onEnter: () => void
 }
-const VersusSearchInput = ({ value, setValue }: IVersusSearchInput) => {
+const VersusSearchInput = ({
+    value,
+    setValue,
+    onEnter,
+}: IVersusSearchInput) => {
+    const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+        if (onEnter && e.key === "Enter") {
+            e.preventDefault()
+            onEnter()
+        }
+    }
+
     return (
         // <></>
         <VersusStyles.SearchInputBox>
@@ -18,6 +30,7 @@ const VersusSearchInput = ({ value, setValue }: IVersusSearchInput) => {
                 onChange={(e) => {
                     setValue(e.target.value)
                 }}
+                onKeyDown={handleKeyDown}
             />
         </VersusStyles.SearchInputBox>
     )

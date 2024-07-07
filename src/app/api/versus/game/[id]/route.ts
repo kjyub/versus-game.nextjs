@@ -11,7 +11,7 @@ import MFile from "@/models/file/MFile"
 export async function GET(req: NextApiRequest, { params }: { id: string }) {
     const { id } = params
 
-    const mGame = await MVersusGame.findOne({ _id: id })
+    const mGame = await MVersusGame.findOne({ _id: id, isDeleted: false })
 
     return ApiUtils.response(mGame)
 }
@@ -59,6 +59,40 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
         thumbnailImageId: thumbnailImageId,
         thumbnailImageUrl: thumbnailImageUrl,
         choices: choices,
+    }
+
+    Object.assign(mGame, gameData)
+
+    try {
+        const resultGame = await mGame.save()
+
+        return ApiUtils.response(resultGame)
+    } catch (err: any) {
+        console.log("에러", err)
+        return ApiUtils.serverError()
+    }
+}
+
+export async function DELETE(req: NextApiRequest, { params }: { id: string }) {
+    const { id } = params
+
+    await DBUtils.connect()
+
+    const session = await auth()
+
+    // 유저 확인
+    if (!session.user) {
+        return ApiUtils.notAuth()
+    }
+
+    const mGame = await MVersusGame.findOne({ _id: id })
+
+    if (mGame["userId"] !== session?.user._id) {
+        return ApiUtils.notAuth()
+    }
+
+    const gameData = {
+        isDeleted: true,
     }
 
     Object.assign(mGame, gameData)

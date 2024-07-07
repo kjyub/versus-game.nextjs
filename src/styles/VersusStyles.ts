@@ -43,7 +43,7 @@ export const EditChoiceBox = tw(EditBox)`
 `
 
 export const EditorControlLayout = tw.div`
-    flex justify-end w-full space-x-4
+    flex justify-between w-full space-x-4
 `
 export const EditorControlButton = tw.button`
     flex flex-center px-7 py-3

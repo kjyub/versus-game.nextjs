@@ -150,6 +150,25 @@ export default function VersusEditor({
         }
     }
 
+    const handleDelete = async () => {
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/versus/game/${game.id}`,
+            "DELETE",
+            null,
+        )
+
+        if (!bResult) {
+            if (response["message"]) {
+                alert(response["message"])
+            } else {
+                alert("삭제 실패했습니다.")
+            }
+
+            return
+        }
+        router.push("/")
+    }
+
     return (
         <VersusStyles.EditorLayout>
             <VersusStyles.EditorDataLayout>
@@ -212,6 +231,13 @@ export default function VersusEditor({
             </VersusStyles.EditorDataLayout>
 
             <VersusStyles.EditorControlLayout>
+                <VersusStyles.EditorControlButton
+                    onClick={() => {
+                        handleDelete()
+                    }}
+                >
+                    삭제
+                </VersusStyles.EditorControlButton>
                 <VersusStyles.EditorControlButton
                     onClick={() => {
                         handleSave()

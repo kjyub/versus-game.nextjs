@@ -1,6 +1,7 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 import VersusGameChoice from "./VersusGameChoice"
+import { ThumbnailImageTypes } from "../VersusTypes"
 
 const CHOICE_COUNT = 10
 
@@ -11,7 +12,7 @@ export default class VersusGame extends AbsApiObject {
     private _userId: string
     private _thumbnailImageId: string
     private _thumbnailImageUrl: string
-    private _thumbnailImageUrl: THUMBNAIL_IMAGE_TYPE
+    private _thumbnailImageType: ThumbnailImageTypes
     private _views: number
     private _favs: number
 
@@ -25,6 +26,7 @@ export default class VersusGame extends AbsApiObject {
         this._userId = ""
         this._thumbnailImageId = ""
         this._thumbnailImageUrl = ""
+        this._thumbnailImageType = ThumbnailImageTypes.IMAGE
         this._views = ""
         this._favs = ""
 
@@ -43,6 +45,8 @@ export default class VersusGame extends AbsApiObject {
             this._thumbnailImageId = json.thumbnailImageId
         if (json.thumbnailImageUrl)
             this._thumbnailImageUrl = json.thumbnailImageUrl
+        if (json.thumbnailImageType)
+            this._thumbnailImageType = json.thumbnailImageType
         if (json.views) this._views = json.views
         if (json.favs) this._favs = json.favs
 
@@ -75,6 +79,9 @@ export default class VersusGame extends AbsApiObject {
     get thumbnailImageUrl(): string {
         return this._thumbnailImageUrl
     }
+    get thumbnailImageType(): ThumbnailImageTypes {
+        return this._thumbnailImageType
+    }
     get views(): string {
         return this._views
     }
@@ -93,6 +100,9 @@ export default class VersusGame extends AbsApiObject {
     }
     set thumbnailImageUrl(v: string) {
         this._thumbnailImageUrl = v
+    }
+    set thumbnailImageType(v: ThumbnailImageTypes) {
+        this._thumbnailImageType = v
     }
 
     get choices(): Array<VersusGameChoice> {
