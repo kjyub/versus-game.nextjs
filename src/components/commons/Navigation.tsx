@@ -54,7 +54,9 @@ const Navigation = ({}: INavigation) => {
                     </MainStyles.NavButton>
                 </Link>
             </MainStyles.ItemAddButtonContainer>
-            <span className="title">Versus Game</span>
+            <Link href={"/"} className="title">
+                <span>Versus Game</span>
+            </Link>
             <MainStyles.LoginButtonContainer
                 ref={userRef}
                 $is_show={session.status === "authenticated"}

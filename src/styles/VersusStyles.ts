@@ -19,7 +19,7 @@ export const PageLayout = tw.div`
 `
 
 export const EditorLayout = tw.div`
-    flex flex-col p-4 w-full space-y-4
+    flex flex-col w-full p-4 mb-24 space-y-4
 `
 export const EditorDataLayout = tw.div`
     flex w-full
@@ -62,12 +62,12 @@ export const InputTitle = tw.span`
 export const InputBox = tw.div`
     flex items-center w-full px-2 py-2
     rounded-md
-    border border-slate-300/40
+    border border-slate-700/20
     ${(props: StyleProps) =>
-        props.$disabled ? "bg-stone-800/20" : "bg-transparent"}
+        props.$disabled ? "bg-stone-800/20" : "bg-stone-800/20"}
     ${(props: StyleProps) =>
-        props.$is_focus ? "border-slate-200/70 bg-stone-800/20" : ""}
-    duration-300
+        props.$is_focus ? "border-slate-200/70 bg-stone-800/40" : ""}
+    duration-200
     [&>.input]:w-full [&>.input]:bg-transparent
     [&>.input]:text-stone-100 [&>.input]:text-sm
     [&>.input]:outline-none focus:[&>.input]:outline-none
@@ -89,12 +89,19 @@ export const ThumbnailImageEditLayout = tw.div`
     flex w-full space-x-2
 `
 export const ThumbnailImageEditPreviewBox = tw.div`
-    flex flex-center w-full aspect-[4/3]
-    rounded-md bg-black/30
+    relative
+    flex flex-center max-sm:w-full h-full
     text-stone-300
 `
+export const ThumbnailImageEditPreviewImageBox = tw.div`
+    relative
+    flex flex-center flex-shrink-0 h-full
+    aspect-[4/3]
+    rounded-md bg-black/30
+    overflow-hidden [&>img]:object-cover
+`
 export const ThumbnailImageEditUploadBox = tw.div`
-    flex flex-col flex-shrink-0 w-40 space-y-2
+    flex flex-col w-full max-sm:h-11 sm:h-full space-y-2
 `
 export const ThumbnailImageEditUploadDragBox = tw.div`
     flex flex-center w-full h-full p-3
@@ -107,7 +114,7 @@ export const ThumbnailImageEditUploadDragBox = tw.div`
 `
 export const ThumbnailImageEditUploadButton = tw.label`
     flex flex-center flex-shrink-0 h-9
-    rounded-md bg-stone-300/50 hover:bg-stone-300/70
+    rounded-md bg-stone-300/50 hover:bg-stone-300/70 backdrop-blur-sm
     text-sm text-stone-700
     cursor-pointer duration-200
 `
@@ -137,10 +144,17 @@ export const ChoiceBox = tw.div`
     flex-col max-sm:w-full max-2xl:w-64 2xl:w-72
     rounded-md 
 `
-export const ChoiceImageBox = tw.div`
-    flex flex-center w-full aspect-[4/3]
-    rounded-md bg-black/50
+export const ChoiceThumbnailBox = tw.div`
+    relative
+    flex flex-col flex-center w-full aspect-[4/3]
+    rounded-md bg-black/30
     text-stone-300
+    overflow-hidden [&>img]:object-cover
+`
+export const ChoiceImageEditBox = tw.div`
+    absolute z-10
+    flex flex-col w-full h-full max-sm:px-4 max-sm:py-2 sm:px-12 sm:py-8
+    ${(props: StyleProps) => (props.$is_active ? "bg-black/70" : "")}
 `
 export const ChoiceInfoBox = tw.div`
     flex flex-col w-full mt-2 space-y-2
@@ -154,4 +168,40 @@ export const ChoiceTitleBox = tw.div`
         props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : ""}
     duration-200
     [&>input]:bg-transparent [&>input]:text-stone-300
+`
+
+export const ListLayout = tw.div`
+    flex flex-col p-4 w-full space-y-4
+`
+export const ListGrid = tw.div`
+    grid max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3 max-xl:grid-cols-4 max-3xl:grid-cols-5 3xl:grid-cols-6
+    w-full gap-4
+`
+export const ListGameBox = tw.div`
+    flex flex-col w-full p-3
+    rounded-md bg-black/30 backdrop-blur
+    duration-300 [&.hover]:bg-black/40
+`
+export const ListGameThumbnailBox = tw.div`
+    relative
+    flex flex-col flex-center w-full aspect-[4/3]
+    rounded-md bg-black/30
+    text-stone-300
+    overflow-hidden
+    [&>img]:object-cover [&>img]:duration-300 [&>img.hover]:scale-110
+`
+export const ListGameContentBox = tw.div`
+    flex flex-col w-full h-20 mt-2 space-y-1
+    [&>.title]:font-semibold [&>.title]:text-stone-100
+    [&>.content]:text-stone-300
+`
+export const ListGameControlBox = tw.div`
+    flex justify-between items-center mt-auto
+    [&>.box]:flex [&>.box]:items-center [&>.box]:space-x-1
+`
+export const ListGameControlButton = tw.button`
+    flex flex-center px-2 py-0.5
+    rounded-lg bg-stone-100/70 hover:bg-stone-100/90
+    text-sm text-stone-700
+    duration-200
 `

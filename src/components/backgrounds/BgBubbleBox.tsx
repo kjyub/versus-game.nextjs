@@ -13,7 +13,7 @@ const BgMoveLines = () => {
             }}
             className="bg-bubble-box area"
         >
-            <ul class="circles">
+            <ul className="circles">
                 {/* 1 */}
                 <li></li>
                 {/* 2 */}

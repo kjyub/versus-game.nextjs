@@ -1,6 +1,8 @@
 import Image from "next/image"
 import * as MainStyles from "@/styles/MainStyles"
+import * as VersusStyles from "@/styles/VersusStyles"
 import dynamic from "next/dynamic"
+import VersusEditor from "@/components/versus/VersusEditor"
 import ApiUtils from "@/utils/ApiUtils"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
@@ -8,26 +10,20 @@ const VersusMainSearch = dynamic(
     () => import("@/components/versus/VersusMainSearch"),
     { ssr: false },
 )
-const VersusList = dynamic(() => import("@/components/versus/VersusList"), {
-    ssr: false,
-})
 
-const getGameList = async () => {
+const getGame = async (gameId: string) => {
     const [bResult, statusCode, response] = await ApiUtils.request(
-        "/api/versus/game",
+        `/api/versus/game/${gameId}`,
         "GET",
     )
 
     return response
 }
 
-export default async function Home() {
-    const gameData = await getGameList()
+export default async function GameUpdatePage({ params }: { gameId: string }) {
+    const { gameId } = params
 
-    return (
-        <MainStyles.PageLayout>
-            <VersusMainSearch />
-            <VersusList versusGameData={gameData} />
-        </MainStyles.PageLayout>
-    )
+    const gameData = await getGame(gameId)
+
+    return <VersusEditor isUpdate={true} gameData={gameData} />
 }

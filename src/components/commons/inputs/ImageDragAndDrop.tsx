@@ -3,11 +3,13 @@ import React, { Dispatch, SetStateAction, useState } from "react"
 interface IImageDragAndDrop {
     handleUpload: (_file: File) => void
     setFileEnter: Dispatch<SetStateAction<boolean>>
+    styleClass: string
     children: React.ReactNode
 }
 export default function ImageDragAndDrop({
     handleUpload,
     setFileEnter,
+    styleClass = "",
     children,
 }: IImageDragAndDrop) {
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -31,7 +33,7 @@ export default function ImageDragAndDrop({
 
     return (
         <div
-            className="w-full h-full"
+            className={`w-full h-full ${styleClass}`}
             onDragOver={(e) => {
                 e.preventDefault()
                 setFileEnter(true)

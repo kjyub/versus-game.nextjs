@@ -1,5 +1,6 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
+import CommonUtils from "@/utils/CommonUtils"
 
 export default class VersusGameChoice extends AbsApiObject {
     private _id: string
@@ -18,7 +19,7 @@ export default class VersusGameChoice extends AbsApiObject {
         this._content = ""
         this._imageId = ""
         this._imageUrl = ""
-        this._voteCount = ""
+        this._voteCount = 0
     }
 
     parseResponse(json: object) {
@@ -29,6 +30,22 @@ export default class VersusGameChoice extends AbsApiObject {
         if (json.imageId) this._imageId = json.imageId
         if (json.imageUrl) this._imageUrl = json.imageUrl
         if (json.voteCount) this._voteCount = json.voteCount
+    }
+
+    parseRequest(): object {
+        let data = {
+            gameId: this._gameId,
+            title: this._title,
+            content: this._content,
+            imageId: this._imageId,
+            imageUrl: this._imageUrl,
+            voteCount: this._voteCount,
+        }
+        if (!CommonUtils.isStringNullOrEmpty(this._id)) {
+            data["_id"] = this._id
+        }
+
+        return data
     }
 
     get id(): string {

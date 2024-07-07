@@ -11,6 +11,7 @@ export default class VersusGame extends AbsApiObject {
     private _userId: string
     private _thumbnailImageId: string
     private _thumbnailImageUrl: string
+    private _thumbnailImageUrl: THUMBNAIL_IMAGE_TYPE
     private _views: number
     private _favs: number
 
@@ -46,13 +47,13 @@ export default class VersusGame extends AbsApiObject {
         if (json.favs) this._favs = json.favs
 
         if (json.choices && Array.isArray(json.choices)) {
-            let _choices: Array<VersusGameChoice> = []
+            let newChoices: Array<VersusGameChoice> = []
             json.choices.map((choiceData: any) => {
                 const _choice = new VersusGameChoice()
                 _choice.parseResponse(choiceData)
-                _choices.push(_choice)
+                newChoices.push(_choice)
             })
-            this._choices = _choices
+            this._choices = newChoices
         }
     }
 

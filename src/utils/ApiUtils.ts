@@ -10,6 +10,7 @@ export default class ApiUtils {
         method: RequestMethodTypes,
         query: object = null,
         data: object = null,
+        useCache: boolean = false,
     ): [boolean, number, object] {
         let bResult: boolean = false
         let statusCode: number = 200
@@ -26,11 +27,43 @@ export default class ApiUtils {
             requestData = JSON.stringify(data)
         }
 
-        await fetch(requestUrl, {
+        await fetch(process.env.NEXT_PUBLIC_API_URL + requestUrl, {
             method: method,
             body: requestData,
             headers: {
                 "Content-Type": "application/json",
+                credentials: "include",
+            },
+            cache: useCache ? "" : "no-store",
+        })
+            .then(async (response) => {
+                // 결과
+                statusCode = response.status
+                if (statusCode >= 200 && statusCode < 300) {
+                    bResult = true
+                }
+                resultData = await response.json()
+            })
+            .catch((error) => {
+                console.log(error)
+                resultData = "에러"
+            })
+
+        return [bResult, statusCode, resultData]
+    }
+    static async fileUpload(file: File): [boolean, number, object] {
+        let bResult: boolean = false
+        let statusCode: number = 200
+
+        let resultData: object = {}
+
+        const formData = new FormData()
+        formData.append("files", file, file.name)
+
+        await fetch("/api/files/upload_file", {
+            method: "POST",
+            body: formData,
+            headers: {
                 credentials: "include",
             },
         })
@@ -78,5 +111,13 @@ export default class ApiUtils {
     }
     static serverError(data: any = {}) {
         return this.badRequest(data, 500)
+    }
+
+    static mediaUrl(_url) {
+        if (!CommonUtils.isStringNullOrEmpty(_url)) {
+            return "https://kr.cafe24obs.com/" + _url
+        }
+
+        return ""
     }
 }

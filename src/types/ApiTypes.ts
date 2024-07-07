@@ -1,3 +1,5 @@
+import CommonUtils from "@/utils/CommonUtils"
+
 export const REQUEST_TYPE_INSERT = "REQUEST_TYPE_INSERT"
 export const REQUEST_TYPE_UPDATE = "REQUEST_TYPE_UPDATE"
 export const REQUEST_TYPE_DELETE = "REQUEST_TYPE_DELETE"
@@ -13,7 +15,16 @@ export enum QueryTypes {
 }
 
 export abstract class AbsApiObject {
-    constructor() {}
+    private _id: string
+
+    constructor() {
+        this._id = ""
+    }
+
+    isEmpty(): boolean {
+        return CommonUtils.isStringNullOrEmpty(this._id)
+    }
     parseResponse(json: object) {}
+    parseRequest(): object {}
     stringifyRequest(): object {}
 }
