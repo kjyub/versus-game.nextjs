@@ -51,22 +51,27 @@ export const InputBox = tw.div`
     flex items-center w-full px-4 py-2
     rounded-full 
     ${(props: StyleProps) =>
-        props.$disabled ? "bg-stone-300/50" : "bg-stone-200/50"}
-    ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-stone-400" : "")}
+        props.$disabled
+            ? "bg-stone-500/10 [&>input]:text-stone-600"
+            : "bg-stone-100/70 [&>input]:text-stone-700"}
+    ${(props: StyleProps) =>
+        props.$is_focus ? "ring-2 ring-stone-400" : "ring-1 ring-stone-300"}
     duration-300
-    [&>input]:w-full [&>input]:bg-transparent [&>input]:text-stone-700 [&>input]:text-sm
+    [&>input]:flex [&>input]:items-center [&>input]:w-full 
+    [&>input]:bg-transparent [&>input]:text-sm
 `
 
 export const MyInfoContainer = tw.div`
     relative
-    flex flex-col w-64 h-64 p-4
-    rounded-lg bg-white/50 backdrop-blur
+    flex flex-col w-64 h-[36rem] p-4
+    rounded-lg bg-white/60 backdrop-blur
     drop-shadow-xl
     overflow-hidden
 `
 export const MyInfoSection = tw.div`
     flex flex-col mb-2
-    [&>.title]:text-stone-700 [&>.title]:text-lg [&>.title]:mb-2
+    [&>.title]:mb-2
+    [&>.title]:font-semibold [&>.title]:text-stone-700 [&>.title]:text-lg
 `
 export const MyInfoSaveButton = tw.button`
     flex flex-center w-full h-9 mt-1
@@ -74,7 +79,7 @@ export const MyInfoSaveButton = tw.button`
     duration-200
 `
 export const LogoutButton = tw.button`
-    flex flex-center w-full h-9 mt-auto
+    flex flex-center w-full h-9
     rounded-full bg-red-100 hover:bg-red-200 text-red-600
     duration-200
 `

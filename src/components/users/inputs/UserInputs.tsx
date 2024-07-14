@@ -18,6 +18,7 @@ export interface IUserInputText {
     type?: HTMLInputTypeAttribute | undefined
     labelMessage: ReactNode
     disabled: boolean
+    autoPassword: boolean
     onEnter: () => void
 }
 const UserInputText = ({
@@ -28,6 +29,7 @@ const UserInputText = ({
     type = "text",
     labelMessage = null,
     disabled = false,
+    autoPassword = true,
     onEnter = null,
 }: IUserInputText) => {
     const [isFocus, setFocus] = useState<boolean>(false)
@@ -40,7 +42,7 @@ const UserInputText = ({
     }
     return (
         <UserStyles.InputContainer>
-            <div className="label flex justify-between items-center w-full px-1 mb-1">
+            <div className="label flex max-sm:flex-col sm:justify-between sm:items-center w-full px-1 mb-1">
                 {!CommonUtils.isStringNullOrEmpty(label) && (
                     <UserStyles.InputTitle className="text-sm">
                         {label}
@@ -64,6 +66,7 @@ const UserInputText = ({
                     }}
                     disabled={disabled}
                     onKeyDown={handleKeyDown}
+                    autoComplete={autoPassword && "new-password"}
                 />
             </UserStyles.InputBox>
         </UserStyles.InputContainer>
