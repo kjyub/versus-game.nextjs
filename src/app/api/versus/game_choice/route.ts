@@ -12,24 +12,58 @@ import AuthUtils from "@/utils/AuthUtils"
 import CommonUtils from "@/utils/CommonUtils"
 import MVersusGame from "@/models/versus/MVersusGame"
 
-// 게임 별 결과들을 반환한다.
+// 게임의 결과들을 반환한다.
 export async function GET(req: NextRequest) {
     let filter = {}
 
-    const filterGameId = req.nextUrl.searchParams.get("gameId")
-    if (filterGameId !== null) {
-        filter["gameId"] = filterGameId
-    }
-
+    const filterGameNanoId = req.nextUrl.searchParams.get("gameNanoId")
     // 게임 확인
-    if (CommonUtils.isStringNullOrEmpty(filterGameId)) {
+    if (CommonUtils.isStringNullOrEmpty(filterGameNanoId)) {
         return ApiUtils.badRequest("게임을 찾을 수 없습니다.")
     }
 
-    await DBUtils.connect()
-    const mAnswers = await MVersusGameAnswer.find(filter)
+    const mGame = await MVersusGame.findOne({
+        nanoId: filterGameNanoId,
+        isDeleted: false,
+    })
+    if (CommonUtils.isNullOrUndefined(mGame)) {
+        return ApiUtils.badRequest("게임을 찾을 수 없습니다.")
+    }
+    console.log(String(mGame._id))
 
-    return ApiUtils.response(mAnswers)
+    await DBUtils.connect()
+    const mAnswers = await MVersusGameAnswer.aggregate([
+        { $match: { gameId: String(mGame._id) } },
+        {
+            $project: {
+                _id: 0,
+                gameId: "$gameId",
+                gameChoiceId: "$gameChoiceId",
+            },
+        },
+        { $group: { _id: "$gameChoiceId", count: { $sum: 1 } } },
+        {
+            $facet: {
+                choices: [
+                    {
+                        $project: {
+                            gameChoiceId: "$gameChoiceId",
+                            count: "$count",
+                        },
+                    },
+                ],
+                totalCount: [
+                    { $group: { _id: null, total: { $sum: "$count" } } },
+                ],
+            },
+        },
+    ])
+
+    if (mAnswers.length > 0) {
+        return ApiUtils.response(mAnswers[0])
+    } else {
+        return ApiUtils.badRequest()
+    }
 }
 
 // 유저가 게임의 선택지를 선택한다.

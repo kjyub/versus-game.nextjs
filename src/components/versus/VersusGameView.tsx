@@ -5,7 +5,7 @@ import * as MainStyles from "@/styles/MainStyles"
 import * as VersusStyles from "@/styles/VersusStyles"
 import dynamic from "next/dynamic"
 import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import VersusGame from "@/types/versus/VersusGame"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import VersusFile from "@/types/file/VersusFile"
@@ -14,6 +14,21 @@ import { useRouter } from "next/navigation"
 import CommonUtils from "@/utils/CommonUtils"
 import { useSession } from "next-auth/react"
 import VersusChoiceView from "./inputs/VersusChoiceView"
+import { nanoid } from "nanoid"
+import { Dictionary } from "@/types/common/Dictionary"
+
+const INIT_CHOICES = [
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+    new VersusGameChoice(),
+]
 
 interface IVersusGameView {
     gameData: object | null
@@ -23,12 +38,14 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
     const session = useSession()
 
     const [game, setGame] = useState<VersusGame>(new VersusGame())
-    const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(
-        new VersusGameChoice(),
-    ) // 선택할 예정인 선택지
-    const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(
-        new VersusGameChoice(),
-    ) // 선택 확정한 선택지
+    const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES)
+    const [totalVotes, setTotalVotes] = useState<number>(0)
+
+    // 선택할 예정인 선택지
+    const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(new VersusGameChoice())
+    // 선택 확정한 선택지
+    const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(new VersusGameChoice())
+
     const [isShowResult, setShowResult] = useState<boolean>(false)
 
     const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true)
@@ -50,13 +67,16 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         updateGameInit(gameData)
     }, [gameData, session.status])
 
+    useEffect(() => {
+        if (isShowResult) {
+            getAnswerResults()
+        }
+    }, [isShowResult])
+
     // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
     const updateGameInit = async (data: object) => {
         // 세션 불러오는 중에는 넘어가기
-        if (
-            CommonUtils.isNullOrUndefined(session) ||
-            session.status === "loading"
-        ) {
+        if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
             return
         }
 
@@ -75,12 +95,10 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         }
 
         setGame(_game)
+        setChoices(_game.choices)
 
         // 유저가 선택한 선택지가 있는지 불러온다.
-        const [bResult, statusCode, response] = await ApiUtils.request(
-            `/api/versus/game_choice/${_game.nanoId}`,
-            "GET",
-        )
+        const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game_choice/${_game.nanoId}`, "GET")
         if (bResult) {
             const answerId = response.gameChoiceId
             let answer = new VersusGameChoice()
@@ -102,16 +120,54 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         setMyAnswerLoading(false)
 
         // 조회수 증가
-        ApiUtils.request(
-            `/api/versus/game_view_count/${_game.nanoId}`,
-            "POST",
-        ).then((result) => {
+        ApiUtils.request(`/api/versus/game_view_count/${_game.nanoId}`, "POST").then((result) => {
             const [bResult, statusCode, response] = result
             //
         })
     }
 
+    const getAnswerResults = async () => {
+        const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "GET", {
+            gameNanoId: game.nanoId,
+        })
+
+        if (!bResult) {
+            return
+        }
+
+        const totalDatas: Array<object> = response["totalCount"] ?? []
+        if (totalDatas.length === 0) {
+            return
+        }
+        const totalData: Array<object> = totalDatas[0]
+        const _totalVotes = totalData["total"] ?? 0
+        const choicesData: Array<object> = response["choices"] ?? []
+        if (choicesData.length === 0 || _totalVotes === 0) {
+            return
+        }
+
+        setTotalVotes(_totalVotes)
+        const choiceDic: Dictionary<string, number> = new Dictionary<string, number>()
+        choicesData.map((choiceData) => {
+            choiceDic.push(choiceData["_id"] ?? "", choiceData["count"] ?? 0)
+        })
+
+        let _choices = choices.map((_choice) => {
+            if (choiceDic.contains(_choice.id)) {
+                _choice.voteCount = choiceDic.getValue(_choice.id)
+                _choice.voteRate = (_choice.voteCount / _totalVotes) * 100
+            }
+
+            return _choice
+        })
+        setChoices(_choices)
+    }
+
     const handleSelectChoice = (choice: VersusGameChoice) => {
+        if (isShowResult) {
+            return
+        }
+
         if (selectedChoice.id === choice.id) {
             setSelectedChoice(new VersusGameChoice())
         } else {
@@ -130,18 +186,17 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             gameAnswerId: selectedChoice.id,
         }
 
-        const [bResult, statusCode, response] = await ApiUtils.request(
-            "/api/versus/game_choice",
-            "POST",
-            null,
-            data,
-        )
+        const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "POST", null, data)
         setAnswerChoice(selectedChoice)
         setShowResult(true)
     }
     const handleReset = () => {
         if (isShowResult) {
             // 이미 선택을 한 경우
+            if (!confirm("선택을 취소하시겠습니까?")) {
+                return
+            }
+
             setAnswerChoice(new VersusGameChoice())
             setSelectedChoice(new VersusGameChoice())
             setShowResult(false)
@@ -161,8 +216,10 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             <VersusStyles.GameViewChoiceLayout>
                 <VersusChoiceView
                     game={game}
+                    choices={choices}
                     selectChoice={handleSelectChoice}
                     selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
                 />
             </VersusStyles.GameViewChoiceLayout>
 

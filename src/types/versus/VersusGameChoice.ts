@@ -10,6 +10,7 @@ export default class VersusGameChoice extends AbsApiObject {
     private _imageId: string
     private _imageUrl: string
     private _voteCount: number
+    private _voteRate: number
 
     constructor() {
         super()
@@ -20,6 +21,7 @@ export default class VersusGameChoice extends AbsApiObject {
         this._imageId = ""
         this._imageUrl = ""
         this._voteCount = 0
+        this._voteRate = 0
     }
 
     parseResponse(json: object) {
@@ -69,6 +71,9 @@ export default class VersusGameChoice extends AbsApiObject {
     get voteCount(): string {
         return this._voteCount
     }
+    get voteRate(): string {
+        return this._voteRate
+    }
 
     set title(v: string) {
         this._title = v
@@ -81,5 +86,11 @@ export default class VersusGameChoice extends AbsApiObject {
     }
     set imageUrl(v: string) {
         this._imageUrl = v
+    }
+    set voteCount(v: number) {
+        this._voteCount = v
+    }
+    set voteRate(v: number) {
+        this._voteRate = v
     }
 }
