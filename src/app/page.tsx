@@ -25,6 +25,10 @@ const getGameList = async (search: string | undefined) => {
         params,
     )
 
+    if (!Array.isArray(response)) {
+        return []
+    }
+
     return response
 }
 

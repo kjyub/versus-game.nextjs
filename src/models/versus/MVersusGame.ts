@@ -1,9 +1,15 @@
 import { ThumbnailImageTypes } from "@/types/VersusTypes"
+import { randomUUID } from "crypto"
 import mongoose from "mongoose"
 
 const { Schema } = mongoose
 
 const choiceSchema = new Schema({
+    _id: {
+        type: String,
+        required: false,
+        default: randomUUID,
+    }, // api에서 게임 생성 시 id 생성
     gameId: {
         type: String,
         required: false,
@@ -30,6 +36,10 @@ const choiceSchema = new Schema({
 
 const schema = new Schema(
     {
+        nanoId: {
+            type: String,
+            required: true,
+        },
         title: {
             type: String,
             required: true,
@@ -62,6 +72,11 @@ const schema = new Schema(
             default: 0,
         },
         choices: [choiceSchema],
+        choiceCountType: {
+            type: Number,
+            required: true,
+            default: 200,
+        },
         isDeleted: {
             type: Boolean,
             default: false,

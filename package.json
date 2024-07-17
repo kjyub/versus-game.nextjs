@@ -14,6 +14,7 @@
         "crypto": "1.0.1",
         "mongodb": "6.6.2",
         "mongoose": "8.4.1",
+        "nanoid": "5.0.7",
         "next": "14.2.3",
         "next-auth": "5.0.0-beta.18",
         "path-to-regexp": "6.2.2",

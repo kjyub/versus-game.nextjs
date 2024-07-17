@@ -14,11 +14,6 @@ import { useSession } from "next-auth/react"
 import User from "@/types/user/User"
 import { useUser } from "@/hooks/useUser"
 
-enum ThumbnailType {
-    IMAGE,
-    TEXT,
-}
-
 interface IVersusList {
     versusGameData: Array<object>
 }
@@ -71,12 +66,12 @@ const GameBox = ({ game, user, goLink }: IGameBox) => {
     const [isHover, setHover] = useState<boolean>(false)
 
     const handleGame = () => {
-        goLink(`/game/${game.id}`)
+        goLink(`/game/${game.nanoId}`)
     }
 
     const handleUpdate = (e: React.MouseEvent<HTMLElement>) => {
         e.stopPropagation()
-        goLink(`/game/update/${game.id}`)
+        goLink(`/game/update/${game.nanoId}`)
     }
 
     return (

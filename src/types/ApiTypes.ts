@@ -28,3 +28,7 @@ export abstract class AbsApiObject {
     parseRequest(): object {}
     stringifyRequest(): object {}
 }
+
+export const CookieConsts = {
+    GUEST_ID: "guest_id",
+}

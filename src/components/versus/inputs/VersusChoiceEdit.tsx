@@ -17,13 +17,15 @@ const CHOICE_COUNT_CONST = 100
 interface IVersusChoiceEdit {
     game: VersusGame
     updateChoice: (index: number, choice: VersusGameChoice) => void
+    choiceCountType: number
+    setChoiceCountType: Dispatch<SetStateAction<number>>
 }
 export default function VersusChoiceEdit({
     game,
     updateChoice,
+    choiceCountType,
+    setChoiceCountType,
 }: IVersusChoiceEdit) {
-    const [choiceCountType, setChoiceCountType] = useState<number>(200) // 백자리 수 부턴 선택 개수, 십자리 수 까진 개수별 레이아웃
-
     const [choiceCount, setChoiceCount] = useState<number>(0)
     const [layoutType, setLayoutType] = useState<number>(0)
 

@@ -7,18 +7,31 @@ import MVersusGame from "@/models/versus/MVersusGame"
 import { auth } from "@/auth"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import MFile from "@/models/file/MFile"
+import CommonUtils from "@/utils/CommonUtils"
 
-export async function GET(req: NextApiRequest, { params }: { id: string }) {
+export async function GET(req: NextRequest, { params }: { id: string }) {
     const { id } = params
 
-    const mGame = await MVersusGame.findOne({ _id: id, isDeleted: false })
+    // const session = await auth()
+    // // 유저 확인
+    // if (CommonUtils.isNullOrUndefined(session.user)) {
+    //     return ApiUtils.notAuth()
+    // }
+    // console.log(session)
+
+    const mGame = await MVersusGame.findOne({ nanoId: id, isDeleted: false })
+
+    // if (mGame["userId"] !== session?.user._id) {
+    //     return ApiUtils.notAuth()
+    // }
 
     return ApiUtils.response(mGame)
 }
 
-export async function PUT(req: NextApiRequest, { params }: { id: string }) {
+export async function PUT(req: NextRequest, { params }: { id: string }) {
     const { id } = params
-    const { title, content, thumbnailImageId, choices } = await req.json()
+    const { title, content, thumbnailImageId, choices, choiceCountType } =
+        await req.json()
 
     await DBUtils.connect()
 
@@ -29,7 +42,7 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
         return ApiUtils.notAuth()
     }
 
-    const mGame = await MVersusGame.findOne({ _id: id })
+    let mGame = await MVersusGame.findOne({ nanoId: id })
 
     if (mGame["userId"] !== session?.user._id) {
         return ApiUtils.notAuth()
@@ -52,16 +65,13 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
         return ApiUtils.badRequest("선택지 정보가 없습니다.")
     }
 
-    const gameData = {
-        title: title,
-        content: content,
-        userId: session?.user?._id,
-        thumbnailImageId: thumbnailImageId,
-        thumbnailImageUrl: thumbnailImageUrl,
-        choices: choices,
-    }
-
-    Object.assign(mGame, gameData)
+    mGame.title = title
+    mGame.content = content
+    mGame.userId = session?.user?._id
+    mGame.thumbnailImageId = thumbnailImageId
+    mGame.thumbnailImageUrl = thumbnailImageUrl
+    mGame.choices = choices
+    mGame.choiceCountType = choiceCountType
 
     try {
         const resultGame = await mGame.save()
@@ -73,7 +83,7 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
     }
 }
 
-export async function DELETE(req: NextApiRequest, { params }: { id: string }) {
+export async function DELETE(req: NextRequest, { params }: { id: string }) {
     const { id } = params
 
     await DBUtils.connect()
@@ -85,7 +95,7 @@ export async function DELETE(req: NextApiRequest, { params }: { id: string }) {
         return ApiUtils.notAuth()
     }
 
-    const mGame = await MVersusGame.findOne({ _id: id })
+    const mGame = await MVersusGame.findOne({ nanoId: id })
 
     if (mGame["userId"] !== session?.user._id) {
         return ApiUtils.notAuth()

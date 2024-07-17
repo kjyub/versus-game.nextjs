@@ -7,8 +7,14 @@ import * as MainStyles from "@/styles/MainStyles"
 import { auth } from "@/auth"
 import { SessionProvider } from "next-auth/react"
 import BgBubbleBox from "@/components/backgrounds/BgBubbleBox"
+import AppClientLayout from "@/layouts/AppClientLayout"
+import ApiUtils from "@/utils/ApiUtils"
 
 const inter = Inter({ subsets: ["latin"] })
+
+async function generateGuestId() {
+    await ApiUtils.request("/api/users/guest", "POST", null, null, true)
+}
 
 export const metadata: Metadata = {
     title: "VS 게임",
@@ -21,11 +27,13 @@ export default async function RootLayout({
     children: React.ReactNode
 }>) {
     const session = await auth()
+    // await generateGuestId()
 
     return (
         <html lang="kr">
             <head>
                 <FrontHead />
+                <AppClientLayout />
             </head>
             <MainStyles.Body
                 className={`${inter.className} background`}

@@ -61,6 +61,13 @@ const Navigation = ({}: INavigation) => {
                 ref={userRef}
                 $is_show={session.status === "authenticated"}
             >
+                {/* <MainStyles.LoginButton
+                    onClick={() => {
+                        handleClick()
+                    }}
+                >
+                    회원 체크
+                </MainStyles.LoginButton> */}
                 <MainStyles.LoginButton
                     onClick={() => {
                         setUserShow(true)

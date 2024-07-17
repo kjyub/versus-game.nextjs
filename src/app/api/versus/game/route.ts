@@ -7,6 +7,8 @@ import MVersusGame from "@/models/versus/MVersusGame"
 import { auth } from "@/auth"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import MFile from "@/models/file/MFile"
+import { nanoid } from "nanoid"
+import AuthUtils from "@/utils/AuthUtils"
 
 export async function GET(req: NextRequest) {
     let filter = {
@@ -18,15 +20,19 @@ export async function GET(req: NextRequest) {
         filter["title"] = new RegExp(searchValue, "i")
     }
 
+    await DBUtils.connect()
     const mGames = await MVersusGame.find(filter).sort({
         createdAt: -1,
     })
+    const session = await auth()
+    let userId: string = AuthUtils.getUserOrGuestId(req, session)
 
     return ApiUtils.response(mGames)
 }
 
 export async function POST(req: NextRequest) {
-    const { title, content, thumbnailImageId, choices } = await req.json()
+    const { title, content, thumbnailImageId, choices, choiceCountType } =
+        await req.json()
 
     await DBUtils.connect()
 
@@ -53,13 +59,16 @@ export async function POST(req: NextRequest) {
         return ApiUtils.badRequest("선택지 정보가 없습니다.")
     }
 
+    const nanoId = nanoid(11)
     const mGame = new MVersusGame({
+        nanoId: nanoId,
         title: title,
         content: content,
         userId: session?.user?._id,
         thumbnailImageId: thumbnailImageId,
         thumbnailImageUrl: thumbnailImageUrl,
         choices: choices,
+        choiceCountType: choiceCountType,
     })
 
     try {

@@ -1,5 +1,10 @@
+import { Session } from "next-auth"
 import CommonUtils from "./CommonUtils"
 import { NextRequest, NextResponse } from "next/server"
+import { CookieConsts } from "@/types/ApiTypes"
+import AuthUtils from "./AuthUtils"
+import { ResponseCookies } from "next/dist/compiled/@edge-runtime/cookies"
+import { RequestInit } from "next/dist/server/web/spec-extension/request"
 
 type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {})
 
@@ -10,7 +15,7 @@ export default class ApiUtils {
         method: RequestMethodTypes,
         query: object = null,
         data: object = null,
-        useCache: boolean = false,
+        useCache: boolean = false, // true로 하면 캐시에 저장되서 한동안 같은 결과가 나온다.
     ): [boolean, number, object] {
         let bResult: boolean = false
         let statusCode: number = 200
@@ -27,15 +32,19 @@ export default class ApiUtils {
             requestData = JSON.stringify(data)
         }
 
-        await fetch(process.env.NEXT_PUBLIC_API_URL + requestUrl, {
+        let requestInit: RequestInit = {
             method: method,
             body: requestData,
             headers: {
                 "Content-Type": "application/json",
                 credentials: "include",
             },
-            cache: useCache ? "" : "no-store",
-        })
+        }
+        if (!useCache) {
+            requestInit["cache"] = "no-store"
+        }
+
+        await fetch(process.env.NEXT_PUBLIC_API_URL + requestUrl, requestInit)
             .then(async (response) => {
                 // 결과
                 statusCode = response.status
@@ -98,7 +107,11 @@ export default class ApiUtils {
         return data
     }
     static response(data: any = {}) {
-        return NextResponse.json(this.parseData(data), { status: 200 })
+        let response: NextResponse = NextResponse.json(this.parseData(data), {
+            status: 200,
+        })
+
+        return response
     }
     static badRequest(data: any = {}, status: number = 400) {
         return NextResponse.json(this.parseData(data), { status: 400 })

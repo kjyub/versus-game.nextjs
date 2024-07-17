@@ -7,6 +7,7 @@ const CHOICE_COUNT = 10
 
 export default class VersusGame extends AbsApiObject {
     private _id: string
+    private _nanoId: string
     private _title: string
     private _content: string
     private _userId: string
@@ -21,6 +22,7 @@ export default class VersusGame extends AbsApiObject {
     constructor() {
         super()
         this._id = ""
+        this._nanoId = ""
         this._title = ""
         this._content = ""
         this._userId = ""
@@ -30,6 +32,7 @@ export default class VersusGame extends AbsApiObject {
         this._views = ""
         this._favs = ""
 
+        this._choiceCountType = 200
         this._choices = []
         for (let i = 0; i < CHOICE_COUNT; i++) {
             this._choices.push(new VersusGameChoice())
@@ -38,6 +41,7 @@ export default class VersusGame extends AbsApiObject {
 
     parseResponse(json: object) {
         if (json._id) this._id = String(json._id)
+        if (json.nanoId) this._nanoId = String(json.nanoId)
         if (json.title) this._title = json.title
         if (json.content) this._content = json.content
         if (json.userId) this._userId = json.userId
@@ -50,6 +54,7 @@ export default class VersusGame extends AbsApiObject {
         if (json.views) this._views = json.views
         if (json.favs) this._favs = json.favs
 
+        if (json.choiceCountType) this._choiceCountType = json.choiceCountType
         if (json.choices && Array.isArray(json.choices)) {
             let newChoices: Array<VersusGameChoice> = []
             json.choices.map((choiceData: any) => {
@@ -63,6 +68,9 @@ export default class VersusGame extends AbsApiObject {
 
     get id(): string {
         return this._id
+    }
+    get nanoId(): string {
+        return this._nanoId
     }
     get title(): string {
         return this._title
@@ -88,6 +96,9 @@ export default class VersusGame extends AbsApiObject {
     get favs(): string {
         return this._favs
     }
+    get choiceCountType(): number {
+        return this._choiceCountType
+    }
 
     set title(v: string) {
         this._title = v
@@ -105,6 +116,9 @@ export default class VersusGame extends AbsApiObject {
         this._thumbnailImageType = v
     }
 
+    set choiceCountType(v: number) {
+        this._choiceCountType = v
+    }
     get choices(): Array<VersusGameChoice> {
         return this._choices
     }

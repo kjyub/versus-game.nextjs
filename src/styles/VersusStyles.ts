@@ -1,4 +1,5 @@
 import { StyleProps } from "@/types/StyleTypes"
+import { ChoiceSelectStatus } from "@/types/VersusTypes"
 import tw from "tailwind-styled-components"
 
 export const MainSearchLayout = tw.div`
@@ -124,7 +125,7 @@ export const ChoiceLayoutSettingContainer = tw.div`
     rounded-md 
 `
 export const ChoiceLayoutSettingGrid = tw.div`
-    grid gap-2
+    grid gap-4
     ${(props: any) =>
         props.$choice_count <= 2 ? "max-sm:grid-cols-1 sm:grid-cols-2" : ""}
     ${(props: any) =>
@@ -204,4 +205,56 @@ export const ListGameControlButton = tw.button`
     rounded-lg bg-stone-100/70 hover:bg-stone-100/90
     text-sm text-stone-700
     duration-200
+`
+
+export const GameViewLayout = tw.div`
+    flex flex-col items-center w-full max-w-[80rem] p-2 mx-auto mb-24 space-y-4
+`
+export const GameViewSectionLayoutSize = tw.div`
+    w-full p-4
+`
+export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
+    flex flex-col space-y-2
+    rounded-md bg-black/30 backdrop-blur
+    duration-300
+
+    [&>.title]:text-center [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-100
+    [&>.content]:text-stone-300
+`
+export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
+    flex flex-col items-center min-h-[32rem] max-h-[calc(100vh-192px)]
+    overflow-y-auto scroll-transparent scroll-overlay
+`
+export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
+    ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
+    ${(props: any) =>
+        props.$status === ChoiceSelectStatus.SELECTED
+            ? "ring-4 ring-indigo-600 [&>img]:scale-110"
+            : "[&>img]:hover:scale-110"}
+    ${(props: any) =>
+        props.$status === ChoiceSelectStatus.UNSELECTED
+            ? "[&>.content]:bg-black/30"
+            : ""}
+    duration-300 [&>img]:duration-300
+`
+export const ChoiceImageContentBox = tw.div`
+    absolute z-10
+    flex flex-col w-full h-full max-sm:px-4 max-sm:py-2 sm:px-4 sm:py-2
+    duration-300
+    hover:drop-shadow
+
+    [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-xl [&>.title]:text-white 
+`
+export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
+    flex flex-row items-center h-12 space-x-2 py-0
+    [&>button]:h-full [&>button]:rounded-lg
+    [&>button]:font-medium [&>button]:text-white
+    [&>button]:backdrop-blur [&>button]:duration-300
+    disabled:[&>button]:grayscale disabled:[&>button]:text-stone-300
+`
+
+export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
+    flex flex-col space-y-4
+    rounded-md bg-black/40 backdrop-blur
+    [&>.title]:font-semibold [&>.title]:text-stone-100
 `

@@ -1,4 +1,8 @@
+import { Session } from "next-auth"
 import CommonUtils from "./CommonUtils"
+import { cookies } from "next/headers"
+import { CookieConsts } from "@/types/ApiTypes"
+import { randomUUID } from "crypto"
 
 export default class AuthUtils {
     static parseJwt(token: string): object {
@@ -49,5 +53,31 @@ export default class AuthUtils {
         const now = new Date()
 
         return expireDate.getTime() <= now.getTime()
+    }
+    static isSessionAuth(session: Session) {
+        if (
+            CommonUtils.isNullOrUndefined(session) ||
+            CommonUtils.isNullOrUndefined(session.user)
+        ) {
+            return false
+        }
+
+        return true
+    }
+    static getUserOrGuestId(req: NextRequest, session: Session) {
+        let userId: string = ""
+
+        // 유저 확인 없으면 게스트
+        if (this.isSessionAuth(session)) {
+            userId = session?.user._id
+        } else if (req.cookies.has(CookieConsts.GUEST_ID)) {
+            const guestIdCookie = req.cookies.get(CookieConsts.GUEST_ID)
+            userId = guestIdCookie.value
+        } else {
+            const newGuestId = randomUUID()
+            cookies().set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
+        }
+
+        return userId
     }
 }

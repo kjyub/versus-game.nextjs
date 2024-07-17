@@ -14,17 +14,14 @@ import VersusFile from "@/types/file/VersusFile"
 import ApiUtils from "@/utils/ApiUtils"
 import { useRouter } from "next/navigation"
 import CommonUtils from "@/utils/CommonUtils"
+import { useSession } from "next-auth/react"
+import { ThumbnailImageTypes } from "@/types/VersusTypes"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
 const VersusMainSearch = dynamic(
     () => import("@/components/versus/VersusMainSearch"),
     { ssr: false },
 )
-
-enum ThumbnailType {
-    IMAGE,
-    TEXT,
-}
 
 interface IVersusEditor {
     isUpdate: boolean
@@ -35,14 +32,16 @@ export default function VersusEditor({
     gameData = null,
 }: IVersusEditor) {
     const router = useRouter()
+    const session = useSession()
 
     const [game, setGame] = useState<VersusGame>(new VersusGame())
 
     const [title, setTitle] = useState<string>("")
     const [content, setContent] = useState<string>("")
-    const [thumbnailType, setThumbnailType] = useState<ThumbnailType>(
-        ThumbnailType.IMAGE,
+    const [thumbnailType, setThumbnailType] = useState<ThumbnailImageTypes>(
+        ThumbnailImageTypes.IMAGE,
     )
+    const [choiceCountType, setChoiceCountType] = useState<number>(200) // 백자리 수 부턴 선택 개수, 십자리 수 까진 개수별 레이아웃
 
     useEffect(() => {
         // const handleBeforeUnload = (event) => {
@@ -59,7 +58,7 @@ export default function VersusEditor({
 
     useEffect(() => {
         updateGameInit(gameData)
-    }, [isUpdate, gameData])
+    }, [isUpdate, gameData, session.status])
 
     useEffect(() => {
         game.title = title
@@ -71,6 +70,19 @@ export default function VersusEditor({
 
     // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
     const updateGameInit = (data: object) => {
+        // 세션 불러오는 중에는 넘어가기
+        if (
+            CommonUtils.isNullOrUndefined(session) ||
+            session.status === "loading"
+        ) {
+            return
+        }
+        // 로그인 안했으면 나가기
+        if (session.status === "unauthenticated") {
+            router.push("/")
+            return
+        }
+
         if (!isUpdate || CommonUtils.isNullOrUndefined(data)) {
             return
         }
@@ -83,9 +95,17 @@ export default function VersusEditor({
             return
         }
 
+        // 작성자가 아니면 권한 X
+        if (isUpdate && session.data?.user?._id !== _game.userId) {
+            alert("권한이 없습니다")
+            router.push("/")
+            return
+        }
+
         setGame(_game)
         setTitle(_game.title)
         setContent(_game.content)
+        setChoiceCountType(_game.choiceCountType)
     }
 
     const updateThumbnail = (file: VersusFile) => {
@@ -103,6 +123,7 @@ export default function VersusEditor({
             content: game.content,
             thumbnailImageId: game.thumbnailImageId,
             choices: game.choices.map((_c) => _c.parseRequest()),
+            choiceCountType: choiceCountType,
         }
 
         if (CommonUtils.isStringNullOrEmpty(game.id)) {
@@ -131,7 +152,7 @@ export default function VersusEditor({
             }
         } else {
             const [bResult, statusCode, response] = await ApiUtils.request(
-                `/api/versus/game/${game.id}`,
+                `/api/versus/game/${game.nanoId}`,
                 "PUT",
                 null,
                 data,
@@ -152,7 +173,7 @@ export default function VersusEditor({
 
     const handleDelete = async () => {
         const [bResult, statusCode, response] = await ApiUtils.request(
-            `/api/versus/game/${game.id}`,
+            `/api/versus/game/${game.nanoId}`,
             "DELETE",
             null,
         )
@@ -190,17 +211,21 @@ export default function VersusEditor({
                         </VersusStyles.InputTitle>
                         <VersusStyles.InputTypeButtonList>
                             <VersusStyles.InputTypeButton
-                                $is_show={thumbnailType === ThumbnailType.IMAGE}
+                                $is_show={
+                                    thumbnailType === ThumbnailImageTypes.IMAGE
+                                }
                                 onClick={() => {
-                                    setThumbnailType(ThumbnailType.IMAGE)
+                                    setThumbnailType(ThumbnailImageTypes.IMAGE)
                                 }}
                             >
                                 이미지 썸네일
                             </VersusStyles.InputTypeButton>
                             <VersusStyles.InputTypeButton
-                                $is_show={thumbnailType === ThumbnailType.TEXT}
+                                $is_show={
+                                    thumbnailType === ThumbnailImageTypes.TEXT
+                                }
                                 onClick={() => {
-                                    setThumbnailType(ThumbnailType.TEXT)
+                                    setThumbnailType(ThumbnailImageTypes.TEXT)
                                 }}
                             >
                                 텍스트 썸네일
@@ -208,7 +233,9 @@ export default function VersusEditor({
                         </VersusStyles.InputTypeButtonList>
                         <div className="relative w-full max-lg:h-56 max-2xl:h-72 2xl:h-56">
                             <VersusThumbnailImageEdit
-                                isShow={thumbnailType === ThumbnailType.IMAGE}
+                                isShow={
+                                    thumbnailType === ThumbnailImageTypes.IMAGE
+                                }
                                 oldImageId={game.thumbnailImageId}
                                 updateThumbnail={updateThumbnail}
                             />
@@ -226,7 +253,12 @@ export default function VersusEditor({
                 </VersusStyles.EditInfoBox>
                 <VersusStyles.EditChoiceBox>
                     <span className="title">선택지</span>
-                    <VersusChoiceEdit game={game} updateChoice={updateChoice} />
+                    <VersusChoiceEdit
+                        game={game}
+                        updateChoice={updateChoice}
+                        choiceCountType={choiceCountType}
+                        setChoiceCountType={setChoiceCountType}
+                    />
                 </VersusStyles.EditChoiceBox>
             </VersusStyles.EditorDataLayout>
 

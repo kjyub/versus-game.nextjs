@@ -10,7 +10,7 @@ import { NextApiRequest, NextApiResponse } from "next"
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
     // const { email } = await req.json()
     const session = await auth()
-    console.log(session)
+    console.log("user-check ", session)
     return ApiUtils.response(true)
 
     // await DBUtils.connect()
