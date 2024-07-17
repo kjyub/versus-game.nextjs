@@ -22,11 +22,27 @@ const Navigation = ({}: INavigation) => {
 
     useEffect(() => {
         if (session.status === "authenticated") {
-            const _user = new User()
-            _user.parseResponse(session.data.user)
-            setUser(_user)
+            getUserInfo()
         }
     }, [session])
+
+    const getUserInfo = async () => {
+        if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+            return
+        }
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/users/user_info/${session.data?.user._id}`,
+            "GET",
+        )
+
+        if (bResult) {
+            const user = new User()
+            user.parseResponse(response)
+            setUser(user)
+        } else {
+            alert(response)
+        }
+    }
 
     const handleClick = (e: React.MouseEvent<HTMLElement>) => {
         userCheck()
@@ -36,6 +52,11 @@ const Navigation = ({}: INavigation) => {
         e.stopPropagation()
     }
 
+    const handleUserInfo = async () => {
+        await getUserInfo()
+        setUserShow(true)
+    }
+
     const userCheck = async () => {
         await ApiUtils.request("/api/users/user_check", "POST")
     }
@@ -43,7 +64,7 @@ const Navigation = ({}: INavigation) => {
     return (
         // <></>
         <MainStyles.NavBox>
-            <MainStyles.ItemAddButtonContainer ref={userRef} $is_show={true}>
+            <MainStyles.ItemAddButtonContainer $is_show={true}>
                 <Link href={"/game/add"}>
                     <MainStyles.NavButton
                         onClick={() => {
@@ -70,7 +91,7 @@ const Navigation = ({}: INavigation) => {
                 </MainStyles.LoginButton> */}
                 <MainStyles.LoginButton
                     onClick={() => {
-                        setUserShow(true)
+                        handleUserInfo()
                     }}
                 >
                     회원 정보
@@ -79,7 +100,7 @@ const Navigation = ({}: INavigation) => {
                     {isUserShow && (
                         <MyInfoModal
                             isModalShow={isUserShow}
-                            userId={user.id}
+                            user={user}
                         />
                     )}
                 </MainStyles.LoginLayout>

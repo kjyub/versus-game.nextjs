@@ -75,7 +75,9 @@ const LoginPage = ({ page, setPage }: IPage) => {
             //     alert("로그인 성공")
             //     return
             // }
-            if (errorMessage === "CredentialsSignin") {
+            if (errorMessage === null) {
+                return
+            } else if (errorMessage === "CredentialsSignin") {
                 alert("로그인 성공")
                 return
             } else {

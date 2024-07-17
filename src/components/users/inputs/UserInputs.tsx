@@ -42,7 +42,7 @@ const UserInputText = ({
     }
     return (
         <UserStyles.InputContainer>
-            <div className="label flex max-sm:flex-col sm:justify-between sm:items-center w-full px-1 mb-1">
+            <div className="label flex flex-col w-full px-1 mb-1">
                 {!CommonUtils.isStringNullOrEmpty(label) && (
                     <UserStyles.InputTitle className="text-sm">
                         {label}
@@ -66,7 +66,7 @@ const UserInputText = ({
                     }}
                     disabled={disabled}
                     onKeyDown={handleKeyDown}
-                    autoComplete={autoPassword && "new-password"}
+                    autoComplete={autoPassword ? "new-password" : undefined}
                 />
             </UserStyles.InputBox>
         </UserStyles.InputContainer>

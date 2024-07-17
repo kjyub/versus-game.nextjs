@@ -10,9 +10,9 @@ import User from "@/types/user/User"
 
 export interface MyInfoModal {
     isModalShow: boolean
-    userId: string
+    user: User
 }
-const MyInfoModal = ({ isModalShow, userId }: MyInfoModal) => {
+const MyInfoModal = ({ isModalShow, user }: MyInfoModal) => {
     const [email, setEmail] = useState<string>("")
     const [name, setName] = useState<string>("")
     const [passwordCurrent, setPasswordCurrent] = useState<string>("")
@@ -23,7 +23,7 @@ const MyInfoModal = ({ isModalShow, userId }: MyInfoModal) => {
         if (isModalShow) {
             getUserInfo()
         }
-    }, [isModalShow, userId])
+    }, [isModalShow, user])
 
     useEffect(() => {
         if (CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
@@ -32,27 +32,17 @@ const MyInfoModal = ({ isModalShow, userId }: MyInfoModal) => {
         }
     }, [passwordCurrent])
 
-    const getUserInfo = async () => {
-        if (CommonUtils.isStringNullOrEmpty(userId)) {
+    const getUserInfo = () => {
+        if (CommonUtils.isStringNullOrEmpty(user.id)) {
             return
         }
-        const [bResult, statusCode, response] = await ApiUtils.request(
-            `/api/users/user_info/${userId}`,
-            "GET",
-        )
 
-        if (bResult) {
-            const user = new User()
-            user.parseResponse(response)
-            setName(user.name)
-            setEmail(user.email)
-        } else {
-            alert(response)
-        }
+        setName(user.name)
+        setEmail(user.email)
     }
 
     const handleUserUpdate = async () => {
-        if (CommonUtils.isStringNullOrEmpty(userId)) {
+        if (CommonUtils.isStringNullOrEmpty(user.id)) {
             return
         }
 
@@ -80,7 +70,7 @@ const MyInfoModal = ({ isModalShow, userId }: MyInfoModal) => {
         }
 
         const [bResult, statusCode, response] = await ApiUtils.request(
-            `/api/users/user_info/${userId}`,
+            `/api/users/user_info/${user.id}`,
             "PUT",
             null,
             data,
