@@ -27,7 +27,6 @@ export default function VersusCommentPagination({pageIndex, pageSize, maxPage, m
         for (let i = first; i < first + maxPageButtons; i++) {
             _pages.push(i)
 
-            console.log(i, maxPage)
             if (i === maxPage) {
                 break
             }
