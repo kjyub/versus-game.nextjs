@@ -95,6 +95,16 @@ const config: Config = {
             },
         },
     },
-    plugins: [],
+    plugins: [
+        function({ addUtilities }) {
+          const newUtilities = {
+            '.backdrop-blur': {
+              '-webkit-backdrop-filter': 'blur(10px)',
+              'backdrop-filter': 'blur(10px)',
+            },
+          }
+          addUtilities(newUtilities, ['responsive', 'hover']);
+        }
+    ],
 }
 export default config

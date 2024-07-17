@@ -2,12 +2,12 @@ import { StyleProps } from "@/types/StyleTypes"
 import tw from "tailwind-styled-components"
 
 export const Body = tw.body`
-    flex flex-col w-screen min-h-screen
+    flex flex-col w-screen h-screen max-h-screen
     bg-blue-500
 `
 
 export const NavBox = tw.div`
-    relative
+    sticky top-0 z-50
     flex justify-center items-center w-screen h-14
     [&>.title]:text-xl [&>.title]:font-bold [&>.title]:text-black
 `
@@ -31,7 +31,7 @@ export const ItemAddButtonContainer = tw(NavButtonContainer)`
 export const LoginButtonContainer = tw.div`
     absolute max-sm:right-2 sm:right-4
     ${(props: StyleProps) =>
-        props.$is_show ? "opacity-100 z-10" : "opacity-0 -z-10"}
+        props.$is_show ? "opacity-100 z-50" : "opacity-0 -z-10"}
 `
 export const LoginButton = tw.button`
     flex justify-center items-center 
@@ -42,7 +42,7 @@ export const LoginButton = tw.button`
 `
 
 export const PageLayout = tw.div`
-    flex flex-col items-center w-screen min-h-screen
+    flex flex-col items-center w-screen
 `
 
 export const LoginLayout = tw.div`

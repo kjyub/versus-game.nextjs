@@ -16,6 +16,7 @@ import MVersusGame from "@/models/versus/MVersusGame"
 export async function GET(req: NextRequest) {
     let filter = {}
 
+    await DBUtils.connect()
     const filterGameNanoId = req.nextUrl.searchParams.get("gameNanoId")
     // 게임 확인
     if (CommonUtils.isStringNullOrEmpty(filterGameNanoId)) {
@@ -29,9 +30,7 @@ export async function GET(req: NextRequest) {
     if (CommonUtils.isNullOrUndefined(mGame)) {
         return ApiUtils.badRequest("게임을 찾을 수 없습니다.")
     }
-    console.log(String(mGame._id))
 
-    await DBUtils.connect()
     const mAnswers = await MVersusGameAnswer.aggregate([
         { $match: { gameId: String(mGame._id) } },
         {

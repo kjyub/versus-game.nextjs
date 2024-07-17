@@ -19,6 +19,7 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
     // }
     // console.log(session)
 
+    await DBUtils.connect()
     const mGame = await MVersusGame.findOne({ nanoId: id, isDeleted: false })
 
     // if (mGame["userId"] !== session?.user._id) {

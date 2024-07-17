@@ -64,7 +64,7 @@ export const InputBox = tw.div`
 export const MyInfoContainer = tw.div`
     relative
     flex flex-col w-64 h-[36rem] p-4
-    rounded-lg bg-white/60 backdrop-blur
+    rounded-lg bg-white/70 backdrop-blur
     drop-shadow-xl
     overflow-hidden
 `

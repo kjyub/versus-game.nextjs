@@ -1,9 +1,10 @@
+import * as MainStyles from "@/styles/MainStyles"
 import { StyleProps } from "@/types/StyleTypes"
 import { ChoiceSelectStatus } from "@/types/VersusTypes"
 import tw from "tailwind-styled-components"
 
 export const MainSearchLayout = tw.div`
-    flex flex-col w-128
+    flex flex-col max-sm:w-screen sm:w-128 px-4
 `
 
 export const SearchInputBox = tw.div`
@@ -14,9 +15,7 @@ export const SearchInputBox = tw.div`
     [&>input]:w-full [&>input]:bg-transparent
 `
 
-export const PageLayout = tw.div`
-    flex flex-col items-center w-screen h-screen
-    overflow-y-auto scroll-transparent
+export const PageLayout = tw(MainStyles.PageLayout)`
 `
 
 export const EditorLayout = tw.div`
@@ -238,8 +237,8 @@ export const GameViewChoiceResultBox = tw.div`
     ${(props: StyleProps) => (props.$is_show ? "bottom-4" : "-bottom-8")}
     flex items-center py-1
     divide-x divide-stone-300
-    rounded-md bg-white/70 backdrop-blur
-    font-medium text-rose-500 text-sm
+    rounded-md bg-white/80 backdrop-blur
+    font-medium text-rose-600 text-sm
     duration-300
     [&>div]:px-2
 `
@@ -253,7 +252,42 @@ export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
 `
 
 export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
-    flex flex-col space-y-4
+    ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
+    flex-col space-y-4
     rounded-md bg-black/40 backdrop-blur
+    duration-500
     [&>.title]:font-semibold [&>.title]:text-stone-100
+`
+export const GameViewCommentList = tw.div`
+    flex flex-col w-full space-y-2
+`
+export const GameViewCommentBox = tw.div`
+    flex flex-col w-full p-3
+    rounded-md bg-black/20
+`
+export const GameViewCommentInputBox = tw.div`
+    flex items-center w-full px-2 py-2 space-x-2
+    rounded-md bg-black/40
+    border border-stone-500
+    ${(props: StyleProps) => (props.$is_focus ? "border-slate-200/70" : "")}
+    duration-200
+    
+    [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-stone-300
+`
+export const GameViewCommentInputButton = tw.button`
+    px-3 py-1 rounded-md 
+    ${(props: StyleProps) => (props.$is_active ? "text-rose-500 hover:text-rose-600 " : "text-stone-400")}
+    font-semibold 
+    duration-200
+`
+
+export const CommentPaginationBox = tw.div`
+    flex items-center space-x-2
+`
+export const CommentPaginationButton = tw.button`
+    flex flex-center p-2 w-9 h-9
+    rounded-full
+    text-stone-300
+    duration-200
+    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent hover:bg-black/20")}
 `

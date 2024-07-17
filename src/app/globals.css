@@ -48,9 +48,24 @@ textarea:focus {
     -ms-user-select: none;
     user-select: none;
 }
+
+.scroll-transparent {
+}
+.scroll-transparent::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+}
+.scroll-transparent::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+
+    border-radius: 9999px;
+    transition: all 0.3s;
+}
 .scroll-overlay {
     scrollbar-gutter: stable both-edges;
 }
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

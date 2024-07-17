@@ -68,10 +68,10 @@ export default class VersusGameChoice extends AbsApiObject {
     get imageUrl(): string {
         return this._imageUrl
     }
-    get voteCount(): string {
+    get voteCount(): number {
         return this._voteCount
     }
-    get voteRate(): string {
+    get voteRate(): number {
         return this._voteRate
     }
 

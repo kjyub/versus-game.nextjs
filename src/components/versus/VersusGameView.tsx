@@ -16,6 +16,7 @@ import { useSession } from "next-auth/react"
 import VersusChoiceView from "./inputs/VersusChoiceView"
 import { nanoid } from "nanoid"
 import { Dictionary } from "@/types/common/Dictionary"
+import VersusGameViewComment from "./VersusGameViewComment"
 
 const INIT_CHOICES = [
     new VersusGameChoice(),
@@ -106,6 +107,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             for (let i = 0; i < _game.choices.length; i++) {
                 const _choice: VersusGameChoice = _game.choices[i]
 
+                // 선택한 선택지가 있으면 게임 결과 표시
                 if (_choice.id === answerId) {
                     answer = _choice
                     setShowResult(true)
@@ -135,6 +137,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             return
         }
 
+        // 데이터 정리
         const totalDatas: Array<object> = response["totalCount"] ?? []
         if (totalDatas.length === 0) {
             return
@@ -152,6 +155,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             choiceDic.push(choiceData["_id"] ?? "", choiceData["count"] ?? 0)
         })
 
+        // 선택지 결과 계산 및 값 설정
         let _choices = choices.map((_choice) => {
             if (choiceDic.contains(_choice.id)) {
                 _choice.voteCount = choiceDic.getValue(_choice.id)
@@ -244,9 +248,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                 </button>
             </VersusStyles.GameViewSelectLayout>
 
-            <VersusStyles.GameViewCommentLayout>
-                <span className="title">댓글</span>
-            </VersusStyles.GameViewCommentLayout>
+            <VersusGameViewComment game={game} answerChoice={answerChoice} isShowResult={isShowResult} />
         </VersusStyles.GameViewLayout>
     )
 }
