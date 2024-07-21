@@ -21,6 +21,13 @@ const schema = new Schema(
             type: String,
             required: true,
         },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "users",
+            default: function() {
+                return this.userId
+            }
+        },
         content: {
             type: String,
             required: true,

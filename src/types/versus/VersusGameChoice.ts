@@ -1,6 +1,7 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 import CommonUtils from "@/utils/CommonUtils"
+import ApiUtils from "@/utils/ApiUtils"
 
 export default class VersusGameChoice extends AbsApiObject {
     private _id: string
@@ -48,6 +49,10 @@ export default class VersusGameChoice extends AbsApiObject {
         }
 
         return data
+    }
+
+    getThumbnail(): string {
+        return ApiUtils.mediaUrl(this._imageUrl)
     }
 
     get id(): string {

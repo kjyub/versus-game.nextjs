@@ -11,6 +11,7 @@ import CommonUtils from "@/utils/CommonUtils"
 import AuthUtils from "@/utils/AuthUtils"
 import { IPaginationResponse } from "@/types/common/Responses"
 import MVersusGameComment from "@/models/versus/MVersusGameComment"
+import MUser from "@/models/user/MUser"
 
 // 게임의 댓글들을 반환한다.
 export async function GET(req: NextRequest) {
@@ -52,13 +53,21 @@ export async function GET(req: NextRequest) {
         .sort({ createdAt: 1 })
         .skip((pageIndex - 1) * pageSize)
         .limit(pageSize)
+        .populate("user")
+
+    const formattedData = comments.map(comment => ({
+        ...comment._doc,
+        created: CommonUtils.getMoment(comment.createdAt).fromNow(),
+        updated: CommonUtils.getMoment(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
+    }));
 
     const result: IPaginationResponse = {
         itemCount: itemCount,
         pageIndex: pageIndex,
         maxPage: maxPage,
-        items: comments
+        items: formattedData
     }
+
         
     return ApiUtils.response(result)
 }

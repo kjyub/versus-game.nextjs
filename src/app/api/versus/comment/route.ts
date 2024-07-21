@@ -13,6 +13,7 @@ import CommonUtils from "@/utils/CommonUtils"
 import MVersusGame from "@/models/versus/MVersusGame"
 import MVersusGameComment from "@/models/versus/MVersusGameComment"
 import { IPaginationResponse } from "@/types/common/Responses"
+import MUser from "@/models/user/MUser"
 
 // 유저가 댓글을 작성한다.
 export async function POST(req: NextRequest) {
@@ -22,6 +23,12 @@ export async function POST(req: NextRequest) {
 
     const session = await auth()
     if (CommonUtils.isNullOrUndefined(session)) {
+        return ApiUtils.notAuth()
+    }
+
+    // 유저 확인
+    const mUser = await MUser.findOne({ _id: session?.user._id })
+    if (CommonUtils.isNullOrUndefined(mGame)) {
         return ApiUtils.notAuth()
     }
 
@@ -37,6 +44,7 @@ export async function POST(req: NextRequest) {
         gameId: gameId,
         gameChoiceId: gameChoiceId,
         userId: session?.user._id,
+        user: mUser,
         content: content
     })
 

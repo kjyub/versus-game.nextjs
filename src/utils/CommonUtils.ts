@@ -1,4 +1,7 @@
 import { TextFormats } from "@/types/CommonTypes"
+import dayjs from "dayjs"
+import moment, { Moment } from "moment"
+import 'moment/locale/ko';
 
 export default class CommonUtils {
     static isNullOrUndefined(data: any): boolean {
@@ -92,5 +95,27 @@ export default class CommonUtils {
         // 정규식: 최소 6자리, 영문자와 숫자 포함
         const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/
         return regex.test(value)
+    }
+    // 현재 사용안함
+    static relativeDateTime(dateString: string): string {
+        const datetime = dayjs(dateString)
+        
+        if (!datetime.isValid()) {
+            return "-"
+        }
+
+        const now = dayjs()
+        const oneMonthAgo = now.subtract(30, "day")
+
+        
+        if (datetime.isBefore(oneMonthAgo)) {
+            // 1달 보다 전이면 날짜로 표기
+        } else {
+            // 1달 이내면 상대날짜로 표기
+        }
+    }
+    static getMoment(dateString: string | null): Moment {
+        const m = new moment(dateString)
+        return m
     }
 }

@@ -1,6 +1,7 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 import CommonUtils from "@/utils/CommonUtils"
+import User from "../user/User"
 
 export default class VersusGameComment extends AbsApiObject {
     private _id: string
@@ -8,9 +9,13 @@ export default class VersusGameComment extends AbsApiObject {
     private _gameId: string
     private _gameChoiceId: string
     private _userId: string
+    private _user: User
     private _content: string
     private _voteUps: number
     private _voteDowns: number
+
+    private _created: string
+    private _updated: string
 
     constructor() {
         super()
@@ -19,9 +24,13 @@ export default class VersusGameComment extends AbsApiObject {
         this._gameId = ""
         this._gameChoiceId = ""
         this._userId = ""
+        this._user = new User()
         this._content = ""
         this._voteUps = 0
         this._voteDowns = 0
+
+        this._created = ""
+        this._updated = ""
     }
 
     parseResponse(json: object) {
@@ -30,9 +39,16 @@ export default class VersusGameComment extends AbsApiObject {
         if (json.gameId) this._gameId = json.gameId
         if (json.gameChoiceId) this._gameChoiceId = json.gameChoiceId
         if (json.userId) this._userId = json.userId
+        if (json.user) {
+            this._user = new User()
+            this._user.parseResponse(json.user)
+        }
         if (json.content) this._content = json.content
         if (json.voteUps) this._voteUps = json.voteUps
         if (json.voteDowns) this._voteDowns = json.voteDowns
+
+        if (json.created) this._created = json.created
+        if (json.updated) this._updated = json.updated
     }
 
     parseRequest(): object {
@@ -61,6 +77,9 @@ export default class VersusGameComment extends AbsApiObject {
     get userId(): string {
         return this._userId
     }
+    get user(): User {
+        return this._user
+    }
     get content(): string {
         return this._content
     }
@@ -69,6 +88,13 @@ export default class VersusGameComment extends AbsApiObject {
     }
     get voteDowns(): number {
         return this._voteDowns
+    }
+
+    get created(): string {
+        return this._created
+    }
+    get updated(): string {
+        return this._updated
     }
 
     // set title(v: string) {
