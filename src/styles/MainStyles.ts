@@ -8,7 +8,8 @@ export const Body = tw.body`
 
 export const NavBox = tw.div`
     sticky top-0 z-50
-    flex justify-center items-center w-screen h-14
+    flex justify-center items-center w-screen h-14 mb-2
+    backdrop-blur-xl
     [&>.title]:text-xl [&>.title]:font-bold [&>.title]:text-black
 `
 
@@ -19,8 +20,8 @@ export const NavButtonContainer = tw.div`
 export const NavButton = tw.button`
     flex justify-center items-center 
     max-sm:px-2 sm:px-4 py-1
-    rounded-md hover:bg-black/10
-    text-black/70 text-base font-semibold
+    rounded-md hover:bg-black/20
+    text-stone-800/80 text-lg font-semibold
     duration-200
 `
 

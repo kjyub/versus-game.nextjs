@@ -44,7 +44,7 @@ export default async function RootLayout({
             >
                 <BgBubbleBox />
                 <SessionProvider session={session}>
-                    <div className="absolute z-0 w-full h-full overflow-x-hidden overflow-y-auto scroll-transparent">
+                    <div className="absolute z-0 w-full h-full overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
                         <Navigation />
                         {children}
                     </div>

@@ -71,7 +71,8 @@ const Navigation = ({}: INavigation) => {
                             // setUserShow(!isUserShow)
                         }}
                     >
-                        게임 추가
+                        <i className="fa-solid fa-gamepad mr-2"></i>
+                        게임 만들기
                     </MainStyles.NavButton>
                 </Link>
             </MainStyles.ItemAddButtonContainer>
