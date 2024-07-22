@@ -4,6 +4,7 @@ import ApiUtils from "@/utils/ApiUtils"
 import { NextApiRequest } from "next"
 import CommonUtils from "@/utils/CommonUtils"
 import bcryptjs from "bcryptjs"
+import { auth } from "@/auth"
 
 export async function GET(req: NextApiRequest, { params }: { id: string }) {
     const { id } = params
@@ -22,9 +23,21 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
     let data = await req.json()
 
     await DBUtils.connect()
+
+    const session = await auth()
+    // 유저 확인
+    if (!session.user) {
+        return ApiUtils.notAuth()
+    }
+
     const user = await MUser.findOne({ _id: id })
     if (CommonUtils.isNullOrUndefined(user)) {
         return ApiUtils.notFound("회원을 찾을 수 없습니다.")
+    }
+
+    // 본인 데이터인지 확인
+    if (session.user._id !== String(user._id)) {
+        return ApiUtils.notAuth()
     }
 
     const passwordCurrent = data["passwordCurrent"] ?? ""
@@ -51,9 +64,11 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
 
     await MUser.findByIdAndUpdate(id, data).exec()
 
-    if (!user) {
+    const updatedUser = await MUser.findOne({ _id: id })
+
+    if (!updatedUser) {
         return ApiUtils.badRequest("회원을 찾을 수 없습니다.")
     }
 
-    return ApiUtils.response(user)
+    return ApiUtils.response(updatedUser)
 }
