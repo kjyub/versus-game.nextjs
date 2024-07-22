@@ -31,7 +31,7 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
 
 export async function PUT(req: NextRequest, { params }: { id: string }) {
     const { id } = params
-    const { title, content, thumbnailImageId, choices, choiceCountType } =
+    const { title, content, thumbnailImageId, thumbnailImageType, privacyType, choices, choiceCountType } =
         await req.json()
 
     await DBUtils.connect()
@@ -71,6 +71,8 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
     mGame.userId = session?.user?._id
     mGame.thumbnailImageId = thumbnailImageId
     mGame.thumbnailImageUrl = thumbnailImageUrl
+    mGame.thumbnailImageType = thumbnailImageType
+    mGame.privacyType = privacyType
     mGame.choices = choices
     mGame.choiceCountType = choiceCountType
 

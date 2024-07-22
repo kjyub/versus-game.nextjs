@@ -9,29 +9,46 @@ import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import MFile from "@/models/file/MFile"
 import { nanoid } from "nanoid"
 import AuthUtils from "@/utils/AuthUtils"
+import { PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
+import CommonUtils from "@/utils/CommonUtils"
 
 export async function GET(req: NextRequest) {
+    console.log("privacyType", req.nextUrl.searchParams, req.nextUrl.search)
     let filter = {
         isDeleted: false,
+        privacyType: PrivacyTypes.PUBLIC,
     }
 
     const searchValue = req.nextUrl.searchParams.get("search")
     if (searchValue !== null) {
         filter["title"] = new RegExp(searchValue, "i")
     }
+    
+    const privacyType = req.nextUrl.searchParams.get("privacyType")
+    // 공개 옵션 필터가 없는 경우 public으로만 검색한다.
+    if (privacyType === null) {
+        filter["privacyType"] = PrivacyTypes.PUBLIC
+    } else {
+        const session = await auth()
+        let userId: string = AuthUtils.getUserOrGuestId(req, session)
+        console.log("userId", userId)
+
+        // 로그인 했으면 내 userId로 필터링 건다
+        if (!CommonUtils.isStringNullOrEmpty(userId)) {
+            filter["userId"] = userId
+        }
+    }
 
     await DBUtils.connect()
     const mGames = await MVersusGame.find(filter).sort({
         createdAt: -1,
     })
-    const session = await auth()
-    let userId: string = AuthUtils.getUserOrGuestId(req, session)
 
     return ApiUtils.response(mGames)
 }
 
 export async function POST(req: NextRequest) {
-    const { title, content, thumbnailImageId, choices, choiceCountType } =
+    const { title, content, thumbnailImageId, thumbnailImageType, privacyType, choices, choiceCountType } =
         await req.json()
 
     await DBUtils.connect()
@@ -67,6 +84,8 @@ export async function POST(req: NextRequest) {
         userId: session?.user?._id,
         thumbnailImageId: thumbnailImageId,
         thumbnailImageUrl: thumbnailImageUrl,
+        thumbnailImageType: thumbnailImageType,
+        privacyType: privacyType,
         choices: choices,
         choiceCountType: choiceCountType,
     })

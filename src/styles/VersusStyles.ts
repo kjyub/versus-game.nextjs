@@ -3,6 +3,13 @@ import { StyleProps } from "@/types/StyleTypes"
 import { ChoiceSelectStatus } from "@/types/VersusTypes"
 import tw from "tailwind-styled-components"
 
+export const ModalLayout = tw.div`
+    flex flex-col p-4
+    rounded-lg bg-white/70 backdrop-blur-lg
+
+    [&>.title]:font-semibold [&>.title]:text-stone-700 [&>.title]:text-lg
+`
+
 export const MainSearchLayout = tw.div`
     flex flex-col max-sm:w-screen sm:w-128 px-4
 `
@@ -46,11 +53,17 @@ export const EditorControlLayout = tw.div`
     flex justify-between w-full space-x-4
 `
 export const EditorControlButton = tw.button`
-    flex flex-center px-7 py-3
+    flex flex-center px-7 h-14
     rounded-full backdrop-blur
     bg-black/40 hover:bg-black/60
     text-lg text-stone-100
     duration-200
+`
+export const EditorPrivacySetButton = tw(EditorControlButton)`
+    !justify-start w-36 space-x-3
+    bg-black/30 hover:bg-black/40 
+    [&>div>.title]:text-xs [&>div>.title]:text-stone-300
+    [&>div>.value]:text-sm [&>div>.value]:text-stone-100
 `
 
 export const InputContainer = tw.div`
@@ -297,4 +310,21 @@ export const CommentPaginationButton = tw.button`
     text-stone-300
     duration-200
     ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent hover:bg-black/20")}
+`
+
+
+export const PrivacyModalLayout = tw(ModalLayout)`
+    max-sm:w-[90vw] sm:w-96
+`
+export const PrivacyModalItem = tw.div`
+    flex items-center w-full p-3 space-y-0
+    rounded-lg border border-transparent
+    ${(props: StyleProps) => (props.$is_active ? "bg-stone-200/70 border-stone-400" : "bg-transparent hover:bg-stone-200/60")}
+    duration-200 cursor-pointer
+    
+    [&>i]:flex [&>i]:justify-center [&>i]:items-center [&>i]:h-10 [&>i]:aspect-square [&>i]:mr-2 
+    [&>i]:text-xl [&>i]:text-stone-600
+    [&>.info]:flex [&>.info]:flex-col
+    [&>.info>.title]:font-medium [&>.info>.title]:text-stone-600 [&>.info>.title]:text-lg
+    [&>.info>.content]:font-light [&>.info>.content]:text-stone-500 [&>.info>.content]:text-sm
 `

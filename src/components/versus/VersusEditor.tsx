@@ -15,7 +15,9 @@ import ApiUtils from "@/utils/ApiUtils"
 import { useRouter } from "next/navigation"
 import CommonUtils from "@/utils/CommonUtils"
 import { useSession } from "next-auth/react"
-import { ThumbnailImageTypes } from "@/types/VersusTypes"
+import { PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
+import ModalContainer from "../ModalContainer"
+import VersusPrivacyModal from "./modals/VersusPrivacyModal"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
 const VersusMainSearch = dynamic(
@@ -41,7 +43,12 @@ export default function VersusEditor({
     const [thumbnailType, setThumbnailType] = useState<ThumbnailImageTypes>(
         ThumbnailImageTypes.IMAGE,
     )
+    const [privacyType, setPrivacyType] = useState<PrivacyTypes>(
+        PrivacyTypes.PUBLIC,
+    )
     const [choiceCountType, setChoiceCountType] = useState<number>(200) // 백자리 수 부턴 선택 개수, 십자리 수 까진 개수별 레이아웃
+
+    const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false)
 
     useEffect(() => {
         // const handleBeforeUnload = (event) => {
@@ -67,6 +74,14 @@ export default function VersusEditor({
     useEffect(() => {
         game.content = content
     }, [content])
+
+    useEffect(() => {
+        game.thumbnailType = thumbnailType
+    }, [thumbnailType])
+    
+    useEffect(() => {
+        game.privacyType = privacyType
+    }, [privacyType])
 
     // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
     const updateGameInit = (data: object) => {
@@ -106,6 +121,8 @@ export default function VersusEditor({
         setTitle(_game.title)
         setContent(_game.content)
         setChoiceCountType(_game.choiceCountType)
+        setThumbnailType(_game.thumbnailImageType)
+        setPrivacyType(_game.privacyType)
     }
 
     const updateThumbnail = (file: VersusFile) => {
@@ -122,6 +139,8 @@ export default function VersusEditor({
             title: game.title,
             content: game.content,
             thumbnailImageId: game.thumbnailImageId,
+            thumbnailImageType: game.thumbnailType,
+            privacyType: game.privacyType,
             choices: game.choices.map((_c) => _c.parseRequest()),
             choiceCountType: choiceCountType,
         }
@@ -270,14 +289,37 @@ export default function VersusEditor({
                 >
                     삭제
                 </VersusStyles.EditorControlButton>
-                <VersusStyles.EditorControlButton
-                    onClick={() => {
-                        handleSave()
-                    }}
-                >
-                    저장
-                </VersusStyles.EditorControlButton>
+                <div className="flex items-center space-x-2">
+                    <VersusStyles.EditorPrivacySetButton
+                        onClick={()=>{setShowPrivacy(true)}}
+                    >
+                        {PrivacyTypeIcons[privacyType]}
+                        <div className="flex flex-col items-start">
+                            <span className="title">공개 옵션</span>
+                            <span className="value">{PrivacyTypeNames[privacyType]}</span>
+                        </div>
+                    </VersusStyles.EditorPrivacySetButton>
+                    <VersusStyles.EditorControlButton
+                        onClick={() => {
+                            handleSave()
+                        }}
+                    >
+                        저장
+                    </VersusStyles.EditorControlButton>
+                </div>
             </VersusStyles.EditorControlLayout>
+
+            <ModalContainer
+                isOpen={isShowPrivacy}
+                setIsOpen={setShowPrivacy}
+                isBlur={true}
+            >
+                <VersusPrivacyModal
+                    privacyType={privacyType}
+                    setPrivacyType={setPrivacyType}
+                    close={()=>{setShowPrivacy(false)}}
+                />
+            </ModalContainer>
         </VersusStyles.EditorLayout>
     )
 }

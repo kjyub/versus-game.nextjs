@@ -61,6 +61,10 @@ const schema = new Schema(
         thumbnailImageType: {
             type: Number,
         },
+        privacyType: {
+            type: Number,
+            default: 0,
+        },
         views: {
             type: Number,
             required: true,
