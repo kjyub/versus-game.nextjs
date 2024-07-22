@@ -37,7 +37,7 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
 
     // 본인 데이터인지 확인
     if (session.user._id !== String(user._id)) {
-        return ApiUtils.notAuth()
+        return ApiUtils.notAuth("권한이 없습니다.")
     }
 
     const passwordCurrent = data["passwordCurrent"] ?? ""

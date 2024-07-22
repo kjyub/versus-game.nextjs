@@ -20,6 +20,10 @@ export default function VersusCommentPagination({pageIndex, pageSize, maxPage, m
     useEffect(() => {
         let _pages = []
 
+        if (maxPage === 0) {
+            return
+        }
+
         // let _pageCount = Math.ceil(itemCount / pageSize)
         // setPageCount(_pageCount)
 

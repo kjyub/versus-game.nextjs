@@ -100,9 +100,9 @@ export default class VersusGameComment extends AbsApiObject {
     // set title(v: string) {
     //     this._title = v
     // }
-    // set content(v: string) {
-    //     this._content = v
-    // }
+    set content(v: string) {
+        this._content = v
+    }
     // set imageId(v: string) {
     //     this._imageId = v
     // }

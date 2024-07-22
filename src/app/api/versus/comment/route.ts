@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     // 유저 확인
     const mUser = await MUser.findOne({ _id: session?.user._id })
-    if (CommonUtils.isNullOrUndefined(mGame)) {
+    if (CommonUtils.isNullOrUndefined(mUser)) {
         return ApiUtils.notAuth()
     }
 

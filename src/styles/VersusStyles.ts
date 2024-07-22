@@ -235,9 +235,9 @@ export const ChoiceImageContentBox = tw.div`
 export const GameViewChoiceResultBox = tw.div`
     absolute z-10
     ${(props: StyleProps) => (props.$is_show ? "bottom-4" : "-bottom-8")}
-    flex items-center py-1
+    flex items-center px-1 py-1
     divide-x divide-stone-300
-    rounded-md bg-white/80 backdrop-blur
+    rounded-full bg-white/80 backdrop-blur
     font-medium text-rose-600 text-sm
     duration-300
     [&>div]:px-2
@@ -245,7 +245,7 @@ export const GameViewChoiceResultBox = tw.div`
 
 export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
     flex flex-row items-center h-12 space-x-2 py-0
-    [&>button]:h-full [&>button]:rounded-lg
+    [&>button]:h-full [&>button]:rounded-full
     [&>button]:font-medium [&>button]:text-white
     [&>button]:backdrop-blur [&>button]:duration-300
     disabled:[&>button]:grayscale disabled:[&>button]:text-stone-300
@@ -266,18 +266,25 @@ export const GameViewCommentBox = tw.div`
     rounded-md bg-black/20
 `
 export const GameViewCommentInputBox = tw.div`
-    flex items-center w-full px-2 py-2 space-x-2
+    flex items-start w-full px-2 py-2 space-x-2
     rounded-md bg-black/40
     border border-stone-500
-    ${(props: StyleProps) => (props.$is_focus ? "border-slate-200/70" : "")}
+    ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}
     duration-200
     
-    [&>input]:flex-1 [&>input]:bg-transparent [&>input]:text-stone-300
+    [&>textarea]:flex-1 [&>textarea]:p-1 [&>textarea]:resize-none
+    [&>textarea]:bg-transparent [&>textarea]:text-stone-300
 `
 export const GameViewCommentInputButton = tw.button`
     px-3 py-1 rounded-md 
-    ${(props: StyleProps) => (props.$is_active ? "text-rose-500 hover:text-rose-600 " : "text-stone-400")}
+    ${(props: StyleProps) => (props.$is_active ? "text-rose-500 hover:text-rose-600" : "text-stone-400")}
     font-semibold 
+    duration-200
+`
+export const GameViewCommentEditButton = tw.button`
+    px-2 py-1
+    rounded-md text-sm
+    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-400")}
     duration-200
 `
 

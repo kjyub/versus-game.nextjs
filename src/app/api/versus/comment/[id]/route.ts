@@ -32,7 +32,8 @@ export async function GET(req: NextRequest) {
     }
 
     let filter = {
-        gameId: String(mGame._id)
+        gameId: String(mGame._id),
+        isDeleted: false
     }
     const filterGameChoiceId = req.nextUrl.searchParams.get("gameChoiceId")
     if (!CommonUtils.isStringNullOrEmpty(filterGameChoiceId)) {
@@ -49,13 +50,24 @@ export async function GET(req: NextRequest) {
         pageIndex = maxPage
     }
 
-    const comments = await MVersusGameComment.find(filter)
+    if ((await MVersusGameComment.find(filter)).length === 0) {
+        const result: IPaginationResponse = {
+            itemCount: 0,
+            pageIndex: 1,
+            maxPage: 0,
+            items: []
+        }
+    
+        return ApiUtils.response(result)
+    }
+
+    const items = await MVersusGameComment.find(filter)
         .sort({ createdAt: 1 })
         .skip((pageIndex - 1) * pageSize)
         .limit(pageSize)
         .populate("user")
 
-    const formattedData = comments.map(comment => ({
+    const formattedItems = items.map(comment => ({
         ...comment._doc,
         created: CommonUtils.getMoment(comment.createdAt).fromNow(),
         updated: CommonUtils.getMoment(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
@@ -65,9 +77,89 @@ export async function GET(req: NextRequest) {
         itemCount: itemCount,
         pageIndex: pageIndex,
         maxPage: maxPage,
-        items: formattedData
+        items: formattedItems
     }
-
         
     return ApiUtils.response(result)
+}
+
+// 유저가 댓글을 수정한다.
+export async function PUT(req: NextRequest, { params }: { id: string }) {
+    const { content } = await req.json()
+    const { id } = params
+
+    await DBUtils.connect()
+
+    // 댓글 확인
+    let mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false })
+    if (CommonUtils.isNullOrUndefined(mComment)) {
+        return ApiUtils.badRequest("댓글을 찾을 수 없습니다.")
+    }
+
+    // 유저 확인
+    const session = await auth()
+    if (CommonUtils.isNullOrUndefined(session)) {
+        return ApiUtils.notAuth("유저를 찾을 수 없습니다.")
+    }
+
+    const mUser = await MUser.findOne({ _id: session?.user._id })
+    if (CommonUtils.isNullOrUndefined(mUser)) {
+        return ApiUtils.notAuth("유저를 찾을 수 없습니다.")
+    }
+
+    if (String(mUser._id) !== String(mComment.userId)) {
+        return ApiUtils.badRequest("권한이 없습니다.")
+    }
+
+    // 수정
+    mComment.content = content
+
+    try {
+        const result = await mComment.save()
+
+        return ApiUtils.response(result)
+    } catch (err: any) {
+        console.log("에러", err)
+        return ApiUtils.serverError(err)
+    }
+}
+
+// 유저가 댓글을 삭제한다.
+export async function DELETE(req: NextRequest, { params }: { id: string }) {
+    const { id } = params
+
+    await DBUtils.connect()
+
+    // 댓글 확인
+    let mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false })
+    if (CommonUtils.isNullOrUndefined(mComment)) {
+        return ApiUtils.badRequest("댓글을 찾을 수 없습니다.")
+    }
+
+    // 유저 확인
+    const session = await auth()
+    if (CommonUtils.isNullOrUndefined(session)) {
+        return ApiUtils.notAuth("유저를 찾을 수 없습니다.")
+    }
+
+    const mUser = await MUser.findOne({ _id: session?.user._id })
+    if (CommonUtils.isNullOrUndefined(mUser)) {
+        return ApiUtils.notAuth("유저를 찾을 수 없습니다.")
+    }
+
+    if (String(mUser._id) !== String(mComment.userId)) {
+        return ApiUtils.badRequest("권한이 없습니다.")
+    }
+
+    // 삭제
+    mComment.isDeleted = true
+
+    try {
+        const result = await mComment.save()
+
+        return ApiUtils.response(result)
+    } catch (err: any) {
+        console.log("에러", err)
+        return ApiUtils.serverError(err)
+    }
 }

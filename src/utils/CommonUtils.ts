@@ -2,6 +2,7 @@ import { TextFormats } from "@/types/CommonTypes"
 import dayjs from "dayjs"
 import moment, { Moment } from "moment"
 import 'moment/locale/ko';
+import { FormEventHandler } from "react";
 
 export default class CommonUtils {
     static isNullOrUndefined(data: any): boolean {
@@ -117,5 +118,15 @@ export default class CommonUtils {
     static getMoment(dateString: string | null): Moment {
         const m = new moment(dateString)
         return m
+    }
+    static setTextareaAutoHeight(e: any) {
+        const element = e.target
+
+        if (!element) {
+            return
+        }
+
+        element.style.height = "auto"
+        element.style.height = (Number(element.scrollHeight) + 4) + "px"
     }
 }
