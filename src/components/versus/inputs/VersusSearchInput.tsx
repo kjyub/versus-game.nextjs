@@ -21,6 +21,10 @@ const VersusSearchInput = ({
         }
     }
 
+    const handleClear = () => {
+        setValue("")
+    }
+
     return (
         // <></>
         <VersusStyles.SearchInputBox>
@@ -32,6 +36,11 @@ const VersusSearchInput = ({
                 }}
                 onKeyDown={handleKeyDown}
             />
+            <i 
+                className={`clear fa-solid fa-circle-xmark ${!CommonUtils.isStringNullOrEmpty(value) ? "opacity-100" : "opacity-0"}`}
+                onClick={()=>{handleClear()}}
+            />
+            <i className="search fa-solid fa-magnifying-glass"></i>
         </VersusStyles.SearchInputBox>
     )
 }

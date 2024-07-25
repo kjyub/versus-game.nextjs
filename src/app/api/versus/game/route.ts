@@ -13,10 +13,8 @@ import { PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
 import CommonUtils from "@/utils/CommonUtils"
 
 export async function GET(req: NextRequest) {
-    console.log("privacyType", req.nextUrl.searchParams, req.nextUrl.search)
     let filter = {
         isDeleted: false,
-        privacyType: PrivacyTypes.PUBLIC,
     }
 
     const searchValue = req.nextUrl.searchParams.get("search")
@@ -24,19 +22,15 @@ export async function GET(req: NextRequest) {
         filter["title"] = new RegExp(searchValue, "i")
     }
     
-    const privacyType = req.nextUrl.searchParams.get("privacyType")
-    // 공개 옵션 필터가 없는 경우 public으로만 검색한다.
-    if (privacyType === null) {
-        filter["privacyType"] = PrivacyTypes.PUBLIC
-    } else {
-        const session = await auth()
-        let userId: string = AuthUtils.getUserOrGuestId(req, session)
-        console.log("userId", userId)
+    const myGames = req.nextUrl.searchParams.get("myGames")
+    const userId = req.nextUrl.searchParams.get("userId")
 
-        // 로그인 했으면 내 userId로 필터링 건다
-        if (!CommonUtils.isStringNullOrEmpty(userId)) {
-            filter["userId"] = userId
-        }
+    // 내 게임이 활성화되고 userId가 있으면 내 게임만 검색한다.
+    if (myGames !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
+        filter["userId"] = userId
+    } else {
+        // 공개 옵션 필터가 없는 경우 public으로만 검색한다.
+        filter["privacyType"] = PrivacyTypes.PUBLIC
     }
 
     await DBUtils.connect()

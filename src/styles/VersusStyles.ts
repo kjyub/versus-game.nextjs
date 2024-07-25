@@ -11,15 +11,28 @@ export const ModalLayout = tw.div`
 `
 
 export const MainSearchLayout = tw.div`
-    flex flex-col max-sm:w-screen sm:w-128 px-4
+    flex flex-col max-sm:w-screen sm:w-128 px-4 space-y-2
+`
+export const MainSearchFilterMenuBox = tw.div`
+    flex justify-between items-center w-full
+    [&>div.section]:flex [&>div.section]:items-center [&>div.section]:space-x-2
+`
+export const MainSearchFilterMenuButton = tw.button`
+    flex flex-center px-2.5 py-1
+    rounded-md text-sm
+    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/70 hover:bg-stone-100/90 text-stone-600" : "text-stone-300 bg-black/40 hover:bg-black/50")}
+    duration-200
 `
 
 export const SearchInputBox = tw.div`
-    flex items-center px-4 py-2
+    flex items-center px-5 py-2
     rounded-full bg-black/50 backdrop-blur
     text-white/90
 
     [&>input]:w-full [&>input]:bg-transparent
+    [&>i.clear]:ml-2 [&>i.clear]:mr-4 [&>i.clear]:text-stone-400 hover:[&>i.clear]:text-stone-300
+    [&>i.search]:text-stone-300 hover:[&>i.search]:text-stone-100 [&>i.search]:text-lg
+    [&>i]:cursor-pointer [&>i]:duration-200
 `
 
 export const PageLayout = tw(MainStyles.PageLayout)`
@@ -62,8 +75,8 @@ export const EditorControlButton = tw.button`
 export const EditorPrivacySetButton = tw(EditorControlButton)`
     !justify-start w-36 space-x-3
     bg-black/30 hover:bg-black/40 
-    [&>div>.title]:text-xs [&>div>.title]:text-stone-300
-    [&>div>.value]:text-sm [&>div>.value]:text-stone-100
+    [&>div>.title]:font-light [&>div>.title]:text-xs [&>div>.title]:text-stone-300
+    [&>div>.value]:font-medium [&>div>.value]:text-sm [&>div>.value]:text-stone-100
 `
 
 export const InputContainer = tw.div`
