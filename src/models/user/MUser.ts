@@ -18,6 +18,10 @@ const userSchema = new Schema(
             required: true,
             default: "",
         },
+        isDeleted: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true },
 )

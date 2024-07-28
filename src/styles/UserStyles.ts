@@ -30,7 +30,11 @@ export const LoginTitleBox = tw.div`
 `
 export const LoginButton = tw.button`
     flex items-center w-fit px-8 py-2
-    rounded-xl bg-gradient-to-r from-rose-700 to-rose-500
+    rounded-xl 
+    ${(props: StyleProps) =>
+        props.disabled
+            ? "bg-stone-500"
+            : "bg-gradient-to-r from-rose-700 to-rose-500"}
     text-white font-medium
     shadow-lg hover:shadow-xl
     duration-200

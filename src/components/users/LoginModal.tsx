@@ -211,6 +211,7 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
             
             <div className="flex justify-center items-center w-full mt-4 space-y-2">
                 <UserStyles.LoginButton
+                    disabled={!isAgree}
                     onClick={() => {
                         setPage(LoginModalPage.REGIST)
                     }}
@@ -311,7 +312,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
                 throw error
             }
         } else {
-            const _message = response["message"]
+            const _message = response["message"] ?? "실패했습니다."
             setErrorMessage(_message)
         }
     }

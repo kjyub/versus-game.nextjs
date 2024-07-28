@@ -90,6 +90,36 @@ const MyInfoModal = ({ isModalShow, user }: MyInfoModal) => {
         await signOut()
     }
 
+    const handleDelete = async () => {
+        if (!confirm("회원 탈퇴하시겠습니까?")) {
+            return
+        }
+
+        if (CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
+            alert("현재 비밀번호를 입력해주세요.")
+            return
+        }
+
+        let data = {
+            passwordCurrent
+        }
+
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/users/user_info/${user.id}`,
+            "DELETE",
+            null,
+            data,
+        )
+
+        if (bResult) {
+            alert("회원 탈퇴 처리되었습니다.")
+            await signOut()
+            return
+        } else {
+            alert(response["message"] ?? "요청 실패했습니다.")
+        }
+    }
+
     return (
         <UserStyles.MyInfoContainer>
             <UserStyles.MyInfoSection>
@@ -142,7 +172,10 @@ const MyInfoModal = ({ isModalShow, user }: MyInfoModal) => {
                             setValue={setPassword2}
                         />
                     </div>
-                    <button className="px-2 py-0 5 ml-auto text-stone-600 text-sm">
+                    <button 
+                        className="px-2 py-0 5 ml-auto text-stone-600 text-sm" 
+                        onClick={()=>{handleDelete()}}
+                    >
                         회원 탈퇴
                     </button>
                 </div>

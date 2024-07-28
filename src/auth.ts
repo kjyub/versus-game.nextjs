@@ -20,6 +20,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                 try {
                     const mUser = await MUser.findOne({
                         email: credentials.email,
+                        isDeleted: false
                     })
                     if (mUser) {
                         const isPasswordCorrect = await bcrypt.compare(

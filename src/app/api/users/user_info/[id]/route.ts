@@ -5,6 +5,7 @@ import { NextApiRequest } from "next"
 import CommonUtils from "@/utils/CommonUtils"
 import bcryptjs from "bcryptjs"
 import { auth } from "@/auth"
+import { nanoid } from "nanoid"
 
 export async function GET(req: NextApiRequest, { params }: { id: string }) {
     const { id } = params
@@ -71,4 +72,54 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
     }
 
     return ApiUtils.response(updatedUser)
+}
+
+export async function DELETE(req: NextApiRequest, { params }: { id: string }) {
+    const { id } = params
+    let data = await req.json()
+
+    await DBUtils.connect()
+
+    const session = await auth()
+    // 유저 확인
+    if (!session.user) {
+        return ApiUtils.notAuth()
+    }
+
+    const mUser = await MUser.findOne({ _id: id })
+    if (CommonUtils.isNullOrUndefined(mUser)) {
+        return ApiUtils.notFound("회원을 찾을 수 없습니다.")
+    }
+
+    // 본인 데이터인지 확인
+    if (session.user._id !== String(mUser._id)) {
+        return ApiUtils.notAuth("권한이 없습니다.")
+    }
+
+    const passwordCurrent = data["passwordCurrent"] ?? ""
+
+    // 비밀번호 변경 요청이 있는 경우
+    if (!CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
+        const isPasswordCorrect = await bcryptjs.compare(
+            passwordCurrent,
+            mUser.password,
+        )
+
+        // 현재 비밀번호가 다른 경우
+        if (!isPasswordCorrect) {
+            return ApiUtils.badRequest("현재 비밀번호가 틀립니다.")
+        }
+    }
+
+    mUser.email = mUser.email + `$${nanoid(6)}`
+    mUser.isDeleted = true
+    
+    try {
+        const resultUser = await mUser.save()
+
+        return ApiUtils.response(resultUser)
+    } catch (err: any) {
+        console.log("에러", err)
+        return ApiUtils.serverError(err)
+    }
 }
