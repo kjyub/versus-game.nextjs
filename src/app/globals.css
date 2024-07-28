@@ -64,7 +64,7 @@ textarea:focus {
     transition: all 0.3s;
 }
 .scroll-overlay {
-    scrollbar-gutter: auto;
+    scrollbar-gutter: stable both-edges;
 }
 
 ::-webkit-scrollbar {
@@ -170,6 +170,10 @@ textarea:focus {
     background: radial-gradient(#ff6b6b 1px, transparent 1px);
     background-size: 20px 20px;
     animation: moveDots 10s linear infinite;
+}
+
+.login-page-transition {
+    transition: top 0.75s cubic-bezier(0.25, 1, 0.4, 1);
 }
 
 @keyframes moveDots {

@@ -11,7 +11,7 @@ export const LoginContainer = tw.div`
 export const LoginPageContainer = tw.div`
     absolute
     flex flex-col w-full h-full p-4
-    duration-300
+    login-page-transition
 `
 export const LoginPageHead = tw.div`
     flex items-center w-full
@@ -41,6 +41,25 @@ export const LoginRegistButton = tw.button`
     hover:underline underline-offset-2
 `
 
+export const AgreeSection = tw.div`
+    flex flex-col w-full h-full p-2 space-y-2
+`
+export const AgreeTitleBox = tw.div`
+    flex justify-between items-center w-full
+    [&>.title]:font-semibold [&>.title]:text-stone-800
+    [&>.agree]:flex [&>.agree]:items-center [&>.agree]:px-2 [&>.agree]:py-1 [&>.agree]:space-x-1 
+    [&>.agree]:rounded-md hover:[&>.agree]:bg-stone-100/40
+    [&>.agree]:text-stone-500 [&>.agree.active]:text-indigo-600
+    [&>.agree]:duration-200 [&>.agree]:cursor-pointer
+`
+export const AgreeContent = tw.div`
+    flex w-full max-h-full px-3 py-2
+    rounded-md bg-stone-100/30
+    font-light text-sm text-stone-600
+    overflow-y-auto scroll-transparent scroll-overlay
+    [&>pre]:w-full
+`
+
 export const InputContainer = tw.div`
     flex flex-col w-full
 `
@@ -55,7 +74,7 @@ export const InputBox = tw.div`
             ? "bg-stone-500/10 [&>input]:text-stone-600"
             : "bg-stone-100/70 [&>input]:text-stone-700"}
     ${(props: StyleProps) =>
-        props.$is_focus ? "ring-2 ring-stone-400" : "ring-1 ring-stone-300"}
+        props.$is_focus ? "ring-2 ring-indigo-500" : "ring-1 ring-stone-300"}
     duration-300
     [&>input]:flex [&>input]:items-center [&>input]:w-full 
     [&>input]:bg-transparent [&>input]:text-sm

@@ -7,10 +7,12 @@ import { signIn, useSession } from "next-auth/react"
 import { AuthError } from "next-auth"
 import ApiUtils from "@/utils/ApiUtils"
 import { Credentials } from "next-auth/providers/credentials"
+import { SIGNUP_AGREEMENT } from "@/types/UserTypes"
 
 export enum LoginModalPage {
     LOGIN,
     REGIST,
+    REGIST_AGREE,
     FIND_PASSWORD,
 }
 
@@ -35,6 +37,11 @@ const LoginModal = ({
     return (
         <UserStyles.LoginContainer>
             <LoginPage page={page} setPage={setPage} />
+            <RegistAgreePage
+                page={page}
+                setPage={setPage}
+                setModalShow={setModalShow}
+            />
             <RegistPage
                 page={page}
                 setPage={setPage}
@@ -140,7 +147,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
                 </UserStyles.LoginButton>
                 <UserStyles.LoginRegistButton
                     onClick={() => {
-                        setPage(LoginModalPage.REGIST)
+                        setPage(LoginModalPage.REGIST_AGREE)
                     }}
                 >
                     회원가입
@@ -149,6 +156,73 @@ const LoginPage = ({ page, setPage }: IPage) => {
         </UserStyles.LoginPageContainer>
     )
 }
+
+
+const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
+    const [isAgree, setAgree] = useState<boolean>(false)
+
+    return (
+        <UserStyles.LoginPageContainer
+            className={`
+                ${page === LoginModalPage.LOGIN ? "top-full" : ""}
+                ${page === LoginModalPage.REGIST_AGREE ? "top-0" : ""}
+                ${page === LoginModalPage.REGIST ? "-top-full" : ""}
+            `}
+        >
+            <UserStyles.LoginPageHead>
+                <UserStyles.LoginPageHeadPageButton
+                    onClick={() => {
+                        setPage(LoginModalPage.LOGIN)
+                    }}
+                >
+                    이전
+                </UserStyles.LoginPageHeadPageButton>
+            </UserStyles.LoginPageHead>
+            <UserStyles.LoginTitleBox>
+                <h1>이용약관</h1>
+                <h3>회원가입 시 아래의 약관 동의가 필요합니다.</h3>
+            </UserStyles.LoginTitleBox>
+
+            <div className="flex flex-col w-full h-72 space-y-2">
+                <UserStyles.AgreeSection>
+                    <UserStyles.AgreeTitleBox>
+                        <span className="title">
+                            개인정보 동의
+                        </span>
+                        <div 
+                            className={`agree ${isAgree ? "active" : ""}`}
+                            onClick={()=>{setAgree(!isAgree)}}
+                        >
+                            <span>동의(필수)</span>
+                            {isAgree ? (
+                                <i className="fa-solid fa-circle-check"></i>
+                            ) : (
+                                <i className="fa-regular fa-circle"></i>
+                            )}
+                        </div>
+                    </UserStyles.AgreeTitleBox>
+                    <UserStyles.AgreeContent>
+                        <p>
+                        {SIGNUP_AGREEMENT}
+                        </p>
+                    </UserStyles.AgreeContent>
+                </UserStyles.AgreeSection>
+            </div>
+            
+            <div className="flex justify-center items-center w-full mt-4 space-y-2">
+                <UserStyles.LoginButton
+                    onClick={() => {
+                        setPage(LoginModalPage.REGIST)
+                    }}
+                >
+                    다음으로
+                </UserStyles.LoginButton>
+            </div>
+        </UserStyles.LoginPageContainer>
+    )
+}
+
+
 const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
     const [name, setName] = useState<string>("")
     const [email, setEmail] = useState<string>("")
@@ -244,14 +318,14 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
 
     return (
         <UserStyles.LoginPageContainer
-            className={`${
-                page === LoginModalPage.REGIST ? "top-0" : "top-full"
-            }`}
+            className={`
+                ${page === LoginModalPage.REGIST ? "top-0" : "top-full"}
+            `}
         >
             <UserStyles.LoginPageHead>
                 <UserStyles.LoginPageHeadPageButton
                     onClick={() => {
-                        setPage(LoginModalPage.LOGIN)
+                        setPage(LoginModalPage.REGIST_AGREE)
                     }}
                 >
                     이전
