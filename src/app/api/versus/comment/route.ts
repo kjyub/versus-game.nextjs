@@ -23,13 +23,13 @@ export async function POST(req: NextRequest) {
 
     const session = await auth()
     if (CommonUtils.isNullOrUndefined(session)) {
-        return ApiUtils.notAuth()
+        return ApiUtils.notAuth("로그인 후 이용 가능합니다.")
     }
 
     // 유저 확인
     const mUser = await MUser.findOne({ _id: session?.user._id })
     if (CommonUtils.isNullOrUndefined(mUser)) {
-        return ApiUtils.notAuth()
+        return ApiUtils.notAuth("회원 정보를 찾을 수 없습니다.")
     }
 
     // 게임 확인
