@@ -227,13 +227,16 @@ export default function VersusEditor({
         }
 
         if (saveResult) {
-            setTimeout(() => {
-                router.push("/")
-            }, 500)
+            router.push("/")
+            router.refresh()
         }
     }
 
     const handleDelete = async () => {
+        if (!confirm("정말 삭제하시겠습니까?")) {
+            return
+        }
+        
         const [bResult, statusCode, response] = await ApiUtils.request(
             `/api/versus/game/${game.nanoId}`,
             "DELETE",
@@ -250,6 +253,7 @@ export default function VersusEditor({
             return
         }
         router.push("/")
+        router.refresh()
     }
 
     return (
