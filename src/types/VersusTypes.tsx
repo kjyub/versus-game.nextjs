@@ -25,3 +25,6 @@ export const PrivacyTypeIcons = {
     1: <i className="fa-solid fa-link" />,
     2: <i className="fa-solid fa-eye-slash" />,
 }
+
+// ChoiceCountType에서 choice의 개수 구할 때 사용 ex) 300 -> 3개, 1200 -> 12개
+export const CHOICE_COUNT_CONST = 100 

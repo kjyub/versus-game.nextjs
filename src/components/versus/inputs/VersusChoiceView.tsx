@@ -11,11 +11,9 @@ import ImageDragAndDrop from "@/components/commons/inputs/ImageDragAndDrop"
 import VersusFile from "@/types/file/VersusFile"
 import CommonUtils from "@/utils/CommonUtils"
 import ApiUtils from "@/utils/ApiUtils"
-import { ChoiceSelectStatus } from "@/types/VersusTypes"
+import { CHOICE_COUNT_CONST, ChoiceSelectStatus } from "@/types/VersusTypes"
 import VersusChoiceProgressBar from "./VersusChoiceProgressBar"
 import { TextFormats } from "@/types/CommonTypes"
-
-const CHOICE_COUNT_CONST = 100
 
 interface IVersusChoiceView {
     game: VersusGame

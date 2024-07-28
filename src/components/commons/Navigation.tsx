@@ -61,15 +61,21 @@ const Navigation = ({}: INavigation) => {
         await ApiUtils.request("/api/users/user_check", "POST")
     }
 
+    const handleGameAdd = (e) => {
+        if (session.status !== "authenticated") {
+            e.preventDefault()
+            alert("로그인 후 이용가능합니다.")
+            return
+        }
+    }
+
     return (
         // <></>
         <MainStyles.NavBox>
             <MainStyles.ItemAddButtonContainer $is_show={true}>
                 <Link href={"/game/add"}>
                     <MainStyles.NavButton
-                        onClick={() => {
-                            // setUserShow(!isUserShow)
-                        }}
+                        onClick={handleGameAdd}
                     >
                         <i className="fa-solid fa-gamepad mr-2"></i>
                         게임 만들기

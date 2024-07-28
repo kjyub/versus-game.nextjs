@@ -5,9 +5,12 @@ import CommonUtils from "@/utils/CommonUtils"
 import * as VS from "@/styles/VersusStyles"
 import VersusSearchInput from "./inputs/VersusSearchInput"
 import { useRouter, useSearchParams } from "next/navigation"
+import { useSession } from "next-auth/react"
 
 interface IVersusMainSearch {}
 const VersusMainSearch = ({}: IVersusMainSearch) => {
+    const session = useSession()
+
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -83,12 +86,14 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
                 {/* 정렬 (사용 안할 수도 있음) */}
                 <div className="section"></div>
                 <div className="section">
-                    <VS.MainSearchFilterMenuButton 
-                        $is_active={isMyGame}
-                        onClick={()=>{handleMyGame()}}
-                    >
-                        내 게임
-                    </VS.MainSearchFilterMenuButton>
+                    {session.status === "authenticated" && (
+                        <VS.MainSearchFilterMenuButton 
+                            $is_active={isMyGame}
+                            onClick={()=>{handleMyGame()}}
+                        >
+                            내 게임
+                        </VS.MainSearchFilterMenuButton>
+                    )}
                 </div>
             </VS.MainSearchFilterMenuBox>
             <VersusSearchInput

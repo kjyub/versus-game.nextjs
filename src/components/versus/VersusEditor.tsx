@@ -15,7 +15,7 @@ import ApiUtils from "@/utils/ApiUtils"
 import { useRouter } from "next/navigation"
 import CommonUtils from "@/utils/CommonUtils"
 import { useSession } from "next-auth/react"
-import { PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
+import { CHOICE_COUNT_CONST, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
 import ModalContainer from "../ModalContainer"
 import VersusPrivacyModal from "./modals/VersusPrivacyModal"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
@@ -134,7 +134,41 @@ export default function VersusEditor({
         game.updateChoice(index, choice)
     }
 
+    // 게임 저장 유효성 검사
+    const gameValidate = () => {
+        let errorMessages: Array<string> = []
+        // 1. 제목 확인 (필수)
+        if (CommonUtils.isStringNullOrEmpty(game.title)) {
+            errorMessages.push("제목을 입력해 주세요.")
+        }
+
+        // 2. 썸네일 확인 (아직은 선택)
+
+        // 3. 선택지 확인 (선택지의 제목은 반드시 입력되어야 함)
+        let choiceCount = Math.floor(choiceCountType / CHOICE_COUNT_CONST)
+        for (let i=0; i<choiceCount; i++) {
+            const choice: VersusGameChoice = game.choices[i]
+
+            if (CommonUtils.isStringNullOrEmpty(choice.title)) {
+                errorMessages.push(`${i + 1}번 선택지의 제목을 입력해주세요`)
+            }
+        }
+
+        if (errorMessages.length > 0) {
+            alert(errorMessages.join("\n"))
+
+            return false
+        }
+
+        return true
+    }
+
     const handleSave = async () => {
+        // 유효성 검사
+        if (!gameValidate()) {
+            return
+        }
+
         const data = {
             title: game.title,
             content: game.content,
@@ -144,6 +178,9 @@ export default function VersusEditor({
             choices: game.choices.map((_c) => _c.parseRequest()),
             choiceCountType: choiceCountType,
         }
+
+        // 저장 성공 여부
+        let saveResult: boolean = false 
 
         if (CommonUtils.isStringNullOrEmpty(game.id)) {
             const [bResult, statusCode, response] = await ApiUtils.request(
@@ -167,7 +204,7 @@ export default function VersusEditor({
             newGame.parseResponse(response)
 
             if (!newGame.isEmpty()) {
-                router.push("/")
+                saveResult = true
             }
         } else {
             const [bResult, statusCode, response] = await ApiUtils.request(
@@ -186,7 +223,13 @@ export default function VersusEditor({
 
                 return
             }
-            router.push("/")
+            saveResult = true
+        }
+
+        if (saveResult) {
+            setTimeout(() => {
+                router.push("/")
+            }, 500)
         }
     }
 
@@ -282,13 +325,19 @@ export default function VersusEditor({
             </VersusStyles.EditorDataLayout>
 
             <VersusStyles.EditorControlLayout>
-                <VersusStyles.EditorControlButton
-                    onClick={() => {
-                        handleDelete()
-                    }}
-                >
-                    삭제
-                </VersusStyles.EditorControlButton>
+                {!CommonUtils.isStringNullOrEmpty(game.id) ? (
+                    <VersusStyles.EditorControlButton
+                        onClick={() => {
+                            handleDelete()
+                        }}
+                        >
+                        삭제
+                    </VersusStyles.EditorControlButton>
+                ) : (
+                    <div>
+
+                    </div>
+                )}
                 <div className="flex items-center space-x-2">
                     <VersusStyles.EditorPrivacySetButton
                         onClick={()=>{setShowPrivacy(true)}}

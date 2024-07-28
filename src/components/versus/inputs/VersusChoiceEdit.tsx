@@ -11,8 +11,7 @@ import ImageDragAndDrop from "@/components/commons/inputs/ImageDragAndDrop"
 import VersusFile from "@/types/file/VersusFile"
 import CommonUtils from "@/utils/CommonUtils"
 import ApiUtils from "@/utils/ApiUtils"
-
-const CHOICE_COUNT_CONST = 100
+import { CHOICE_COUNT_CONST } from "@/types/VersusTypes"
 
 interface IVersusChoiceEdit {
     game: VersusGame
