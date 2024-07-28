@@ -4,6 +4,7 @@ import dynamic from "next/dynamic"
 import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
 import { auth } from "@/auth"
+import { IPaginationResponse } from "@/types/common/Responses"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
 const VersusMainSearch = dynamic(
@@ -33,9 +34,9 @@ const getGameList = async (search: string | undefined, myGames: string | undefin
         params,
     )
 
-    if (!Array.isArray(response)) {
-        return []
-    }
+    // if (!Array.isArray(response)) {
+    //     return []
+    // }
 
     return response
 }
@@ -49,7 +50,9 @@ export default async function Home({ params, searchParams }) {
 
     const search = searchParams.search ? searchParams.search : ""
     const myGames = searchParams.myGames ? searchParams.myGames : ""
-    const gameData = await getGameList(search, myGames, userId)
+    const gameResult: IPaginationResponse = await getGameList(search, myGames, userId)
+
+    const gameData = gameResult.items
 
     return (
         <MainStyles.PageLayout>

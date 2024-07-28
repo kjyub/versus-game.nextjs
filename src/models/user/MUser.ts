@@ -1,3 +1,4 @@
+import { UserRole } from "@/types/UserTypes"
 import mongoose from "mongoose"
 
 const { Schema } = mongoose
@@ -17,6 +18,10 @@ const userSchema = new Schema(
             type: String,
             required: true,
             default: "",
+        },
+        userRole: {
+            type: Number,
+            default: UserRole.USER,
         },
         isDeleted: {
             type: Boolean,

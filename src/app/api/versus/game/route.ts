@@ -33,12 +33,52 @@ export async function GET(req: NextRequest) {
         filter["privacyType"] = PrivacyTypes.PUBLIC
     }
 
-    await DBUtils.connect()
     const mGames = await MVersusGame.find(filter).sort({
         createdAt: -1,
     })
+    await DBUtils.connect()
 
-    return ApiUtils.response(mGames)
+    // 페이지네이션
+    let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? -1)
+    const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
+    const itemCount = await MVersusGame.countDocuments(filter)
+    const maxPage = Math.ceil(itemCount / pageSize)
+
+    if (pageIndex < 1) {
+        pageIndex = maxPage
+    }
+
+    if ((await MVersusGame.find(filter)).length === 0) {
+        const result: IPaginationResponse = {
+            itemCount: 0,
+            pageIndex: 1,
+            maxPage: 0,
+            items: []
+        }
+    
+        return ApiUtils.response(result)
+    }
+
+
+    const items = await MVersusGame.find(filter)
+        .sort({ createdAt: 1 })
+        .skip((pageIndex - 1) * pageSize)
+        .limit(pageSize)
+
+    // const formattedItems = items.map(comment => ({
+    //     ...comment._doc,
+    //     created: CommonUtils.getMoment(comment.createdAt).fromNow(),
+    //     updated: CommonUtils.getMoment(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
+    // }));
+
+    const result: IPaginationResponse = {
+        itemCount: itemCount,
+        pageIndex: pageIndex,
+        maxPage: maxPage,
+        items: items
+    }
+
+    return ApiUtils.response(result)
 }
 
 export async function POST(req: NextRequest) {

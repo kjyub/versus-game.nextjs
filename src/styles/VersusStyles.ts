@@ -195,21 +195,21 @@ export const ListGrid = tw.div`
     w-full gap-4
 `
 export const ListGameBox = tw.div`
-    flex flex-col w-full p-3
-    rounded-md bg-black/30 backdrop-blur
+    flex flex-col w-full p-4
+    rounded-sm bg-black/30 backdrop-blur
     duration-300 [&.hover]:bg-black/40
 `
 export const ListGameThumbnailBox = tw.div`
     relative
     flex flex-col flex-center w-full aspect-[4/3]
-    rounded-md bg-black/30
+    rounded-sm bg-black/30
     text-stone-300
     overflow-hidden
     [&>img]:object-cover [&>img]:duration-300 [&>img.hover]:scale-110
 `
 export const ListGameContentBox = tw.div`
-    flex flex-col w-full h-20 mt-2 space-y-1
-    [&>.title]:font-semibold [&>.title]:text-stone-100
+    flex flex-col w-full h-20 mt-3 space-y-1
+    [&>.title]:font-semibold [&>.title]:text-stone-100 [&>.title]:text-lg
     [&>.content]:text-stone-300
 `
 export const ListGameControlBox = tw.div`
@@ -217,7 +217,7 @@ export const ListGameControlBox = tw.div`
     [&>.box]:flex [&>.box]:items-center [&>.box]:space-x-1
 `
 export const ListGameControlButton = tw.button`
-    flex flex-center px-2 py-0.5
+    flex flex-center px-3 py-1
     rounded-lg bg-stone-100/70 hover:bg-stone-100/90
     text-sm text-stone-700
     duration-200

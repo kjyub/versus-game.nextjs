@@ -6,6 +6,7 @@ import CommonUtils from "@/utils/CommonUtils"
 import bcryptjs from "bcryptjs"
 import { auth } from "@/auth"
 import { nanoid } from "nanoid"
+import { UserRole } from "@/types/UserTypes"
 
 export async function GET(req: NextApiRequest, { params }: { id: string }) {
     const { id } = params
@@ -15,6 +16,11 @@ export async function GET(req: NextApiRequest, { params }: { id: string }) {
     if (!user) {
         return ApiUtils.badRequest("회원을 찾을 수 없습니다.")
     }
+
+    // await Promise.all((await MUser.find()).map(async(mUser) => {
+    //     mUser.userRole = UserRole.USER
+    //     await mUser.save()
+    // }))
 
     return ApiUtils.response(user)
 }

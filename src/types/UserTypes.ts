@@ -3,6 +3,13 @@ export const AUTH_PROVIDER_TYPES = {
     GOOGLE: 1
 }
 
+export enum UserRole {
+    GUEST = 0,
+    USER = 1,
+    BAN = 2,
+    STAFF = 3
+}
+
 export const SIGNUP_AGREEMENT = `
 1. 개인정보의 처리 목적
 - 'VersusGame'는 다음의 목적을 위하여 개인정보를 처리하고 있으며, 다음의 목적 이외의 용도로는 이용하지 않습니다.

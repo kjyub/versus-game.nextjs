@@ -1,11 +1,13 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
+import { UserRole } from "../UserTypes"
 
 export default class User extends AbsApiObject {
     private _id: string
     private _email: string
     private _name: string
     private _profileImageUrl: string
+    private _userRole: UserRole
 
     constructor() {
         super()
@@ -13,6 +15,7 @@ export default class User extends AbsApiObject {
         this._email = ""
         this._name = ""
         this._profileImageUrl = ""
+        this._userRole = UserRole.GUEST
     }
 
     parseResponse(json: object) {
@@ -21,6 +24,7 @@ export default class User extends AbsApiObject {
         if (json.name) this._name = json.name
         if (json.profile_image_url)
             this._profileImageUrl = json.profile_image_url
+        if (json.userRole) this._userRole = json.userRole
 
         // this.ID = id !== undefined ? id : -1
         // this.Name = name !== undefined ? name : ""
@@ -39,5 +43,8 @@ export default class User extends AbsApiObject {
     }
     get profileImageUrl(): string {
         return this._profileImageUrl
+    }
+    get userRole(): UserRole {
+        return this._userRole
     }
 }
