@@ -48,7 +48,7 @@ const ModalContainer = ({
             <Background onClick={handleClick}>
                 {/* {!CommonUtils.isNullOrUndefined(children) && children} */}
                 <div
-                    className="flex flex-center w-full"
+                    className="flex flex-center"
                     onClick={handleStopPropagation}
                 >
                     {!CommonUtils.isNullOrUndefined(children) && children}

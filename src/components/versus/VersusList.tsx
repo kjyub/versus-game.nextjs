@@ -13,6 +13,8 @@ import ApiUtils from "@/utils/ApiUtils"
 import { useSession } from "next-auth/react"
 import User from "@/types/user/User"
 import { useUser } from "@/hooks/useUser"
+import { GameState, PrivacyTypeIcons, PrivacyTypeNames } from "@/types/VersusTypes"
+import { UserRole } from "@/types/UserTypes"
 
 interface IVersusList {
     versusGameData: Array<object>
@@ -23,11 +25,16 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const user = useUser()
     const [games, setGames] = useState<Array<VersusGame>>([])
 
+    const [pageIndex, setPageIndex] = useState<number>(1)
+    const [itemCount, setItemCount] = useState<number>(0)
+    const [maxPage, setMaxPage] = useState<number>(0)
+
     useEffect(() => {
+        // SSR 데이터는 1페이지만 불러온다.
         if (!Array.isArray(versusGameData)) {
             return
         }
-        
+
         let newGames: Array<VersusGame> = []
 
         versusGameData.map((data) => {
@@ -38,6 +45,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
         })
 
         setGames(newGames)
+        setPageIndex(1)
     }, [versusGameData])
 
     const handleLink = (link: string) => {
@@ -104,12 +112,24 @@ const GameBox = ({ game, user, goLink }: IGameBox) => {
                 )}
             </VS.ListGameThumbnailBox>
             <VS.ListGameContentBox>
-                <span className="title">{game.title}</span>
+                <span className="title">
+                    {game.title}
+                    {game.state === GameState.BLOCK && (
+                        <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>
+                    )}
+                </span>
                 <span className="content">{game.content}</span>
             </VS.ListGameContentBox>
             <VS.ListGameControlBox>
                 {/* 게임 정보 */}
-                <div className="box"></div>
+                <div className="box">
+                    {(user.userRole === UserRole.STAFF || isMaster) && (
+                        <VS.ListGamePrivacy>
+                            {PrivacyTypeIcons[game.privacyType]}
+                            <span className="value">{PrivacyTypeNames[game.privacyType]}</span>
+                        </VS.ListGamePrivacy>
+                    )}
+                </div>
                 {/* 게임 정보 (글쓴이) */}
                 {isMaster && (
                     <div className="box">

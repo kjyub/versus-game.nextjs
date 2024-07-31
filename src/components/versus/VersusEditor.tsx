@@ -15,7 +15,7 @@ import ApiUtils from "@/utils/ApiUtils"
 import { useRouter } from "next/navigation"
 import CommonUtils from "@/utils/CommonUtils"
 import { useSession } from "next-auth/react"
-import { CHOICE_COUNT_CONST, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
+import { CHOICE_COUNT_CONST, GameState, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
 import ModalContainer from "../ModalContainer"
 import VersusPrivacyModal from "./modals/VersusPrivacyModal"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
@@ -123,6 +123,11 @@ export default function VersusEditor({
         setChoiceCountType(_game.choiceCountType)
         setThumbnailType(_game.thumbnailImageType)
         setPrivacyType(_game.privacyType)
+
+        // 게임이 차단된 경우
+        if (_game.state === GameState.BLOCK) {
+            alert("관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.")
+        }
     }
 
     const updateThumbnail = (file: VersusFile) => {
@@ -352,19 +357,22 @@ export default function VersusEditor({
                             <span className="value">{PrivacyTypeNames[privacyType]}</span>
                         </div>
                     </VersusStyles.EditorPrivacySetButton>
-                    <VersusStyles.EditorControlButton
-                        onClick={() => {
-                            handleSave()
-                        }}
-                    >
-                        저장
-                    </VersusStyles.EditorControlButton>
+                    {game.state !== GameState.BLOCK && (
+                        <VersusStyles.EditorControlButton
+                            onClick={() => {
+                                handleSave()
+                            }}
+                        >
+                            저장
+                        </VersusStyles.EditorControlButton>
+                    )}
                 </div>
             </VersusStyles.EditorControlLayout>
 
             <ModalContainer
                 isOpen={isShowPrivacy}
                 setIsOpen={setShowPrivacy}
+                isCloseByBackground={true}
                 isBlur={true}
             >
                 <VersusPrivacyModal

@@ -10,6 +10,7 @@ import ApiUtils from "@/utils/ApiUtils"
 import MyInfoModal from "../users/MyInfoModal"
 import User from "@/types/user/User"
 import Link from "next/link"
+import { UserRole } from "@/types/UserTypes"
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
@@ -82,6 +83,16 @@ const Navigation = ({}: INavigation) => {
                     </MainStyles.NavButton>
                 </Link>
             </MainStyles.ItemAddButtonContainer>
+            {user.userRole === UserRole.STAFF && (
+                <MainStyles.ItemAddButtonContainer $is_show={true} className="max-sm:left-40 sm:left-40">
+                    <Link href={"/csstaff"}>
+                        <MainStyles.NavButton>
+                            <i className="fa-solid fa-hammer mr-2"></i>
+                            관리
+                        </MainStyles.NavButton>
+                    </Link>
+                </MainStyles.ItemAddButtonContainer>
+            )}
             <Link href={"/"} className="title">
                 <span>Versus Game</span>
             </Link>
