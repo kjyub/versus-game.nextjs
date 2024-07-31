@@ -1,7 +1,8 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 import VersusGameChoice from "./VersusGameChoice"
-import { PrivacyTypes, ThumbnailImageTypes } from "../VersusTypes"
+import { GameState, PrivacyTypes, ThumbnailImageTypes } from "../VersusTypes"
+import User from "../user/User"
 
 const CHOICE_COUNT = 10
 
@@ -17,8 +18,12 @@ export default class VersusGame extends AbsApiObject {
     private _privacyType: PrivacyTypes
     private _views: number
     private _favs: number
+    private _state: GameState
 
     private _choices: Array<VersusGameChoice>
+
+    // 임의 정의
+    private _user: User
 
     constructor() {
         super()
@@ -33,12 +38,15 @@ export default class VersusGame extends AbsApiObject {
         this._privacyType = PrivacyTypes.PUBLIC
         this._views = ""
         this._favs = ""
+        this._state = GameState.NORMAL
 
         this._choiceCountType = 200
         this._choices = []
         for (let i = 0; i < CHOICE_COUNT; i++) {
             this._choices.push(new VersusGameChoice())
         }
+
+        this._user = new User()
     }
 
     parseResponse(json: object) {
@@ -56,6 +64,7 @@ export default class VersusGame extends AbsApiObject {
         if (json.privacyType) this._privacyType = json.privacyType
         if (json.views) this._views = json.views
         if (json.favs) this._favs = json.favs
+        if (json.state) this._state = json.state
 
         if (json.choiceCountType) this._choiceCountType = json.choiceCountType
         if (json.choices && Array.isArray(json.choices)) {
@@ -66,6 +75,11 @@ export default class VersusGame extends AbsApiObject {
                 newChoices.push(_choice)
             })
             this._choices = newChoices
+        }
+
+        if (json.user && typeof json.user === "object") {
+            this._user = new User()
+            this._user.parseResponse(json.user)
         }
     }
 
@@ -102,8 +116,14 @@ export default class VersusGame extends AbsApiObject {
     get favs(): string {
         return this._favs
     }
+    get state(): GameState {
+        return this._state
+    }
     get choiceCountType(): number {
         return this._choiceCountType
+    }
+    get user(): User {
+        return this._user
     }
 
     set title(v: string) {
@@ -123,6 +143,9 @@ export default class VersusGame extends AbsApiObject {
     }
     set privacyType(v: PrivacyTypes) {
         this._privacyType = v
+    }
+    set state(v: GameState) {
+        this._state = v
     }
 
     set choiceCountType(v: number) {

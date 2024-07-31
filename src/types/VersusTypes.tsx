@@ -1,5 +1,10 @@
 import React from "react"
 
+export enum GameState {
+    NORMAL = 0,
+    BLOCK = 1,
+    STOP = 2,
+}
 export enum ThumbnailImageTypes {
     IMAGE = 0,
     TEXT = 1,

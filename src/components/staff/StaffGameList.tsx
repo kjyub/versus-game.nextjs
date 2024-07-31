@@ -2,10 +2,12 @@
 
 import VersusGame from "@/types/versus/VersusGame"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
+import { GameState } from "@/types/VersusTypes"
 import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import * as SS from "@/styles/StaffStyles"
 
 const PAGE_SIZE = 100
 
@@ -61,6 +63,44 @@ interface IGame {
     game: VersusGame
 }
 const Game = ({game}: IGame) => {
+    const [state, setState] = useState<GameState>(GameState.NORMAL)
+
+    useEffect(() => {
+        setState(game.state)
+    }, [game])
+
+    const handleStateSave = async (_state: GameState) => {
+        if (!confirm(`${game.title}의 상태를 변경하시겠습니까?`)) {
+            return
+        }
+
+        const data = {
+            state: _state
+        }
+
+        // 저장 성공 여부
+        let saveResult: boolean = false 
+
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/versus/game_state/${game.nanoId}`,
+            "PUT",
+            null,
+            data,
+        )
+
+        if (!bResult) {
+            if (response["message"]) {
+                alert(response["message"])
+            } else {
+                alert("저장 실패했습니다.")
+            }
+
+            return
+        }
+        
+        setState(_state)
+    }
+
     return (
         <div className="flex flex-col w-full">
             {/* 헤더 */}
@@ -78,17 +118,43 @@ const Game = ({game}: IGame) => {
                 <div className="flex flex-col justify-start w-full h-full space-y-1">
                     {/* 1단 */}
                     <div className="flex w-full space-x-2">
-                        <span className="font-semibold text-stone-200">
+                        <span className={`font-semibold ${state === GameState.BLOCK ? "text-red-500" : "text-stone-200"}`}>
                             {game.title}
                         </span>
                         <span className="text-stone-400">
-                            {game.userId}
+                            {game.user.name} ({game.user.email})
                         </span>
                     </div>
                     {/* 2단 */}
                     <p className="text-stone-300 text-sm">
                         {game.content}
                     </p>
+                </div>
+
+                {/* 상태변경 */}
+                <div className="flex flex-col w-28 h-full space-y-1">
+                    <span className="text-sm text-stone-300">
+                        게임 상태
+                    </span>
+
+                    <SS.GameStateButton 
+                        $is_active={state === GameState.NORMAL}
+                        onClick={()=>{handleStateSave(GameState.NORMAL)}}
+                    >
+                        정상
+                    </SS.GameStateButton>
+                    <SS.GameStateButton 
+                        $is_active={state === GameState.BLOCK}
+                        onClick={()=>{handleStateSave(GameState.BLOCK)}}
+                    >
+                        차단
+                    </SS.GameStateButton>
+                    {/* <SS.GameStateButton 
+                        $is_active={state === GameState.STOP}
+                        onClick={()=>{handleStateSave(GameState.STOP)}}
+                    >
+                        정지
+                    </SS.GameStateButton> */}
                 </div>
             </div>
 

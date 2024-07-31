@@ -24,6 +24,10 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const [games, setGames] = useState<Array<VersusGame>>([])
 
     useEffect(() => {
+        if (!Array.isArray(versusGameData)) {
+            return
+        }
+        
         let newGames: Array<VersusGame> = []
 
         versusGameData.map((data) => {

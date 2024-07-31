@@ -49,7 +49,8 @@ const schema = new Schema(
             default: "",
         },
         userId: {
-            type: String,
+            type: Schema.Types.ObjectId,
+            ref: "users",
             required: true,
         },
         thumbnailImageId: {
@@ -75,6 +76,11 @@ const schema = new Schema(
             required: true,
             default: 0,
         },
+        state: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
         choices: [choiceSchema],
         choiceCountType: {
             type: Number,
@@ -88,6 +94,13 @@ const schema = new Schema(
     },
     { timestamps: true },
 )
+
+schema.virtual("user", {
+    ref: "users",
+    localField: "userId",
+    foreignField: "_id",
+    justOne: true
+})
 
 export default mongoose.models.versus_games ||
     mongoose.model("versus_games", schema)
