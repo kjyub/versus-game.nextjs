@@ -53,19 +53,15 @@ export async function GET(req: NextRequest) {
         }
     }
 
-
     // 페이지네이션
-    let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? -1)
+    let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? 1)
     const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
     const itemCount = await MVersusGame.countDocuments(filter)
     const maxPage = Math.ceil(itemCount / pageSize)
 
     // await MVersusGame.updateMany({}, { $set: { "state": 0 }})
-    if (pageIndex < 1) {
-        pageIndex = maxPage
-    }
 
-    if ((await MVersusGame.find(filter)).length === 0) {
+    if (itemCount.length === 0) {
         const result: IPaginationResponse = {
             itemCount: 0,
             pageIndex: 1,
@@ -76,11 +72,10 @@ export async function GET(req: NextRequest) {
         return ApiUtils.response(result)
     }
 
-
     const items = await MVersusGame
         .aggregate([
             { $match: filter },
-            { $sort: { createdAt: 1 } },
+            { $sort: { createdAt: -1 } },
             { $skip: (pageIndex - 1) * pageSize },
             { $limit: pageSize },
             { $addFields: { userObjectId: { $toObjectId: "$userId"} }},

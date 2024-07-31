@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
         pageIndex = maxPage
     }
 
-    if ((await MVersusGameComment.find(filter)).length === 0) {
+    if (itemCount.length === 0) {
         const result: IPaginationResponse = {
             itemCount: 0,
             pageIndex: 1,
@@ -61,14 +61,24 @@ export async function GET(req: NextRequest) {
         return ApiUtils.response(result)
     }
 
-    const items = await MVersusGameComment.find(filter)
-        .sort({ createdAt: 1 })
-        .skip((pageIndex - 1) * pageSize)
-        .limit(pageSize)
-        .populate("user")
+    const items = await MVersusGameComment
+        .aggregate([
+            { $match: filter },
+            { $sort: { createdAt: 1 } },
+            { $skip: (pageIndex - 1) * pageSize },
+            { $limit: pageSize },
+            { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
+            { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
+            { $unwind: "$user" },
+        ])
+        // .find(filter)
+        // .sort({ createdAt: 1 })
+        // .skip((pageIndex - 1) * pageSize)
+        // .limit(pageSize)
+        // .populate("user")
 
     const formattedItems = items.map(comment => ({
-        ...comment._doc,
+        ...comment,
         created: CommonUtils.getMoment(comment.createdAt).fromNow(),
         updated: CommonUtils.getMoment(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
     }));
