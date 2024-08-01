@@ -2,7 +2,7 @@
 
 import VersusGame from "@/types/versus/VersusGame"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
-import { GameState } from "@/types/VersusTypes"
+import { GameState, PrivacyTypes } from "@/types/VersusTypes"
 import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
 import Image from "next/image"
@@ -52,6 +52,12 @@ export default function StaffGameList() {
 
     return (
         <div className="flex flex-col w-full divide-y divide-stone-400">
+            {/* 검색 */}
+            <div className="">
+
+            </div>
+
+            {/* 리스트 */}
             {games.map((game: VersusGame, index: number) => (
                 <Game key={index} game={game} />
             ))}
@@ -64,9 +70,11 @@ interface IGame {
 }
 const Game = ({game}: IGame) => {
     const [state, setState] = useState<GameState>(GameState.NORMAL)
+    const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC)
 
     useEffect(() => {
         setState(game.state)
+        setPrivacyType(game.privacyType)
     }, [game])
 
     const handleStateSave = async (_state: GameState) => {
@@ -75,7 +83,8 @@ const Game = ({game}: IGame) => {
         }
 
         const data = {
-            state: _state
+            state: _state,
+            privacyType: privacyType
         }
 
         // 저장 성공 여부
@@ -99,6 +108,39 @@ const Game = ({game}: IGame) => {
         }
         
         setState(_state)
+    }
+
+    const handlePrivacySave = async (_privacyType: PrivacyTypes) => {
+        if (!confirm(`${game.title}의 상태를 변경하시겠습니까?`)) {
+            return
+        }
+
+        const data = {
+            state: state,
+            privacyType: _privacyType
+        }
+
+        // 저장 성공 여부
+        let saveResult: boolean = false 
+
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/versus/game_state/${game.nanoId}`,
+            "PUT",
+            null,
+            data,
+        )
+
+        if (!bResult) {
+            if (response["message"]) {
+                alert(response["message"])
+            } else {
+                alert("저장 실패했습니다.")
+            }
+
+            return
+        }
+        
+        setPrivacyType(_privacyType)
     }
 
     return (
@@ -131,6 +173,31 @@ const Game = ({game}: IGame) => {
                     </p>
                 </div>
 
+                {/* 공개옵션 */}
+                <div className="flex flex-col w-28 h-full space-y-1">
+                    <span className="text-sm text-stone-300">
+                        공개 옵션
+                    </span>
+
+                    <SS.GameStateButton 
+                        $is_active={privacyType === PrivacyTypes.PUBLIC}
+                        onClick={()=>{handlePrivacySave(PrivacyTypes.PUBLIC)}}
+                    >
+                        전체 공개
+                    </SS.GameStateButton>
+                    <SS.GameStateButton 
+                        $is_active={privacyType === PrivacyTypes.RESTRICTED}
+                        onClick={()=>{handlePrivacySave(PrivacyTypes.RESTRICTED)}}
+                    >
+                        일부 공개
+                    </SS.GameStateButton>
+                    <SS.GameStateButton 
+                        $is_active={privacyType === PrivacyTypes.PRIVATE}
+                        onClick={()=>{handlePrivacySave(PrivacyTypes.PRIVATE)}}
+                    >
+                        비공개
+                    </SS.GameStateButton>
+                </div>
                 {/* 상태변경 */}
                 <div className="flex flex-col w-28 h-full space-y-1">
                     <span className="text-sm text-stone-300">

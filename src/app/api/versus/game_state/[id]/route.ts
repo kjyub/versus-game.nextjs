@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
 
 export async function PUT(req: NextRequest, { params }: { id: string }) {
     const { id } = params
-    const { state } = await req.json()
+    const { state, privacyType } = await req.json()
 
     await DBUtils.connect()
 
@@ -51,11 +51,8 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
 
     let mGame = await MVersusGame.findOne({ nanoId: id })
 
-    if (mGame["userId"] !== session?.user._id) {
-        return ApiUtils.notAuth()
-    }
-
     mGame.state = state
+    mGame.privacyType = privacyType
 
     try {
         const resultGame = await mGame.save()
