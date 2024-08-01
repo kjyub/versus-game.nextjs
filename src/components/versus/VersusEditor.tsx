@@ -28,10 +28,12 @@ const VersusMainSearch = dynamic(
 interface IVersusEditor {
     isUpdate: boolean
     gameData: object | null
+    saveOnClose: () => void | null
 }
 export default function VersusEditor({
     isUpdate = false,
     gameData = null,
+    saveOnClose = null
 }: IVersusEditor) {
     const router = useRouter()
     const session = useSession()
@@ -232,8 +234,12 @@ export default function VersusEditor({
         }
 
         if (saveResult) {
-            router.push("/")
-            router.refresh()
+            if (saveOnClose === null) {
+                router.push("/")
+                router.refresh()
+            } else {
+                saveOnClose()
+            }
         }
     }
 

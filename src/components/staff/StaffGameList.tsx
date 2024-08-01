@@ -8,6 +8,8 @@ import CommonUtils from "@/utils/CommonUtils"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import * as SS from "@/styles/StaffStyles"
+import ModalContainer from "../ModalContainer"
+import VersusEditor from "../versus/VersusEditor"
 
 const PAGE_SIZE = 100
 
@@ -19,6 +21,10 @@ export default function StaffGameList() {
     const [maxPage, setMaxPage] = useState<number>(0)
     const [search, setSearch] = useState<string>("")
     const [searchValue, setSearchValue] = useState<string>("")
+
+    // 게임 수정
+    const [isEditorShow, setEditorShow] = useState<boolean>(false)
+    const [editorGameData, setEditorGameData] = useState<object | null>(null)
 
     useEffect(() => {
         getGameList(1, "")
@@ -50,6 +56,18 @@ export default function StaffGameList() {
         setMaxPage(pagination.maxPage)
     }
 
+    const openGameEditor = async (gameId: string) => {
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/versus/game/${gameId}`, 
+            "GET"
+        )
+
+        if (bResult) {
+            setEditorGameData(response)
+            setEditorShow(true)
+        }
+    }
+
     return (
         <div className="flex flex-col w-full divide-y divide-stone-400">
             {/* 검색 */}
@@ -59,20 +77,34 @@ export default function StaffGameList() {
 
             {/* 리스트 */}
             {games.map((game: VersusGame, index: number) => (
-                <Game key={index} game={game} />
+                <Game key={index} game={game} openGameEditor={openGameEditor} />
             ))}
+
+            <ModalContainer
+                isOpen={isEditorShow}
+                setIsOpen={setEditorShow}
+                isCloseByBackground={true}
+                isBlur={true}
+            >
+                <div className="p-4 rounded-lg bg-white/20 backdrop-blur-xl">
+                    <VersusEditor isUpdate={true} gameData={editorGameData} saveOnClose={()=>{setEditorShow(false)}} />
+                </div>
+            </ModalContainer>
         </div>
     )
 }
 
 interface IGame {
     game: VersusGame
+    openGameEditor: (gameId: string) => void
 }
-const Game = ({game}: IGame) => {
+const Game = ({ game, openGameEditor }: IGame) => {
+    const [versusGame, setVersusGame] = useState<VersusGame>(new VersusGame()) // game 데이터 갱신을 위해 다시 useState로 선언
     const [state, setState] = useState<GameState>(GameState.NORMAL)
     const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC)
 
     useEffect(() => {
+        setVersusGame(game)
         setState(game.state)
         setPrivacyType(game.privacyType)
     }, [game])
@@ -143,16 +175,33 @@ const Game = ({game}: IGame) => {
         setPrivacyType(_privacyType)
     }
 
+    const handleOpenEditor = () => {
+        openGameEditor(game.nanoId)
+    }
+
+    const handleRefresh = async () => {
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/versus/game/${game.nanoId}`, 
+            "GET"
+        )
+
+        if (bResult) {
+            const newGame = new VersusGame()
+            newGame.parseResponse(response)
+            setVersusGame(newGame)
+        }
+    }
+
     return (
         <div className="flex flex-col w-full">
             {/* 헤더 */}
             <div className="flex items-center w-full h-28 p-2 space-x-2">
                 {/* 썸네일 */}
                 <div className="relative flex flex-center h-full aspect-[4/3] bg-stone-700">
-                    {CommonUtils.isStringNullOrEmpty(game.thumbnailImageUrl) ? (
+                    {CommonUtils.isStringNullOrEmpty(versusGame.thumbnailImageUrl) ? (
                         <span className="text-stone-400">이미지 없음</span>
                     ) : (
-                        <Image src={ApiUtils.mediaUrl(game.thumbnailImageUrl)} fill alt={""} />
+                        <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={""} />
                     )}
                 </div>
                 
@@ -161,16 +210,37 @@ const Game = ({game}: IGame) => {
                     {/* 1단 */}
                     <div className="flex w-full space-x-2">
                         <span className={`font-semibold ${state === GameState.BLOCK ? "text-red-500" : "text-stone-200"}`}>
-                            {game.title}
+                            {versusGame.title}
                         </span>
                         <span className="text-stone-400">
-                            {game.user.name} ({game.user.email})
+                            {versusGame.user.name} ({versusGame.user.email})
                         </span>
                     </div>
                     {/* 2단 */}
                     <p className="text-stone-300 text-sm">
-                        {game.content}
+                        {versusGame.content}
                     </p>
+                </div>
+
+                {/* 게임 정보 */}
+                <div className="flex flex-col w-28 h-full space-y-1">
+                    <span className="text-sm text-stone-300">
+                        게임 정보
+                    </span>
+                    <SS.GameStateButton 
+                        $is_active={false}
+                        onClick={()=>{handleRefresh()}}
+                        className="w-24"
+                    >
+                        새로고침
+                    </SS.GameStateButton>
+                    <SS.GameStateButton 
+                        $is_active={false}
+                        onClick={()=>{handleOpenEditor()}}
+                        className="w-24"
+                    >
+                        게임 수정
+                    </SS.GameStateButton>
                 </div>
 
                 {/* 공개옵션 */}
@@ -227,7 +297,7 @@ const Game = ({game}: IGame) => {
 
             {/* 선택지 */}
             <div className="grid max-sm:grid-cols-2 max-xl:grid-cols-5 xl:grid-cols-10 w-full p-2 divide-x divide-y divide-stone-700">
-                {game.choices.map((choice: VersusGameChoice, index: number) => (
+                {versusGame.choices.map((choice: VersusGameChoice, index: number) => (
                     <div
                         key={index} 
                         className="flex flex-col items-center w-full"

@@ -8,6 +8,8 @@ import { auth } from "@/auth"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import MFile from "@/models/file/MFile"
 import CommonUtils from "@/utils/CommonUtils"
+import MUser from "@/models/user/MUser"
+import { UserRole } from "@/types/UserTypes"
 
 export async function GET(req: NextRequest, { params }: { id: string }) {
     const { id } = params
@@ -20,7 +22,18 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
     // console.log(session)
 
     await DBUtils.connect()
-    const mGame = await MVersusGame.findOne({ nanoId: id, isDeleted: false })
+    const mGames = await MVersusGame
+        .aggregate([
+            { $match: { nanoId: id, isDeleted: false } },
+            { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
+            { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
+            { $unwind: "$user" },
+            { $limit: 1 }
+        ])
+
+    const mGame = mGames.length > 0 ? mGames[0] : null
+
+    // const mGame = await MVersusGame.findOne({ nanoId: id, isDeleted: false })
 
     // if (mGame["userId"] !== session?.user._id) {
     //     return ApiUtils.notAuth()
@@ -42,10 +55,16 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
     if (!session.user) {
         return ApiUtils.notAuth()
     }
+    // 관리자 확인
+    let isStaff = false
+    const mUser = await MUser.findOne({ _id: session.user._id})
+    if (mUser.userRole === UserRole.STAFF) {
+        isStaff = true
+    }
 
     let mGame = await MVersusGame.findOne({ nanoId: id })
 
-    if (mGame["userId"] !== session?.user._id) {
+    if (mGame["userId"] !== session?.user._id && !isStaff) {
         return ApiUtils.notAuth()
     }
 
