@@ -28,16 +28,10 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
             { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
             { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
             { $unwind: "$user" },
-            { $limit: 1 }
+            { $limit: 1 },
         ])
 
     const mGame = mGames.length > 0 ? mGames[0] : null
-
-    // const mGame = await MVersusGame.findOne({ nanoId: id, isDeleted: false })
-
-    // if (mGame["userId"] !== session?.user._id) {
-    //     return ApiUtils.notAuth()
-    // }
 
     return ApiUtils.response(mGame)
 }

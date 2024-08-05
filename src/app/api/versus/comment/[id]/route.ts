@@ -43,14 +43,14 @@ export async function GET(req: NextRequest) {
     // 페이지네이션
     let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? -1)
     const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
-    const itemCount = await MVersusGameComment.countDocuments(filter)
+    const itemCount = (await MVersusGameComment.aggregate([{ $match: filter }])).length
     const maxPage = Math.ceil(itemCount / pageSize)
 
     if (pageIndex < 1) {
         pageIndex = maxPage
     }
 
-    if (itemCount.length === 0) {
+    if (itemCount === 0) {
         const result: IPaginationResponse = {
             itemCount: 0,
             pageIndex: 1,

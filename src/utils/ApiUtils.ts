@@ -54,7 +54,7 @@ export default class ApiUtils {
                 resultData = await response.json()
             })
             .catch((error) => {
-                console.log(error)
+                console.log(error, requestUrl)
                 resultData = "에러"
             })
 

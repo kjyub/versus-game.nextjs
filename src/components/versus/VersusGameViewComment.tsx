@@ -73,6 +73,10 @@ export default function VersusGameViewComment({ game, answerChoice, isShowResult
     }
 
     const getComments = async (_pageIndex: number) => {
+        if (CommonUtils.isStringNullOrEmpty(game.nanoId)) {
+            return
+        }
+
         const [bResult, statusCode, response] = await ApiUtils.request(
             `/api/versus/comment/${game.nanoId}`, 
             "GET",

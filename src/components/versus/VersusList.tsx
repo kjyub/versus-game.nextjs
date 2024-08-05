@@ -62,7 +62,6 @@ export default function VersusList({ versusGameData }: IVersusList) {
         setPageIndex(1)
         setItemCount(versusGameData.itemCount)
         setMaxPage(versusGameData.maxPage)
-        console.log("refresh", versusGameData)
     }, [versusGameData])
 
     const getNextPage = async () => {

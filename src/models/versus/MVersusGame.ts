@@ -95,12 +95,12 @@ const schema = new Schema(
     { timestamps: true },
 )
 
-schema.virtual("user", {
-    ref: "users",
-    localField: "userId",
-    foreignField: "_id",
-    justOne: true
-})
+// schema.virtual("user", {
+//     ref: "users",
+//     localField: "userId",
+//     foreignField: "_id",
+//     justOne: true
+// })
 
 export default mongoose.models.versus_games ||
     mongoose.model("versus_games", schema)

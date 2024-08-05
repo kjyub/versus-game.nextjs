@@ -39,86 +39,106 @@ export default function VersusChoiceView({
 
     return (
         <VS.ChoiceLayoutSettingGrid $choice_count={choiceCount}>
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={0}
-                choice={choices[0]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={1}
-                choice={choices[1]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={2}
-                choice={choices[2]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={3}
-                choice={choices[3]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={4}
-                choice={choices[4]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={5}
-                choice={choices[5]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={6}
-                choice={choices[6]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={7}
-                choice={choices[7]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={8}
-                choice={choices[8]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
-            <ChoiceView
-                choiceCount={choiceCount}
-                index={9}
-                choice={choices[9]}
-                selectChoice={selectChoice}
-                selectedChoice={selectedChoice}
-                isShowResult={isShowResult}
-            />
+            {choices[0] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={0}
+                    choice={choices[0]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[1] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={1}
+                    choice={choices[1]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[2] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={2}
+                    choice={choices[2]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[3] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={3}
+                    choice={choices[3]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[4] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={4}
+                    choice={choices[4]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[5] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={5}
+                    choice={choices[5]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[6] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={6}
+                    choice={choices[6]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[7] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={7}
+                    choice={choices[7]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[8] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={8}
+                    choice={choices[8]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
+            {choices[9] && (
+                <ChoiceView
+                    choiceCount={choiceCount}
+                    index={9}
+                    choice={choices[9]}
+                    selectChoice={selectChoice}
+                    selectedChoice={selectedChoice}
+                    isShowResult={isShowResult}
+                />
+            )}
         </VS.ChoiceLayoutSettingGrid>
     )
 }
@@ -175,6 +195,7 @@ const ChoiceView = ({ choiceCount, index, choice, selectChoice, selectedChoice, 
     const handleSelectChoice = () => {
         selectChoice(choice)
     }
+
 
     return (
         <VS.ChoiceBox $is_show={index < choiceCount}>
