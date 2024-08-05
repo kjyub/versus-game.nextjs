@@ -50,14 +50,12 @@ export default async function Home({ params, searchParams }) {
 
     const search = searchParams.search ? searchParams.search : ""
     const myGames = searchParams.myGames ? searchParams.myGames : ""
-    const gameResult: IPaginationResponse = await getGameList(search, myGames, userId)
-
-    const gameData = gameResult.items
+    const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, userId)
 
     return (
         <MainStyles.PageLayout>
             <VersusMainSearch />
-            <VersusList versusGameData={gameData} />
+            <VersusList versusGameData={gamePaginationData} />
         </MainStyles.PageLayout>
     )
 }

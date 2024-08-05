@@ -56,7 +56,8 @@ export async function GET(req: NextRequest) {
     // 페이지네이션
     let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? 1)
     const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
-    const itemCount = await MVersusGame.countDocuments(filter)
+    // const itemCount = await MVersusGame.countDocuments(filter)
+    const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length
     const maxPage = Math.ceil(itemCount / pageSize)
 
     // await MVersusGame.updateMany({}, { $set: { "state": 0 }})
@@ -82,7 +83,7 @@ export async function GET(req: NextRequest) {
             { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
             { $unwind: "$user" },
         ])
-
+        
     // const formattedItems = items.map(comment => ({
     //     ...comment._doc,
     //     created: CommonUtils.getMoment(comment.createdAt).fromNow(),
