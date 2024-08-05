@@ -34,7 +34,12 @@ export async function GET(req: NextRequest) {
 
     const searchValue = req.nextUrl.searchParams.get("search")
     if (searchValue !== null) {
-        filter["title"] = new RegExp(searchValue, "i")
+        // filter["title"] = new RegExp(searchValue, "i")
+        filter["$or"] = [
+            { "title": {"$regex": searchValue, "$options": "i"} },
+            { "content": {"$regex": searchValue, "$options": "i"} },
+            { "choices.title": {"$regex": searchValue, "$options": "i"} },
+        ]
     }
     
     const myGames = req.nextUrl.searchParams.get("myGames")
@@ -59,8 +64,6 @@ export async function GET(req: NextRequest) {
     // const itemCount = await MVersusGame.countDocuments(filter)
     const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length
     const maxPage = Math.ceil(itemCount / pageSize)
-
-    // await MVersusGame.updateMany({}, { $set: { "state": 0 }})
 
     if (itemCount.length === 0) {
         const result: IPaginationResponse = {
