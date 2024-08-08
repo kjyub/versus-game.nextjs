@@ -213,7 +213,8 @@ export const ListGameThumbnailBox = tw.div`
 `
 export const ListGameContentBox = tw.div`
     flex flex-col w-full h-20 mt-1 space-y-1
-    [&>.title]:flex [&>.title]:w-full [&>.title]:font-semibold [&>.title]:text-stone-100 [&>.title]:text-lg
+    [&>.title]:flex [&>.title]:items-center [&>.title]:w-full [&>.title]:font-medium [&>.title]:text-stone-100 [&>.title]:text-base
+    [&>.title.viewed]:text-stone-400
     [&>.content]:font-light [&>.content]:text-xs [&>.content]:text-stone-300
 `
 export const ListGameControlBox = tw.div`
@@ -221,7 +222,7 @@ export const ListGameControlBox = tw.div`
     [&>.box]:flex [&>.box]:items-center [&>.box]:space-x-1
 `
 export const ListGameControlButton = tw.button`
-    flex flex-center px-3 py-0.5
+    flex flex-center px-2 py-0.5
     rounded-lg bg-stone-100/70 hover:bg-stone-100/90
     text-sm text-stone-700
     duration-200

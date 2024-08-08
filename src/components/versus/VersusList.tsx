@@ -17,6 +17,8 @@ import { GameState, PrivacyTypeIcons, PrivacyTypeNames } from "@/types/VersusTyp
 import { UserRole } from "@/types/UserTypes"
 import { useInView } from "react-intersection-observer"
 import { IPaginationResponse } from "@/types/common/Responses"
+import { CookieConsts } from "@/types/ApiTypes"
+import StorageUtils from "@/utils/StorageUtils"
 
 const PAGE_SIZE = 50
 
@@ -49,11 +51,25 @@ export default function VersusList({ versusGameData }: IVersusList) {
             return
         }
 
+        // 유저가 게임을 조회, 참여 했는지를 임시로 저장해서 확인한다.
+        // 뒤로가기 처럼 다시 리스트 조회 시 매번 api 요청하지 않기 때문에 최적화를 위함.
+        const gameViewsCache: Array<string> = StorageUtils.getSessionStorageList(CookieConsts.GAME_VIEWED_SESSION)
+        const gameViewsCacheSet: Set<string> = new Set(gameViewsCache)
+        const gameChoicesCache: Array<string> = StorageUtils.getSessionStorageList(CookieConsts.GAME_CHOICED_SESSION)
+        const gameChoicesCacheSet: Set<string> = new Set(gameChoicesCache)
+
         let newGames: Array<VersusGame> = []
 
         versusGameData.items.map((data) => {
             const game = new VersusGame()
             game.parseResponse(data)
+
+            if (gameViewsCacheSet.has(game.nanoId)) {
+                game.isView = true
+            }
+            if (gameChoicesCacheSet.has(game.nanoId)) {
+                game.isChoice = true
+            }
 
             newGames.push(game)
         })
@@ -149,6 +165,7 @@ const GameBox = ({ game, user, goLink }: IGameBox) => {
     const [isHover, setHover] = useState<boolean>(false)
 
     const handleGame = () => {
+        StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, game.nanoId)
         goLink(`/game/${game.nanoId}`)
     }
 
@@ -183,8 +200,17 @@ const GameBox = ({ game, user, goLink }: IGameBox) => {
                 )}
             </VS.ListGameThumbnailBox>
             <VS.ListGameContentBox>
-                <span className="title">
+                <span className={`title ${game.isView ? "viewed" : ""}`}>
+                    {/* 선택했었는지 여부 */}
+                    {game.isChoice && (
+                        <i 
+                            title={"이미 선택한 게임입니다."}
+                            className="fa-solid fa-circle-check text-indigo-400 mr-1"
+                        />
+                    )}
+                    {/* 제목 */}
                     {game.title}
+                    {/* 상태 */}
                     {game.state === GameState.BLOCK && (
                         <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>
                     )}

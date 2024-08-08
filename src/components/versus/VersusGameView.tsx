@@ -17,6 +17,8 @@ import VersusChoiceView from "./inputs/VersusChoiceView"
 import { nanoid } from "nanoid"
 import { Dictionary } from "@/types/common/Dictionary"
 import VersusGameViewComment from "./VersusGameViewComment"
+import StorageUtils from "@/utils/StorageUtils"
+import { CookieConsts } from "@/types/ApiTypes"
 
 const INIT_CHOICES = [
     new VersusGameChoice(),
@@ -191,8 +193,15 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         }
 
         const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "POST", null, data)
-        setAnswerChoice(selectedChoice)
-        setShowResult(true)
+
+        if (bResult) {
+            setAnswerChoice(selectedChoice)
+            setShowResult(true)
+
+            StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId)
+        } else {
+            alert(response["message"] ?? "요청 실패했습니다.")
+        }
     }
     const handleReset = () => {
         if (isShowResult) {

@@ -3,6 +3,7 @@ import CommonUtils from "./CommonUtils"
 import { cookies } from "next/headers"
 import { CookieConsts } from "@/types/ApiTypes"
 import { randomUUID } from "crypto"
+import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 
 export default class AuthUtils {
     static parseJwt(token: string): object {
@@ -72,6 +73,22 @@ export default class AuthUtils {
             userId = session?.user._id
         } else if (req.cookies.has(CookieConsts.GUEST_ID)) {
             const guestIdCookie = req.cookies.get(CookieConsts.GUEST_ID)
+            userId = guestIdCookie.value
+        } else {
+            const newGuestId = randomUUID()
+            cookies().set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
+        }
+
+        return userId
+    }
+    static getUserOrGuestIdBySSR(cookies: ReadonlyRequestCookies, session: Session | null) {
+        let userId: string = ""
+        
+        // 유저 확인 없으면 게스트
+        if (this.isSessionAuth(session)) {
+            userId = session?.user._id
+        } else if (cookies.has(CookieConsts.GUEST_ID)) {
+            const guestIdCookie = cookies.get(CookieConsts.GUEST_ID)
             userId = guestIdCookie.value
         } else {
             const newGuestId = randomUUID()

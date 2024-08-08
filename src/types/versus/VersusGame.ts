@@ -24,6 +24,7 @@ export default class VersusGame extends AbsApiObject {
 
     // 임의 정의
     private _user: User
+    private _isView: booelan // 사용자가 게임을 조회 했었는지 여부
 
     constructor() {
         super()
@@ -47,6 +48,8 @@ export default class VersusGame extends AbsApiObject {
         }
 
         this._user = new User()
+        this._isView = false
+        this._isChoice = false
     }
 
     parseResponse(json: object) {
@@ -80,6 +83,12 @@ export default class VersusGame extends AbsApiObject {
         if (json.user && typeof json.user === "object") {
             this._user = new User()
             this._user.parseResponse(json.user)
+        }
+        if (json.isView) {
+            this._isView = json.isView
+        }
+        if (json.isChoice) {
+            this._isChoice = json.isChoice
         }
     }
 
@@ -125,6 +134,12 @@ export default class VersusGame extends AbsApiObject {
     get user(): User {
         return this._user
     }
+    get isView(): boolean {
+        return this._isView
+    }
+    get isChoice(): boolean {
+        return this._isChoice
+    }
 
     set title(v: string) {
         this._title = v
@@ -146,6 +161,12 @@ export default class VersusGame extends AbsApiObject {
     }
     set state(v: GameState) {
         this._state = v
+    }
+    set isView(v: boolean) {
+        this._isView = v
+    }
+    set isChoice(v: boolean) {
+        this._isChoice = v
     }
 
     set choiceCountType(v: number) {

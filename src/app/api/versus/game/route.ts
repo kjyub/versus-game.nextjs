@@ -14,6 +14,8 @@ import CommonUtils from "@/utils/CommonUtils"
 import MUser from "@/models/user/MUser"
 import { UserRole } from "@/types/UserTypes"
 import mongoose from "mongoose"
+import MVersusGameView from "@/models/versus/MVersusGameView"
+import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer"
 
 export async function GET(req: NextRequest) {
     let filter = {
@@ -76,7 +78,7 @@ export async function GET(req: NextRequest) {
         return ApiUtils.response(result)
     }
 
-    const items = await MVersusGame
+    let items = await MVersusGame
         .aggregate([
             { $match: filter },
             { $sort: { createdAt: -1 } },
@@ -86,7 +88,26 @@ export async function GET(req: NextRequest) {
             { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
             { $unwind: "$user" },
         ])
+    
+    // 이미 읽은 게시글인지 확인
+    if (!CommonUtils.isStringNullOrEmpty(userId)) {
+        const gameIds = items.map(item => item._id)
+        const views = await MVersusGameView.find({ gameId: { $in : gameIds }, userId: userId })
+        const viewIdSet = new Set(views.map(view => view.gameId))
+
+        const choiceds = await MVersusGameAnswer.find({ gameId: { $in : gameIds }, userId: userId })
+        const choiceIdSet = new Set(choiceds.map(choiced => choiced.gameId))
         
+        if (views.length > 0) {
+            items = items.map((item) => {
+                item.isView = viewIdSet.has(String(item._id))
+                item.isChoice = choiceIdSet.has(String(item._id))
+                
+                return item
+            })
+        }
+    }
+
     // const formattedItems = items.map(comment => ({
     //     ...comment._doc,
     //     created: CommonUtils.getMoment(comment.createdAt).fromNow(),

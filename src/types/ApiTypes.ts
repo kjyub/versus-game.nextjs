@@ -31,4 +31,6 @@ export abstract class AbsApiObject {
 
 export const CookieConsts = {
     GUEST_ID: "guest_id",
+    GAME_VIEWED_SESSION: "session_game_viewed", // 게임의 nanoId 리스트를 저장, 게임 조회 여부를 임시로 저장
+    GAME_CHOICED_SESSION: "session_game_choiced", // 게임의 nanoId 리스트를 저장, 게임 참여 여부를 임시로 저장
 }

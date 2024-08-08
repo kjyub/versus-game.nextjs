@@ -5,6 +5,8 @@ import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
 import { auth } from "@/auth"
 import { IPaginationResponse } from "@/types/common/Responses"
+import AuthUtils from "@/utils/AuthUtils"
+import { cookies } from "next/headers"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
 const VersusMainSearch = dynamic(
@@ -43,10 +45,8 @@ const getGameList = async (search: string | undefined, myGames: string | undefin
 
 export default async function Home({ params, searchParams }) {
     const session = await auth()
-    let userId: string = ""
-    if (!CommonUtils.isNullOrUndefined(session)) {
-        userId = session?.user._id
-    }
+    const cookieStore = cookies()
+    const userId: string = AuthUtils.getUserOrGuestIdBySSR(cookieStore, session)
 
     const search = searchParams.search ? searchParams.search : ""
     const myGames = searchParams.myGames ? searchParams.myGames : ""
