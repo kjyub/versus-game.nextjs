@@ -44,9 +44,11 @@ export default async function RootLayout({
             >
                 <BgBubbleBox />
                 <SessionProvider session={session}>
-                    <div className="absolute z-0 w-full h-full overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
+                    <div id="layout" className={`absolute z-0 w-screen min-h-full h-full max-h-full`}>
                         <Navigation />
-                        {children}
+                        <div className="flex flex-col w-full h-[calc(100%-3.5rem)] overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
+                            {children}
+                        </div>
                     </div>
                 </SessionProvider>
             </MainStyles.Body>
@@ -61,6 +63,7 @@ const FrontHead = () => {
                 rel="stylesheet"
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
             />
+            <meta name="theme-color" content="#f92392" />
             {/* <script
                 src="https://kit.fontawesome.com/181af83e33.js"
                 crossOrigin="anonymous"

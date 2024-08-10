@@ -8,9 +8,16 @@ export default function AppClientLayout({
 }: {
     children: React.ReactNode
 }) {
+
     useEffect(() => {
-        ApiUtils.request("/api/users/guest", "POST")
+        requestGuestId()
     }, [])
+
+    const requestGuestId = async () => {
+        const response = await ApiUtils.request("/api/users/guest", "POST")
+        const [bResult, statusCode, resultData] = response
+        // alert(resultData["message"] ?? "없음", resultData)
+    }
 
     return children
 }

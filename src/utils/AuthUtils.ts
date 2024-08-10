@@ -81,18 +81,20 @@ export default class AuthUtils {
 
         return userId
     }
-    static getUserOrGuestIdBySSR(cookies: ReadonlyRequestCookies, session: Session | null) {
+    static getUserOrGuestIdBySSR(session: Session | null) {
         let userId: string = ""
         
+        const currentCookies = cookies()
+
         // 유저 확인 없으면 게스트
         if (this.isSessionAuth(session)) {
             userId = session?.user._id
-        } else if (cookies.has(CookieConsts.GUEST_ID)) {
-            const guestIdCookie = cookies.get(CookieConsts.GUEST_ID)
+        } else if (currentCookies.has(CookieConsts.GUEST_ID)) {
+            const guestIdCookie = currentCookies.get(CookieConsts.GUEST_ID)
             userId = guestIdCookie.value
         } else {
-            const newGuestId = randomUUID()
-            cookies().set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
+            // const newGuestId = randomUUID()
+            // currentCookies.set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
         }
 
         return userId

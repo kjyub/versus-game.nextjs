@@ -7,9 +7,7 @@ export const Body = tw.body`
 `
 
 export const NavBox = tw.div`
-    sticky top-0 z-50
-    flex justify-center items-center w-screen h-14 mb-2
-    backdrop-blur-xl
+    flex justify-center items-center w-screen max-sm:h-12 sm:h-14
     [&>.title]:text-xl [&>.title]:font-bold [&>.title]:text-black
 `
 
@@ -36,7 +34,7 @@ export const LoginButtonContainer = tw.div`
 `
 export const LoginButton = tw.button`
     flex justify-center items-center 
-    max-sm:px-4 sm:px-10 py-2
+    max-sm:px-4 sm:px-10 max-sm:py-1 sm:py-2
     rounded-full bg-white/70 hover:bg-white/90
     text-black/70 text-base
     duration-200

@@ -145,14 +145,14 @@ export const ChoiceLayoutSettingContainer = tw.div`
     rounded-md 
 `
 export const ChoiceLayoutSettingGrid = tw.div`
-    grid gap-4
-    ${(props: any) => (props.$choice_count <= 2 ? "max-sm:grid-cols-1 sm:grid-cols-2" : "")}
+    grid max-sm:gap-2 sm:gap-4
+    ${(props: any) => (props.$choice_count <= 2 ? "max-sm:grid-cols-2 sm:grid-cols-2" : "")}
     ${(props: any) =>
         props.$choice_count > 2 && props.$choice_count <= 3
-            ? "max-sm:grid-cols-1 max-xl:grid-cols-2 xl:grid-cols-3"
+            ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3"
             : ""}
     ${(props: any) =>
-        props.$choice_count > 3 ? "max-sm:grid-cols-1 max-xl:grid-cols-2 xl:grid-cols-3" : ""}
+        props.$choice_count > 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : ""}
     max-sm:w-full
     duration-300
 `
@@ -191,11 +191,12 @@ export const ListLayout = tw.div`
     flex flex-col p-4 w-full space-y-4
 `
 export const ListGrid = tw.div`
-    grid max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3 max-xl:grid-cols-4 max-3xl:grid-cols-5 3xl:grid-cols-6
-    w-full gap-4
+    grid max-sm:grid-cols-2 max-md:grid-cols-2 max-lg:grid-cols-3 max-xl:grid-cols-4 max-3xl:grid-cols-5 3xl:grid-cols-6
+    max-sm:gap-2 sm:gap-4
+    w-full 
 `
 export const ListGameBox = tw.div`
-    flex flex-col w-full p-3
+    flex flex-col w-full max-sm:p-2 sm:p-3
     rounded-lg bg-black/30 backdrop-blur
     duration-300 [&.hover]:bg-black/40
 `
@@ -213,7 +214,8 @@ export const ListGameThumbnailBox = tw.div`
 `
 export const ListGameContentBox = tw.div`
     flex flex-col w-full h-20 mt-1 space-y-1
-    [&>.title]:flex [&>.title]:items-center [&>.title]:w-full [&>.title]:font-medium [&>.title]:text-stone-100 [&>.title]:text-base
+    [&>.title]:flex [&>.title]:items-center [&>.title]:w-full [&>.title]:font-medium [&>.title]:text-stone-100 
+    max-sm:[&>.title]:text-sm sm:[&>.title]:text-base
     [&>.title.viewed]:text-stone-400
     [&>.content]:font-light [&>.content]:text-xs [&>.content]:text-stone-300
 `
@@ -248,9 +250,10 @@ export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     [&>.content]:text-stone-300
 `
 export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
-    flex flex-col items-center min-h-[32rem] max-h-[calc(100vh-192px)]
+    flex flex-col items-center max-sm:min-h-[16rem] sm:min-h-[32rem] p-1
     overflow-y-auto scroll-transparent scroll-overlay
 `
+    // max-h-[calc(100vh-192px)]
 export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
     ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
     ${(props: any) =>
@@ -266,17 +269,18 @@ export const ChoiceImageContentBox = tw.div`
     duration-300
     hover:drop-shadow
 
-    [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-2xl [&>.title]:text-white 
+    [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
+    max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-2xl 
 `
 export const GameViewChoiceResultBox = tw.div`
     absolute z-10
-    ${(props: StyleProps) => (props.$is_show ? "bottom-4" : "-bottom-8")}
+    ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-2 sm:bottom-4" : "-bottom-8")}
     flex items-center px-1 py-1
     divide-x divide-stone-300
     rounded-full bg-white/80 backdrop-blur
     font-medium text-rose-600 text-sm
     duration-300
-    [&>div]:px-2
+    max-sm:[&>div]:px-1 sm:[&>div]:px-2
 `
 
 export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`

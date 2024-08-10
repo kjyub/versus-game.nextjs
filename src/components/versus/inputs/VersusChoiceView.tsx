@@ -220,7 +220,7 @@ const ChoiceView = ({ choiceCount, index, choice, selectChoice, selectedChoice, 
                 <VS.GameViewChoiceResultBox $is_show={isShowResult}>
                     <div>{CommonUtils.textFormat(choice.voteCount, TextFormats.NUMBER)}명</div>
                     <div className="flex items-center space-x-2">
-                        <div className="w-24">
+                        <div className="max-sm:w-20 sm:w-24">
                             <VersusChoiceProgressBar percent={choice.voteRate} />
                         </div>
                         <span className="text-right font-normal">{CommonUtils.round(choice.voteRate, 3)}%</span>

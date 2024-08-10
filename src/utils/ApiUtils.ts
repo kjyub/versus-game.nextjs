@@ -54,9 +54,22 @@ export default class ApiUtils {
                 resultData = await response.json()
             })
             .catch((error) => {
-                console.log(error, requestUrl)
-                resultData = "에러"
+                console.log(error, process.env.NEXT_PUBLIC_API_URL + requestUrl)
+
+                resultData = "Api Error"
             })
+
+        if (process.env.NEXT_PUBLIC_IS_DEBUG == "1" && resultData === "Api Error") {
+            await fetch("http://192.168.0.42:3000" + requestUrl, requestInit)
+                .then(async (response) => {
+                    // 결과
+                    statusCode = response.status
+                    if (statusCode >= 200 && statusCode < 300) {
+                        bResult = true
+                    }
+                    resultData = await response.json()
+                })
+        }
 
         return [bResult, statusCode, resultData]
     }

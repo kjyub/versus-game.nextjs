@@ -45,8 +45,7 @@ const getGameList = async (search: string | undefined, myGames: string | undefin
 
 export default async function Home({ params, searchParams }) {
     const session = await auth()
-    const cookieStore = cookies()
-    const userId: string = AuthUtils.getUserOrGuestIdBySSR(cookieStore, session)
+    const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
 
     const search = searchParams.search ? searchParams.search : ""
     const myGames = searchParams.myGames ? searchParams.myGames : ""
