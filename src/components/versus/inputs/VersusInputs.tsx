@@ -9,6 +9,7 @@ import React, {
 } from "react"
 import CommonUtils from "@/utils/CommonUtils"
 import * as VersusStyles from "@/styles/VersusStyles"
+import StyleUtils from "@/utils/StyleUtils"
 
 export interface IVersusInputText {
     value: string
@@ -60,6 +61,7 @@ export const VersusInputText = ({
                         setFocus(true)
                     }}
                     onBlur={() => {
+                        StyleUtils.rollbackScreen()
                         setFocus(false)
                     }}
                     disabled={disabled}
@@ -112,6 +114,7 @@ export const VersusInputTextArea = ({
                         setFocus(true)
                     }}
                     onBlur={() => {
+                        StyleUtils.rollbackScreen()
                         setFocus(false)
                     }}
                     disabled={disabled}

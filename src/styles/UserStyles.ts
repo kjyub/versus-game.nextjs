@@ -3,7 +3,7 @@ import tw from "tailwind-styled-components"
 
 export const LoginContainer = tw.div`
     relative
-    flex flex-col max-sm:w-[90vw] sm:w-72 h-128
+    flex flex-col max-sm:w-64 sm:w-72 h-128
     rounded-lg bg-white/50 backdrop-blur
     drop-shadow-xl
     overflow-hidden

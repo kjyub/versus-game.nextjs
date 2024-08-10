@@ -39,7 +39,7 @@ export const PageLayout = tw(MainStyles.PageLayout)`
 `
 
 export const EditorLayout = tw.div`
-    flex flex-col w-full p-4 mb-24 space-y-4
+    flex flex-col w-full p-4 mb-0 space-y-4
 `
 export const EditorDataLayout = tw.div`
     flex w-full
@@ -236,7 +236,7 @@ export const ListGamePrivacy = tw.div`
 `
 
 export const GameViewLayout = tw.div`
-    flex flex-col items-center w-full max-w-[60rem] p-2 mx-auto mb-24 space-y-4
+    flex flex-col items-center w-full max-w-[60rem] p-2 mx-auto space-y-4
 `
 export const GameViewSectionLayoutSize = tw.div`
     w-full p-4
@@ -276,9 +276,9 @@ export const GameViewChoiceResultBox = tw.div`
     absolute z-10
     ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-2 sm:bottom-4" : "-bottom-8")}
     flex items-center px-1 py-1
-    divide-x divide-stone-300
+    sm:divide-x divide-stone-300
     rounded-full bg-white/80 backdrop-blur
-    font-medium text-rose-600 text-sm
+    font-medium text-rose-600 max-sm:text-xs sm:text-sm
     duration-300
     max-sm:[&>div]:px-1 sm:[&>div]:px-2
 `
@@ -306,7 +306,7 @@ export const GameViewCommentBox = tw.div`
     rounded-md bg-black/20
 `
 export const GameViewCommentInputBox = tw.div`
-    flex items-start w-full px-2 py-2 space-x-2
+    flex items-start w-full px-2 py-2 space-x-1
     rounded-md bg-black/40
     border border-stone-500
     ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}

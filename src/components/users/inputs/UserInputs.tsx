@@ -9,6 +9,7 @@ import React, {
 } from "react"
 import CommonUtils from "@/utils/CommonUtils"
 import * as UserStyles from "@/styles/UserStyles"
+import StyleUtils from "@/utils/StyleUtils"
 
 export interface IUserInputText {
     value: string
@@ -62,6 +63,7 @@ const UserInputText = ({
                         setFocus(true)
                     }}
                     onBlur={() => {
+                        StyleUtils.rollbackScreen()
                         setFocus(false)
                     }}
                     disabled={disabled}

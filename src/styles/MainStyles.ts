@@ -3,6 +3,7 @@ import tw from "tailwind-styled-components"
 
 export const Body = tw.body`
     flex flex-col w-screen h-screen max-h-screen
+    overflow-hidden
     bg-blue-500
 `
 

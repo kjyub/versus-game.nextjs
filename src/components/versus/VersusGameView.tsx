@@ -68,7 +68,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
 
     useEffect(() => {
         updateGameInit(gameData)
-    }, [gameData, session.status])
+    }, [gameData, session.status, session])
 
     useEffect(() => {
         if (isShowResult) {
@@ -101,6 +101,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         setChoices(_game.choices)
 
         // 유저가 선택한 선택지가 있는지 불러온다.
+        let isChoice: boolean = false
         const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game_choice/${_game.nanoId}`, "GET")
         if (bResult) {
             const answerId = response.gameChoiceId
@@ -112,6 +113,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                 // 선택한 선택지가 있으면 게임 결과 표시
                 if (_choice.id === answerId) {
                     answer = _choice
+                    isChoice = true
                     setShowResult(true)
                     break
                 }
@@ -119,6 +121,12 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
 
             setSelectedChoice(answer)
             setAnswerChoice(answer)
+        }
+
+        if (!isChoice) {
+            setShowResult(false)
+            setSelectedChoice(new VersusGameChoice())
+            setAnswerChoice(new VersusGameChoice())
         }
 
         setMyAnswerLoading(false)

@@ -15,6 +15,7 @@ import { Dictionary } from "@/types/common/Dictionary"
 import { useSession } from "next-auth/react"
 import User from "@/types/user/User"
 import { EditStateTypes } from "@/types/DataTypes"
+import StyleUtils from "@/utils/StyleUtils"
 
 const PAGE_SIZE = 5
 
@@ -185,7 +186,10 @@ export default function VersusGameViewComment({ game, answerChoice, isShowResult
                         value={content}
                         onChange={(e)=>{setContent(e.target.value)}}
                         onFocus={()=>{setInputFocus(true)}}
-                        onBlur={()=>{setInputFocus(false)}}
+                        onBlur={()=>{
+                            StyleUtils.rollbackScreen()
+                            setInputFocus(false)
+                        }}
                         onKeyDown={handleWriteCommentEnter}
                         onInput={CommonUtils.setTextareaAutoHeight}
                     />
@@ -362,7 +366,10 @@ const CommentBox = ({comment, choiceDic, user, getCurrentComments}: ICommentBox)
                         value={content}
                         onChange={(e)=>{setContent(e.target.value)}}
                         onFocus={()=>{setInputFocus(true)}}
-                        onBlur={()=>{setInputFocus(false)}}
+                        onBlur={()=>{
+                            StyleUtils.rollbackScreen()
+                            setInputFocus(false)
+                        }}
                         onKeyDown={handleWriteCommentEnter}
                         onInput={CommonUtils.setTextareaAutoHeight}
                     />
