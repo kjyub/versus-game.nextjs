@@ -12,6 +12,7 @@ import VersusFile from "@/types/file/VersusFile"
 import CommonUtils from "@/utils/CommonUtils"
 import ApiUtils from "@/utils/ApiUtils"
 import { CHOICE_COUNT_CONST } from "@/types/VersusTypes"
+import StyleUtils from "@/utils/StyleUtils"
 
 interface IVersusChoiceEdit {
     game: VersusGame
@@ -302,6 +303,9 @@ const ChoiceEdit = ({
         if (files && files.length > 0) {
             handleImageUpload(files[0])
         }
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
     }
 
     return (
@@ -318,9 +322,12 @@ const ChoiceEdit = ({
                         <VS.ThumbnailImageEditUploadDragBox
                             $is_active={isFileEnter}
                         >
-                            여기에 썸네일 이미지를
-                            <br />
-                            드래그하세요
+                            <p className="max-sm:hidden sm:block">
+                                여기에 썸네일 이미지를
+                                <br />
+                                드래그하세요
+                            </p>
+                            <i class="max-sm:block sm:hidden fa-solid fa-file-import text-base"></i>
                         </VS.ThumbnailImageEditUploadDragBox>
                     </ImageDragAndDrop>
 
@@ -363,6 +370,7 @@ const ChoiceEdit = ({
                         onBlur={() => {
                             setFocus(false)
                             handleUpdateTitle()
+                            StyleUtils.rollbackScreen()
                         }}
                     />
                 </VS.ChoiceTitleBox>

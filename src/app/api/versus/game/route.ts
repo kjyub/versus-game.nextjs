@@ -13,7 +13,7 @@ import { GameState, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusType
 import CommonUtils from "@/utils/CommonUtils"
 import MUser from "@/models/user/MUser"
 import { UserRole } from "@/types/UserTypes"
-import mongoose from "mongoose"
+import mongoose, { mongo } from "mongoose"
 import MVersusGameView from "@/models/versus/MVersusGameView"
 import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer"
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
 
     // 내 게임이 활성화되고 userId가 있으면 내 게임만 검색한다.
     if (myGames !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
-        filter["userId"] = userId
+        filter["userId"] = new mongoose.Types.ObjectId(userId)
     } else {
         // 공개 옵션 필터가 없는 경우 public으로만 검색한다.
         filter["privacyType"] = PrivacyTypes.PUBLIC
@@ -84,8 +84,8 @@ export async function GET(req: NextRequest) {
             { $sort: { createdAt: -1 } },
             { $skip: (pageIndex - 1) * pageSize },
             { $limit: pageSize },
-            { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
-            { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
+            // { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
+            { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
             { $unwind: "$user" },
         ])
     

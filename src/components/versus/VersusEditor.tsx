@@ -1,8 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import * as MainStyles from "@/styles/MainStyles"
-import * as VersusStyles from "@/styles/VersusStyles"
+import * as VS from "@/styles/VersusStyles"
 import dynamic from "next/dynamic"
 import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs"
 import { useEffect, useState } from "react"
@@ -18,6 +17,7 @@ import { useSession } from "next-auth/react"
 import { CHOICE_COUNT_CONST, GameState, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes, ThumbnailImageTypes } from "@/types/VersusTypes"
 import ModalContainer from "../ModalContainer"
 import VersusPrivacyModal from "./modals/VersusPrivacyModal"
+import StyleUtils from "@/utils/StyleUtils"
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
 const VersusMainSearch = dynamic(
@@ -63,6 +63,7 @@ export default function VersusEditor({
         //     window.removeEventListener("beforeunload", handleBeforeUnload)
         //     window.removeEventListener("popstate", handleBeforeUnload)
         // }
+        StyleUtils.rollbackScreen()
     }, [])
 
     useEffect(() => {
@@ -235,8 +236,10 @@ export default function VersusEditor({
 
         if (saveResult) {
             if (saveOnClose === null) {
+                StyleUtils.rollbackScreen()
                 router.push("/")
                 router.refresh()
+                StyleUtils.rollbackScreen()
             } else {
                 saveOnClose()
             }
@@ -268,9 +271,9 @@ export default function VersusEditor({
     }
 
     return (
-        <VersusStyles.EditorLayout>
-            <VersusStyles.EditorDataLayout>
-                <VersusStyles.EditInfoBox>
+        <VS.EditorLayout>
+            <VS.EditorDataLayout>
+                <VS.EditInfoBox>
                     <span className="title">기본 정보</span>
 
                     {/* 제목 */}
@@ -282,12 +285,12 @@ export default function VersusEditor({
                     />
 
                     {/* 썸네일 */}
-                    <VersusStyles.InputContainer>
-                        <VersusStyles.InputTitle className="mb-2">
+                    <VS.InputContainer>
+                        <VS.InputTitle className="mb-2">
                             썸네일
-                        </VersusStyles.InputTitle>
-                        <VersusStyles.InputTypeButtonList>
-                            <VersusStyles.InputTypeButton
+                        </VS.InputTitle>
+                        <VS.InputTypeButtonList>
+                            <VS.InputTypeButton
                                 $is_show={
                                     thumbnailType === ThumbnailImageTypes.IMAGE
                                 }
@@ -296,8 +299,8 @@ export default function VersusEditor({
                                 }}
                             >
                                 이미지 썸네일
-                            </VersusStyles.InputTypeButton>
-                            <VersusStyles.InputTypeButton
+                            </VS.InputTypeButton>
+                            <VS.InputTypeButton
                                 $is_show={
                                     thumbnailType === ThumbnailImageTypes.TEXT
                                 }
@@ -306,8 +309,8 @@ export default function VersusEditor({
                                 }}
                             >
                                 텍스트 썸네일
-                            </VersusStyles.InputTypeButton>
-                        </VersusStyles.InputTypeButtonList>
+                            </VS.InputTypeButton>
+                        </VS.InputTypeButtonList>
                         <div className="relative w-full max-lg:h-56 max-2xl:h-72 2xl:h-56">
                             <VersusThumbnailImageEdit
                                 isShow={
@@ -317,7 +320,7 @@ export default function VersusEditor({
                                 updateThumbnail={updateThumbnail}
                             />
                         </div>
-                    </VersusStyles.InputContainer>
+                    </VS.InputContainer>
 
                     {/* 내용 */}
                     <VersusInputTextArea
@@ -327,8 +330,8 @@ export default function VersusEditor({
                         setValue={setContent}
                         rows={8}
                     />
-                </VersusStyles.EditInfoBox>
-                <VersusStyles.EditChoiceBox>
+                </VS.EditInfoBox>
+                <VS.EditChoiceBox>
                     <span className="title">선택지</span>
                     <VersusChoiceEdit
                         game={game}
@@ -336,25 +339,25 @@ export default function VersusEditor({
                         choiceCountType={choiceCountType}
                         setChoiceCountType={setChoiceCountType}
                     />
-                </VersusStyles.EditChoiceBox>
-            </VersusStyles.EditorDataLayout>
+                </VS.EditChoiceBox>
+            </VS.EditorDataLayout>
 
-            <VersusStyles.EditorControlLayout>
+            <VS.EditorControlLayout>
                 {!CommonUtils.isStringNullOrEmpty(game.id) ? (
-                    <VersusStyles.EditorControlButton
+                    <VS.EditorControlButton
                         onClick={() => {
                             handleDelete()
                         }}
                         >
                         삭제
-                    </VersusStyles.EditorControlButton>
+                    </VS.EditorControlButton>
                 ) : (
                     <div>
 
                     </div>
                 )}
                 <div className="flex items-center space-x-2">
-                    <VersusStyles.EditorPrivacySetButton
+                    <VS.EditorPrivacySetButton
                         onClick={()=>{setShowPrivacy(true)}}
                     >
                         {PrivacyTypeIcons[privacyType]}
@@ -362,18 +365,18 @@ export default function VersusEditor({
                             <span className="title">공개 옵션</span>
                             <span className="value">{PrivacyTypeNames[privacyType]}</span>
                         </div>
-                    </VersusStyles.EditorPrivacySetButton>
+                    </VS.EditorPrivacySetButton>
                     {game.state !== GameState.BLOCK && (
-                        <VersusStyles.EditorControlButton
+                        <VS.EditorControlButton
                             onClick={() => {
                                 handleSave()
                             }}
                         >
                             저장
-                        </VersusStyles.EditorControlButton>
+                        </VS.EditorControlButton>
                     )}
                 </div>
-            </VersusStyles.EditorControlLayout>
+            </VS.EditorControlLayout>
 
             <ModalContainer
                 isOpen={isShowPrivacy}
@@ -387,6 +390,6 @@ export default function VersusEditor({
                     close={()=>{setShowPrivacy(false)}}
                 />
             </ModalContainer>
-        </VersusStyles.EditorLayout>
+        </VS.EditorLayout>
     )
 }

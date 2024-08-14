@@ -39,7 +39,7 @@ export const PageLayout = tw(MainStyles.PageLayout)`
 `
 
 export const EditorLayout = tw.div`
-    flex flex-col w-full p-4 mb-0 space-y-4
+    flex flex-col w-full max-md:p-2 md:p-4 mb-0 space-y-4
 `
 export const EditorDataLayout = tw.div`
     flex w-full
@@ -47,9 +47,9 @@ export const EditorDataLayout = tw.div`
     lg:flex-row lg:space-x-4
 `
 export const EditBox = tw.div`
-    flex flex-col min-h-[32rem] max-h-[calc(100vh-192px)] p-4
+    flex flex-col md:min-h-[32rem] md:max-h-[calc(100vh-192px)] max-sm:p-3 sm:p-4
     rounded-lg bg-black/20 backdrop-blur-sm
-    overflow-y-auto scroll-transparent scroll-overlay
+    overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay
     [&>.title]:mb-2
     [&>.title]:font-medium [&>.title]:text-lg [&>.title]:text-stone-50
 `
@@ -126,25 +126,27 @@ export const ThumbnailImageEditUploadBox = tw.div`
     flex flex-col w-full max-sm:h-11 sm:h-full space-y-2
 `
 export const ThumbnailImageEditUploadDragBox = tw.div`
-    flex flex-center w-full h-full p-3
+    flex flex-center w-full h-full p-1
     rounded-md
     ${(props: StyleProps) => (props.$is_active ? "bg-black/20 animate-pulse" : "bg-transparent")}
     border-2 border-dashed border-stone-300
-    text-stone-200 text-sm text-center
+    text-stone-200 text-center
+    max-md:text-xs md:text-sm
     duration-200
 `
 export const ThumbnailImageEditUploadButton = tw.label`
-    flex flex-center flex-shrink-0 h-9
-    rounded-md bg-stone-300/50 hover:bg-stone-300/70 backdrop-blur-sm
-    text-sm text-stone-700
+    flex flex-center flex-shrink-0 max-sm:h-8 sm:h-9
+    rounded-md bg-stone-100/70 hover:bg-stone-100/90 backdrop-blur-sm
+    max-sm:text-xs sm:text-sm text-stone-700
     cursor-pointer duration-200
 `
 
 export const ChoiceLayoutSettingContainer = tw.div`
-    flex flex-center w-full min-h-[32rem]
+    flex flex-center w-full max-md:min-h-[16rem] md:min-h-[32rem]
     rounded-md 
 `
 export const ChoiceLayoutSettingGrid = tw.div`
+    z-10
     grid max-sm:gap-2 sm:gap-4
     ${(props: any) => (props.$choice_count <= 2 ? "max-sm:grid-cols-2 sm:grid-cols-2" : "")}
     ${(props: any) =>
@@ -182,6 +184,7 @@ export const ChoiceTitleBox = tw.div`
     flex items-center w-full px-3 py-2
     rounded-md bg-black/20
     text-stone-300
+    max-sm:text-sm sm:text-base
     ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : "")}
     duration-200
     [&>input]:bg-transparent [&>input]:text-stone-300
@@ -250,15 +253,17 @@ export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     [&>.content]:text-stone-300
 `
 export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
-    flex flex-col items-center max-sm:min-h-[16rem] sm:min-h-[32rem] p-1
+    z-0
+    flex flex-col items-center max-sm:min-h-[16rem] sm:min-h-[32rem] p-0
     overflow-y-auto scroll-transparent scroll-overlay
+    overflow-visible
 `
     // max-h-[calc(100vh-192px)]
 export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
     ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
     ${(props: any) =>
         props.$status === ChoiceSelectStatus.SELECTED
-            ? "ring-4 ring-indigo-500 [&>img]:scale-110"
+            ? "ring-[3px] ring-indigo-500 [&>img]:scale-110"
             : "[&>img]:hover:scale-110"}
     ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "[&>.content]:bg-black/30" : "")}
     duration-300 [&>img]:duration-300

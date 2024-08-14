@@ -19,6 +19,7 @@ import { useInView } from "react-intersection-observer"
 import { IPaginationResponse } from "@/types/common/Responses"
 import { CookieConsts } from "@/types/ApiTypes"
 import StorageUtils from "@/utils/StorageUtils"
+import StyleUtils from "@/utils/StyleUtils"
 
 const PAGE_SIZE = 50
 
@@ -37,6 +38,10 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const [maxPage, setMaxPage] = useState<number>(0)
     const [scrollRef, scrollInView] = useInView()
     const [isScrollLoading, setScrollLoading] = useState<boolean>(false)
+
+    useEffect(() => {
+        StyleUtils.rollbackScreen()
+    }, [])
 
     useEffect(() => {
         // 맨 위의 아이템이 보이면 업데이트
