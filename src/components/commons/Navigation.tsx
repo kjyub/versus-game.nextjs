@@ -11,6 +11,7 @@ import MyInfoModal from "../users/MyInfoModal"
 import User from "@/types/user/User"
 import Link from "next/link"
 import { UserRole } from "@/types/UserTypes"
+import MobileNav from "./MobileNav"
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
@@ -20,6 +21,7 @@ const Navigation = ({}: INavigation) => {
 
     const [userRef, isUserShow, setUserShow] = useDetectClose()
     const [loginRef, isLoginShow, setLoginShow] = useDetectClose()
+    const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose()
 
     useEffect(() => {
         if (session.status === "authenticated") {
@@ -54,8 +56,12 @@ const Navigation = ({}: INavigation) => {
     }
 
     const handleUserInfo = async () => {
-        await getUserInfo()
-        setUserShow(true)
+        if (isUserShow) {
+            setUserShow(false)
+        } else {
+            await getUserInfo()
+            setUserShow(true)
+        }
     }
 
     const userCheck = async () => {
@@ -73,29 +79,62 @@ const Navigation = ({}: INavigation) => {
     return (
         // <></>
         <MainStyles.NavBox>
-            <MainStyles.ItemAddButtonContainer $is_show={true}>
-                <Link href={"/game/add"}>
-                    <MainStyles.NavButton
-                        onClick={handleGameAdd}
-                    >
-                        <i className="fa-solid fa-gamepad mr-2"></i>
-                        게임 만들기
-                    </MainStyles.NavButton>
-                </Link>
-            </MainStyles.ItemAddButtonContainer>
-            {user.userRole === UserRole.STAFF && (
-                <MainStyles.ItemAddButtonContainer $is_show={true} className="max-sm:left-40 sm:left-40">
-                    <Link href={"/csstaff"}>
-                        <MainStyles.NavButton>
-                            <i className="fa-solid fa-hammer mr-2"></i>
-                            관리
+            {/* 내비게이션 메뉴 (PC) */}
+            <MainStyles.NavButtonList className="max-md:hidden md:flex">
+                <MainStyles.ItemAddButtonContainer $is_show={true}>
+                    <Link href={"/game/add"}>
+                        <MainStyles.NavButton
+                            onClick={handleGameAdd}
+                        >
+                            <i className="fa-solid fa-gamepad mr-2"></i>
+                            게임 만들기
                         </MainStyles.NavButton>
                     </Link>
                 </MainStyles.ItemAddButtonContainer>
-            )}
+                {user.userRole === UserRole.STAFF && (
+                    <MainStyles.ItemAddButtonContainer $is_show={true} className="max-md:left-40 md:left-40">
+                        <Link href={"/csstaff"}>
+                            <MainStyles.NavButton>
+                                <i className="fa-solid fa-hammer mr-2"></i>
+                                관리
+                            </MainStyles.NavButton>
+                        </Link>
+                    </MainStyles.ItemAddButtonContainer>
+                )}
+            </MainStyles.NavButtonList>
+            {/* 내비게이션 메뉴 (모바일) */}
+            <MainStyles.NavButtonList className="max-md:flex md:hidden">
+                <MainStyles.ItemAddButtonContainer 
+                    $is_show={true}
+                    ref={mobileNavRef}
+                >
+                    <MainStyles.NavMobileMenuButton
+                        onClick={() => {
+                            setMobileNavShow(!isMobileNavShow)
+                        }}
+                    >
+                        <i className="fa-solid fa-bars text-lg mr-2 mt-[2px]"></i>
+                        메뉴
+                    </MainStyles.NavMobileMenuButton>
+
+                    <MainStyles.MobileNavLayout $is_show={isMobileNavShow} >
+                        {isMobileNavShow && (
+                            <MobileNav
+                                isModalShow={isMobileNavShow}
+                                setModalShow={setMobileNavShow}
+                                user={user}
+                            />
+                        )}
+                    </MainStyles.MobileNavLayout>
+                </MainStyles.ItemAddButtonContainer>
+            </MainStyles.NavButtonList>
+
+            {/* 내비게이션 로고 */}
             <Link href={"/"} className="title">
                 <span>Versus Game</span>
             </Link>
+            
+            {/* 내비게이션 회원 (로그인 상태) */}
             <MainStyles.LoginButtonContainer
                 ref={userRef}
                 $is_show={session.status === "authenticated"}
@@ -123,6 +162,8 @@ const Navigation = ({}: INavigation) => {
                     )}
                 </MainStyles.LoginLayout>
             </MainStyles.LoginButtonContainer>
+
+            {/* 내비게이션 회원 (로그인 안된 상태) */}
             <MainStyles.LoginButtonContainer
                 ref={loginRef}
                 $is_show={session.status !== "authenticated"}

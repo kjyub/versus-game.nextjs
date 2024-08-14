@@ -8,11 +8,11 @@ import { AuthError } from "next-auth"
 import ApiUtils from "@/utils/ApiUtils"
 import User from "@/types/user/User"
 
-export interface MyInfoModal {
+export interface IMyInfoModal {
     isModalShow: boolean
     user: User
 }
-const MyInfoModal = ({ isModalShow, user }: MyInfoModal) => {
+const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
     const [email, setEmail] = useState<string>("")
     const [name, setName] = useState<string>("")
     const [passwordCurrent, setPasswordCurrent] = useState<string>("")
