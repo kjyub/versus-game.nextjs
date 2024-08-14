@@ -16,6 +16,7 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
 
     const [searchValue, setSearchValue] = useState<string>("")
     const [isMyGame, setMyGame] = useState<boolean>(false)
+    const [isChoiceGame, setChoiceGame] = useState<boolean>(false)
 
     useEffect(() => {
         const search = searchParams.get("search")
@@ -26,6 +27,9 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
 
         const myGames = searchParams.get("myGames")
         setMyGame(myGames !== null)
+
+        const choiced = searchParams.get("choiced")
+        setChoiceGame(choiced !== null)
     }, [searchParams])
 
     const handleSearch = () => {
@@ -79,6 +83,31 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
 
         router.push(`/${queryUrl}`)
     }
+    const handleChoiceGame = () => {
+        let query = {}
+
+        // 현재 쿼리를 query에 추가
+        searchParams.forEach(
+            (value: string, key: string, parent: URLSearchParams) => {
+                query[key] = value
+            },
+        )
+
+        // 내 게임을 활성화
+        if (!isChoiceGame) {
+            query["choiced"] = 1
+        } else {
+            delete query.choiced
+        }
+
+        let queryUrl = ""
+        if (Object.keys(query).length > 0) {
+            queryUrl += "?"
+            queryUrl += new URLSearchParams(query).toString()
+        }
+
+        router.push(`/${queryUrl}`)
+    }
 
     return (
         <VS.MainSearchLayout>
@@ -86,6 +115,14 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
                 {/* 정렬 (사용 안할 수도 있음) */}
                 <div className="section"></div>
                 <div className="section">
+                    {session.status === "authenticated" && (
+                        <VS.MainSearchFilterMenuButton 
+                            $is_active={isChoiceGame}
+                            onClick={()=>{handleChoiceGame()}}
+                        >
+                            참여한 게임
+                        </VS.MainSearchFilterMenuButton>
+                    )}
                     {session.status === "authenticated" && (
                         <VS.MainSearchFilterMenuButton 
                             $is_active={isMyGame}

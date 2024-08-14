@@ -21,6 +21,8 @@ export async function GET(req: NextRequest) {
     let filter = {
         isDeleted: false,
     }
+    let addFields = []
+    let lookUps = []
 
     await DBUtils.connect()
 
@@ -44,8 +46,10 @@ export async function GET(req: NextRequest) {
         ]
     }
     
+    // 내 게임 필터링
     const myGames = req.nextUrl.searchParams.get("myGames")
     const userId = req.nextUrl.searchParams.get("userId")
+    const userObjectId = new mongoose.Types.ObjectId(userId)
 
     // 내 게임이 활성화되고 userId가 있으면 내 게임만 검색한다.
     if (myGames !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
@@ -58,6 +62,25 @@ export async function GET(req: NextRequest) {
         if (!isStaff) {
             filter["state"] = GameState.NORMAL
         }
+    }
+
+    // 참여한 게임 필터링
+    const choiced = req.nextUrl.searchParams.get("choiced")
+    if (choiced !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
+        addFields.push({
+            $addFields: {
+                _idString: { $toString: '$_id' }
+            }
+        })
+        lookUps.push({
+            $lookup: {
+                from: "versus_game_answers",
+                localField: "_idString",
+                foreignField: "gameId",
+                as: "answers"
+            }
+        })
+        filter["answers.userId"] = userId
     }
 
     // 페이지네이션
@@ -80,6 +103,8 @@ export async function GET(req: NextRequest) {
 
     let items = await MVersusGame
         .aggregate([
+            ...addFields,
+            ...lookUps,
             { $match: filter },
             { $sort: { createdAt: -1 } },
             { $skip: (pageIndex - 1) * pageSize },

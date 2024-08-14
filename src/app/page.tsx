@@ -17,14 +17,17 @@ const VersusList = dynamic(() => import("@/components/versus/VersusList"), {
     ssr: false,
 })
 
-const getGameList = async (search: string | undefined, myGames: string | undefined, userId: string) => {
+const getGameList = async (search: string | undefined, myGames: boolean, choiced: boolean, userId: string) => {
     let params = {}
 
     if (!CommonUtils.isStringNullOrEmpty(search)) {
         params["search"] = search
     }
-    if (!CommonUtils.isStringNullOrEmpty(myGames)) {
+    if (myGames) {
         params["myGames"] = 1
+    }
+    if (choiced) {
+        params["choiced"] = 1
     }
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
         params["userId"] = userId
@@ -47,9 +50,10 @@ export default async function Home({ params, searchParams }) {
     const session = await auth()
     const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
 
-    const search = searchParams.search ? searchParams.search : ""
-    const myGames = searchParams.myGames ? searchParams.myGames : ""
-    const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, userId)
+    const search: string = searchParams.search ? searchParams.search : ""
+    const myGames: boolean = searchParams.myGames ? true : false
+    const choiced: boolean = searchParams.choiced ? true : false
+    const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, choiced, userId)
 
     return (
         <MainStyles.PageLayout>

@@ -15,10 +15,10 @@ export const MainSearchLayout = tw.div`
 `
 export const MainSearchFilterMenuBox = tw.div`
     flex justify-between items-center w-full
-    [&>div.section]:flex [&>div.section]:items-center [&>div.section]:space-x-2
+    [&>div.section]:flex [&>div.section]:items-center [&>div.section]:space-x-1
 `
 export const MainSearchFilterMenuButton = tw.button`
-    flex flex-center px-2.5 py-1
+    flex flex-center px-2 py-0.5
     rounded-md text-sm
     ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/70 hover:bg-stone-100/90 text-stone-600" : "text-stone-300 bg-black/40 hover:bg-black/50")}
     duration-200
