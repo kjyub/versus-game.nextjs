@@ -4,6 +4,7 @@ import * as MS from "@/styles/MainStyles"
 import Link from "next/link"
 import User from "@/types/user/User"
 import { UserRole } from "@/types/UserTypes"
+import StyleUtils from "@/utils/StyleUtils"
 
 export interface IMobileNav {
     isModalShow: boolean
@@ -11,10 +12,14 @@ export interface IMobileNav {
     user: User
 }
 const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
+    const handleMobileNav = () => {
+        setModalShow(false)
+        StyleUtils.rollbackScreen()
+    }
 
     return (
         <MS.MobileNavContainer $is_staff={user.userRole === UserRole.STAFF} style={{transition: "1s filter linear"}}>
-            <MS.MobileNavList onClick={()=>{setModalShow(false)}}>
+            <MS.MobileNavList onClick={()=>{handleMobileNav()}}>
                 <Link href={"/"}>
                     <MS.MobileNavButton>
                         <i className="fa-solid fa-gamepad"></i>

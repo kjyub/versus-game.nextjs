@@ -20,7 +20,7 @@ export const MainSearchFilterMenuBox = tw.div`
 export const MainSearchFilterMenuButton = tw.button`
     flex flex-center px-2 py-0.5
     rounded-md text-sm
-    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/70 hover:bg-stone-100/90 text-stone-600" : "text-stone-300 bg-black/40 hover:bg-black/50")}
+    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600" : "text-stone-300 bg-black/40 hover:bg-black/50")}
     duration-200
 `
 
@@ -135,7 +135,7 @@ export const ThumbnailImageEditUploadDragBox = tw.div`
     duration-200
 `
 export const ThumbnailImageEditUploadButton = tw.label`
-    flex flex-center flex-shrink-0 max-sm:h-8 sm:h-9
+    flex flex-center flex-shrink-0 max-sm:h-7 sm:h-9
     rounded-md bg-stone-100/70 hover:bg-stone-100/90 backdrop-blur-sm
     max-sm:text-xs sm:text-sm text-stone-700
     cursor-pointer duration-200
@@ -173,7 +173,7 @@ export const ChoiceThumbnailBox = tw.div`
 `
 export const ChoiceImageEditBox = tw.div`
     absolute z-10
-    flex flex-col w-full h-full max-sm:px-4 max-sm:py-2 sm:px-12 sm:py-8
+    flex flex-col w-full h-full max-sm:px-4 max-sm:py-4 sm:px-12 sm:py-8
     ${(props: StyleProps) => (props.$is_active ? "bg-black/70" : "")}
 `
 export const ChoiceInfoBox = tw.div`

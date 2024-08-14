@@ -327,7 +327,9 @@ const ChoiceEdit = ({
                                 <br />
                                 드래그하세요
                             </p>
-                            <i class="max-sm:block sm:hidden fa-solid fa-file-import text-base"></i>
+                            <div className="max-sm:block sm:hidden">
+                                <i className="fa-solid fa-cloud-arrow-up text-base"></i>
+                            </div>
                         </VS.ThumbnailImageEditUploadDragBox>
                     </ImageDragAndDrop>
 
