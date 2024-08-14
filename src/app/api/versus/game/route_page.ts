@@ -16,7 +16,6 @@ import { UserRole } from "@/types/UserTypes"
 import mongoose, { mongo } from "mongoose"
 import MVersusGameView from "@/models/versus/MVersusGameView"
 import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer"
-import { IPaginationResponse } from "@/types/common/Responses"
 
 export async function GET(req: NextRequest) {
     let filter = {
@@ -85,11 +84,9 @@ export async function GET(req: NextRequest) {
     }
 
     // 페이지네이션
-    const lastId = req.nextUrl.searchParams.get("lastId") ?? ""
-    if (!CommonUtils.isStringNullOrEmpty(lastId)) {
-        filter["_id"] = { $lt: new mongoose.Types.ObjectId(lastId) }
-    }
+    let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? 1)
     const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
+    // const itemCount = await MVersusGame.countDocuments(filter)
     const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length
     const maxPage = Math.ceil(itemCount / pageSize)
 
@@ -98,7 +95,6 @@ export async function GET(req: NextRequest) {
             itemCount: 0,
             pageIndex: 1,
             maxPage: 0,
-            lastId: "",
             items: []
         }
     
@@ -110,25 +106,13 @@ export async function GET(req: NextRequest) {
             ...addFields,
             ...lookUps,
             { $match: filter },
-            { $sort: { _id: -1 } },
-            // { $skip: (pageIndex - 1) * pageSize },
+            { $sort: { createdAt: -1 } },
+            { $skip: (pageIndex - 1) * pageSize },
             { $limit: pageSize },
             // { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
             { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
             { $unwind: "$user" },
         ])
-
-    if (items.length === 0) {
-        const result: IPaginationResponse = {
-            itemCount: 0,
-            pageIndex: 1,
-            maxPage: 0,
-            lastId: "",
-            items: []
-        }
-    
-        return ApiUtils.response(result)
-    }
     
     // 이미 읽은 게시글인지 확인
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
@@ -157,9 +141,8 @@ export async function GET(req: NextRequest) {
 
     const result: IPaginationResponse = {
         itemCount: itemCount,
-        pageIndex: 1,
+        pageIndex: pageIndex,
         maxPage: maxPage,
-        lastId: items[items.length - 1]._id,
         items: items
     }
 

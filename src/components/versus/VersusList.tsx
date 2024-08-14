@@ -29,11 +29,14 @@ interface IVersusList {
 export default function VersusList({ versusGameData }: IVersusList) {
     const router = useRouter()
 
+    const [gameRawData, setGameRawData] = useState<Array<object>>([])
+
     const user = useUser()
     const [games, setGames] = useState<Array<VersusGame>>([])
 
     const searchParams = useSearchParams()
     const [pageIndex, setPageIndex] = useState<number>(1)
+    const [lastId, setLastId] = useState<string>("")
     const [itemCount, setItemCount] = useState<number>(0)
     const [maxPage, setMaxPage] = useState<number>(0)
     const [scrollRef, scrollInView] = useInView()
@@ -45,7 +48,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
     useEffect(() => {
         // 맨 위의 아이템이 보이면 업데이트
-        if (scrollInView && games.length >= PAGE_SIZE - 3 && pageIndex + 1 <= maxPage) {
+        if (scrollInView && games.length >= PAGE_SIZE - 3) {
             getNextPage()
         }
     }, [scrollInView])
@@ -81,6 +84,11 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
         setGames(newGames)
         setPageIndex(1)
+        if (newGames.length > 0) {
+            setLastId(newGames[newGames.length - 1].id)
+        } else {
+            setLastId("")
+        }
         setItemCount(versusGameData.itemCount)
         setMaxPage(versusGameData.maxPage)
     }, [versusGameData])
@@ -89,11 +97,16 @@ export default function VersusList({ versusGameData }: IVersusList) {
         if (isScrollLoading) {
             return
         }
+        // 게임들이 이미 한번 이상 로딩되었는데 lastId가 없으면 에러 혹은 페이지 끝이라고 간주
+        if (pageIndex > 1 && CommonUtils.isStringNullOrEmpty(lastId)) {
+            return
+        }
 
         setScrollLoading(true)
 
         let params = {
-            pageIndex: pageIndex + 1
+            // pageIndex: pageIndex + 1
+            lastId: lastId
         }
 
         const search = searchParams.get("search")
@@ -132,6 +145,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
         })
 
         setPageIndex(pageIndex + 1)
+        setLastId(pagination.lastId)
         setGames([...games, ...newGames])
         setItemCount(pagination.itemCount)
         setMaxPage(pagination.maxPage)
