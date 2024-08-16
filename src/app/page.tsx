@@ -56,7 +56,7 @@ export default async function Home({ params, searchParams }) {
     const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, choiced, userId)
 
     return (
-        <MainStyles.PageLayout>
+        <MainStyles.PageLayout id="game-list-page">
             <VersusMainSearch />
             <VersusList versusGameData={gamePaginationData} />
         </MainStyles.PageLayout>

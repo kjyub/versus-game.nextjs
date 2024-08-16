@@ -46,7 +46,7 @@ export default async function RootLayout({
                 <SessionProvider session={session}>
                     <div id="layout" className={`absolute z-0 w-screen min-h-full h-full max-h-full overflow-hidden`}>
                         <Navigation />
-                        <div className="flex flex-col w-full h-[calc(100%-3rem)] overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
+                        <div id="page-root" className="flex flex-col w-full h-[calc(100%-3rem)] overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
                             {children}
                         </div>
                     </div>

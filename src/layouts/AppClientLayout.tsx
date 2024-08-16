@@ -19,6 +19,7 @@ export default function AppClientLayout({
     useEffect(() => {
         // 모바일 화면 스크롤이 깨지지 않게 유지용
         StyleUtils.rollbackScreen()
+        StyleUtils.initScrollEvent()
     }, [pathname])
 
     const requestGuestId = async () => {

@@ -20,6 +20,7 @@ import { IPaginationResponse } from "@/types/common/Responses"
 import { CookieConsts } from "@/types/ApiTypes"
 import StorageUtils from "@/utils/StorageUtils"
 import StyleUtils from "@/utils/StyleUtils"
+import { IRawData } from "@/types/CommonTypes"
 
 const PAGE_SIZE = 50
 
@@ -29,7 +30,8 @@ interface IVersusList {
 export default function VersusList({ versusGameData }: IVersusList) {
     const router = useRouter()
 
-    const [gameRawData, setGameRawData] = useState<Array<object>>([])
+    const [gameRawData, setGameRawData] = useState<IRawData>({})
+    const [rollbackScrollLocation, setRollbackScrollLocation] = useState<number>(-1) // 목록으로 되돌아 왔을 때 이동할 스크롤 위치
 
     const user = useUser()
     const [games, setGames] = useState<Array<VersusGame>>([])
@@ -54,11 +56,49 @@ export default function VersusList({ versusGameData }: IVersusList) {
     }, [scrollInView])
 
     useEffect(() => {
+        // 목록으로 되돌아 왔을 때 이동할 스크롤 위치가 있다면 바로 이동한다.
+        if (games.length > 0 && rollbackScrollLocation >= 0) {
+            const page = document.getElementById("page-root")
+            if (page) {
+                page.scrollTo({
+                    top: rollbackScrollLocation,
+                })
+            }
+        }
+    }, [games, rollbackScrollLocation])
+
+    useEffect(() => {
         // SSR 데이터는 1페이지만 불러온다.
         if (!Array.isArray(versusGameData.items)) {
             return
         }
 
+        if (rollbackRawData()) {
+            return
+        }
+
+        const newGames: Array<VersusGame> = convertGameDataToGame(versusGameData.items)
+
+        setGames(newGames)
+        setPageIndex(1)
+        let _lastId: string = ""
+        if (newGames.length > 0) {
+            _lastId = newGames[newGames.length - 1].id
+        } else {
+            _lastId = ""
+        }
+        setLastId(_lastId)
+        setItemCount(versusGameData.itemCount)
+        setMaxPage(versusGameData.maxPage)
+
+        // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
+        updateRawData([], _lastId, versusGameData.items)
+        // 페이지를 처음 들어온 경우 이전 기억을 지운다.
+        sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
+    }, [versusGameData])
+
+    // Api에서 게임 데이터를 게임 객체로 변환
+    const convertGameDataToGame = (gameData: Array<object>): Array<VersusGame> => {
         // 유저가 게임을 조회, 참여 했는지를 임시로 저장해서 확인한다.
         // 뒤로가기 처럼 다시 리스트 조회 시 매번 api 요청하지 않기 때문에 최적화를 위함.
         const gameViewsCache: Array<string> = StorageUtils.getSessionStorageList(CookieConsts.GAME_VIEWED_SESSION)
@@ -68,7 +108,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
         let newGames: Array<VersusGame> = []
 
-        versusGameData.items.map((data) => {
+        gameData.map((data) => {
             const game = new VersusGame()
             game.parseResponse(data)
 
@@ -82,16 +122,8 @@ export default function VersusList({ versusGameData }: IVersusList) {
             newGames.push(game)
         })
 
-        setGames(newGames)
-        setPageIndex(1)
-        if (newGames.length > 0) {
-            setLastId(newGames[newGames.length - 1].id)
-        } else {
-            setLastId("")
-        }
-        setItemCount(versusGameData.itemCount)
-        setMaxPage(versusGameData.maxPage)
-    }, [versusGameData])
+        return newGames
+    }
 
     const getNextPage = async () => {
         if (isScrollLoading) {
@@ -136,13 +168,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
         const pagination: IPaginationResponse = response
         const items = pagination.items
 
-        let newGames: Array<VersusGame> = []
-        items.map((data) => {
-            const game = new VersusGame()
-            game.parseResponse(data)
-
-            newGames.push(game)
-        })
+        const newGames: Array<VersusGame> = convertGameDataToGame(items)
 
         setPageIndex(pageIndex + 1)
         setLastId(pagination.lastId)
@@ -150,11 +176,84 @@ export default function VersusList({ versusGameData }: IVersusList) {
         setItemCount(pagination.itemCount)
         setMaxPage(pagination.maxPage)
 
+        // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
+        updateRawData(gameRawData.items, pagination.lastId, items)
+
         setScrollLoading(false)
+    }
+    
+    // 뒤로가기로 돌아왔을 때 사용할 데이터 업데이트
+    const updateRawData = (rawDataItems: IRawData = [], lastId:string, newDataItems: Array<object>) => {
+        let scrollLocation = 0
+        const page = document.getElementById("page-root")
+        if (page) {
+            scrollLocation = page.scrollHeight
+        }
+
+        const newRawData: IRawData = {
+            lastId: lastId,
+            items: [...rawDataItems, ...newDataItems],
+            scrollLocation: scrollLocation,
+        }
+
+        setGameRawData(newRawData)
+    }
+
+    // 현재 목록 상태를 세션스토리지에 저장한다.
+    const memoryRawData = (_game: VersusGame) => {
+        let scrollLocation = 0
+        const page = document.getElementById("page-root")
+        if (page) {
+            scrollLocation = page.scrollTop
+        }
+
+        const newRawData: IRawData = {
+            ...gameRawData,
+            scrollLocation: scrollLocation,
+        }
+
+        setGameRawData(newRawData)
+
+        const jsonData = JSON.stringify(newRawData)
+        sessionStorage.setItem(CookieConsts.GAME_LIST_DATA_SESSION, jsonData)
+    }
+
+    // 리스트 상태를 이전 상태로 되돌린다.
+    const rollbackRawData = (): boolean => {
+        const jsonData = sessionStorage.getItem(CookieConsts.GAME_LIST_DATA_SESSION)
+
+        if (CommonUtils.isNullOrUndefined(jsonData)) {
+            return false
+        }
+
+        const _rawData: IRawData = JSON.parse(jsonData)
+        const newGames: Array<VersusGame> = convertGameDataToGame(_rawData.items)
+
+        setGames(newGames)
+        setPageIndex(1)
+        setLastId(_rawData.lastId)
+        setItemCount(0)
+        setMaxPage(0)
+
+        // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
+        updateRawData([], _rawData.lastId, _rawData.items)
+        setRollbackScrollLocation(_rawData.scrollLocation)
+        
+        return true
     }
 
     const handleLink = (link: string) => {
         router.push(link)
+    }
+
+    const handleTop = () => {
+        const page = document.getElementById("page-root")
+        if (page) {
+            page.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            })
+        }
     }
 
     return (
@@ -166,10 +265,14 @@ export default function VersusList({ versusGameData }: IVersusList) {
                         game={game}
                         user={user}
                         goLink={handleLink}
+                        memoryRawData={memoryRawData}
                     />
                 ))}
             </VS.ListGrid>
             <VS.ListGameLoadingBox $is_active={isScrollLoading} ref={scrollRef}></VS.ListGameLoadingBox>
+            <VS.ListScrollTopButton onClick={() => {handleTop()}}>
+                <i className="fa-solid fa-chevron-up"></i>
+            </VS.ListScrollTopButton>
         </VS.ListLayout>
     )
 }
@@ -178,13 +281,15 @@ interface IGameBox {
     game: VersusGame
     user: User
     goLink: (gameId: string) => void
+    memoryRawData: (_game: VersusGame) => void
 }
-const GameBox = ({ game, user, goLink }: IGameBox) => {
+const GameBox = ({ game, user, goLink, memoryRawData }: IGameBox) => {
     const isMaster = game.userId === user.id
     const [isHover, setHover] = useState<boolean>(false)
 
     const handleGame = () => {
         StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, game.nanoId)
+        memoryRawData(game)
         goLink(`/game/${game.nanoId}`)
     }
 

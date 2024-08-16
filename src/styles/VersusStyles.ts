@@ -193,6 +193,13 @@ export const ChoiceTitleBox = tw.div`
 export const ListLayout = tw.div`
     flex flex-col p-4 w-full space-y-4
 `
+export const ListScrollTopButton = tw.button`
+    absolute max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
+    flex flex-center w-10 h-10
+    border border-blue-500/50
+    rounded-full bg-blue-400/60 backdrop-blur
+    text-white
+`
 export const ListGrid = tw.div`
     grid max-sm:grid-cols-2 max-md:grid-cols-2 max-lg:grid-cols-3 max-xl:grid-cols-4 max-3xl:grid-cols-5 3xl:grid-cols-6
     max-sm:gap-2 sm:gap-4
