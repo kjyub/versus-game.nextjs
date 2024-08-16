@@ -248,10 +248,22 @@ const ChoiceEdit = ({
     const [image, setImage] = useState<VersusFile>(new VersusFile())
 
     useEffect(() => {
+        if (CommonUtils.isNullOrUndefined(choice)) {
+            return
+        }
+        
+        init()
+    }, [choice])
+
+    if (CommonUtils.isNullOrUndefined(choice)) {
+        return
+    }
+
+    const init = () => {
         getImage()
 
         setTitle(choice.title)
-    }, [choice])
+    }
 
     const getImage = async () => {
         if (CommonUtils.isStringNullOrEmpty(choice.imageId)) {
