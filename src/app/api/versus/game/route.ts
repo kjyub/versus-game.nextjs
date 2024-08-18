@@ -24,6 +24,7 @@ export async function GET(req: NextRequest) {
     }
     let addFields = []
     let lookUps = []
+    let sort = { _id: -1}
 
     await DBUtils.connect()
 
@@ -40,6 +41,19 @@ export async function GET(req: NextRequest) {
     const searchValue = req.nextUrl.searchParams.get("search")
     if (searchValue !== null) {
         // filter["title"] = new RegExp(searchValue, "i")
+        // filter["$text"] = { $search: searchValue }
+        // addFields.push({
+        //     $addFields: {
+        //         score: { $meta: 'textScore' }
+        //     }
+        // })
+        // sort = {
+        //     // "score": { $meta: "textScore" },
+        //     // "text": 1,
+        //     // "content": 1,
+        //     // "choices.title": 1,
+        //     "_id": -1
+        // }
         filter["$or"] = [
             { "title": {"$regex": searchValue, "$options": "i"} },
             { "content": {"$regex": searchValue, "$options": "i"} },
@@ -107,10 +121,10 @@ export async function GET(req: NextRequest) {
 
     let items = await MVersusGame
         .aggregate([
+            { $match: filter },
             ...addFields,
             ...lookUps,
-            { $match: filter },
-            { $sort: { _id: -1 } },
+            { $sort: sort },
             // { $skip: (pageIndex - 1) * pageSize },
             { $limit: pageSize },
             // { $addFields: { userObjectId: { $toObjectId: "$userId"} }},

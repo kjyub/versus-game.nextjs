@@ -93,7 +93,17 @@ const schema = new Schema(
         },
     },
     { timestamps: true },
-)
+).index({
+    "title": "text",
+    "content": "text",
+    "choices.title": "text"
+}, {
+    weights: {
+        "title": 5,
+        "content": 4,
+        "choices.title": 1
+    }
+})
 
 // schema.virtual("user", {
 //     ref: "users",
