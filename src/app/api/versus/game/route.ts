@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
 
     const searchValue = req.nextUrl.searchParams.get("search")
     if (searchValue !== null) {
+        // 검색 우선순위 기능 보류 (필요없어 보임)
         // filter["title"] = new RegExp(searchValue, "i")
         // filter["$text"] = { $search: searchValue }
         // addFields.push({
