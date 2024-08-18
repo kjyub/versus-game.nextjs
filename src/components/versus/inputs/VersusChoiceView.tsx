@@ -157,26 +157,12 @@ const ChoiceView = ({ choiceCount, index, choice, selectChoice, selectedChoice, 
     const [image, setImage] = useState<VersusFile>(new VersusFile())
 
     useEffect(() => {
-        if (CommonUtils.isNullOrUndefined(choice)) {
-            return
-        }
-
-        init()
+        getImage()
     }, [choice])
 
     useEffect(() => {
         updateSelectStatus()
     }, [selectedChoice])
-
-    if (CommonUtils.isNullOrUndefined(choice)) {
-        return
-    }
-
-    const init = () => {
-        getImage()
-
-        setTitle(choice.title)
-    }
 
     const getImage = async () => {
         if (CommonUtils.isStringNullOrEmpty(choice.imageId)) {

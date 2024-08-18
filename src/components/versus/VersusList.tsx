@@ -222,7 +222,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const rollbackRawData = (): boolean => {
         const jsonData = sessionStorage.getItem(CookieConsts.GAME_LIST_DATA_SESSION)
 
-        if (CommonUtils.isNullOrUndefined(jsonData)) {
+        if (CommonUtils.isStringNullOrEmpty(jsonData)) {
             return false
         }
 

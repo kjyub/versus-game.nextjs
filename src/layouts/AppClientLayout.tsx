@@ -1,5 +1,6 @@
 "use client"
 
+import { CookieConsts } from "@/types/ApiTypes"
 import ApiUtils from "@/utils/ApiUtils"
 import StyleUtils from "@/utils/StyleUtils"
 import { usePathname } from "next/navigation"
@@ -14,6 +15,9 @@ export default function AppClientLayout({
 
     useEffect(() => {
         requestGuestId()
+
+        // 게임 리스트 페이지로 되돌아 올 시 저장하는 데이터 삭제
+        sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
     }, [])
 
     useEffect(() => {

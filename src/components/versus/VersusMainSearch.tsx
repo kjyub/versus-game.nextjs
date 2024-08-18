@@ -6,6 +6,7 @@ import * as VS from "@/styles/VersusStyles"
 import VersusSearchInput from "./inputs/VersusSearchInput"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
+import { CookieConsts } from "@/types/ApiTypes"
 
 interface IVersusMainSearch {}
 const VersusMainSearch = ({}: IVersusMainSearch) => {
@@ -34,6 +35,9 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
 
     const handleSearch = () => {
         let query = {}
+
+        // 게임 리스트 페이지로 되돌아 올 시 저장하는 데이터 삭제
+        sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
 
         // 현재 쿼리를 query에 추가
         searchParams.forEach(
