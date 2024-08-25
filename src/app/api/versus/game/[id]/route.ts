@@ -33,6 +33,13 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
 
     const mGame = mGames.length > 0 ? mGames[0] : null
 
+    if (CommonUtils.isNullOrUndefined(mGame)) {
+        return ApiUtils.response(mGame)
+    }
+
+    const relatedGames = await MVersusGame.find({ _id: { $in: mGame.relatedGameIds } })
+    mGame.relatedGames = relatedGames
+
     return ApiUtils.response(mGame)
 }
 

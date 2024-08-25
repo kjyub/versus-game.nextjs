@@ -218,7 +218,7 @@ export const ListGameThumbnailBox = tw.div`
     relative
     flex flex-col flex-center w-full aspect-[4/3]
     rounded-md bg-stone-800/20
-    text-stone-300
+    text-stone-500
     overflow-hidden
     [&>img]:object-cover [&>img]:duration-300 [&>img.hover]:scale-110
 `
@@ -246,7 +246,7 @@ export const ListGamePrivacy = tw.div`
 `
 
 export const GameViewLayout = tw.div`
-    flex flex-col items-center w-full max-w-[60rem] p-2 mx-auto space-y-4
+    flex flex-col items-center w-full max-w-[60rem] p-2 pb-16 mx-auto space-y-4
 `
 export const GameViewSectionLayoutSize = tw.div`
     w-full p-4
@@ -349,6 +349,20 @@ export const CommentPaginationButton = tw.button`
     text-stone-300
     duration-200
     ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent hover:bg-black/20")}
+`
+
+export const GameViewRelatedLayout = tw(GameViewSectionLayoutSize)`
+    ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
+    flex-col p-0 space-y-4
+    [&>.title]:font-semibold [&>.title]:text-lg [&>.title]:text-stone-800
+`
+export const GameViewRelatedList = tw.div`
+    max-sm:grid max-sm:grid-cols-2 max-sm:gap-2
+    max-sm:max-h-[20rem] max-sm:overflow-y-auto
+    sm:flex sm:flex-row sm:space-x-3
+    w-full sm:pb-1
+    sm:overflow-x-scroll scroll-transparent scroll-overlay
+    sm:[&>div]:min-w-[12rem]
 `
 
 

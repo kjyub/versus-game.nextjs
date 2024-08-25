@@ -19,6 +19,8 @@ import { Dictionary } from "@/types/common/Dictionary"
 import VersusGameViewComment from "./VersusGameViewComment"
 import StorageUtils from "@/utils/StorageUtils"
 import { CookieConsts } from "@/types/ApiTypes"
+import VersusGameViewRelated from "./VersusGameViewRelated"
+import User from "@/types/user/User"
 
 const INIT_CHOICES = [
     new VersusGameChoice(),
@@ -39,6 +41,8 @@ interface IVersusGameView {
 export default function VersusGameView({ gameData = null }: IVersusGameView) {
     const router = useRouter()
     const session = useSession()
+
+    const [user, setUser] = useState<User>(new User())
 
     const [game, setGame] = useState<VersusGame>(new VersusGame())
     const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES)
@@ -87,6 +91,8 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
             alert("게임을 찾을 수 없습니다")
             return
         }
+
+        updateUser()
 
         setMyAnswerLoading(true)
         const _game = new VersusGame()
@@ -138,6 +144,25 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         })
     }
 
+    const updateUser = async () => {
+        if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+            return
+        }
+
+        const [bResult, statusCode, response] = await ApiUtils.request(
+            `/api/users/user_info/${session.data?.user._id}`,
+            "GET",
+        )
+
+        if (bResult) {
+            const user = new User()
+            user.parseResponse(response)
+            setUser(user)
+        } else {
+            alert(response)
+        }
+    }
+ 
     const getAnswerResults = async () => {
         const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "GET", {
             gameNanoId: game.nanoId,
@@ -264,6 +289,12 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                     선택 후 결과 보기
                 </button>
             </VersusStyles.GameViewSelectLayout>
+
+            <VersusGameViewRelated
+                game={game}
+                user={user}
+                isShowResult={game.relatedGames.length > 0 && isShowResult}
+            />
 
             <VersusGameViewComment game={game} answerChoice={answerChoice} isShowResult={isShowResult} />
         </VersusStyles.GameViewLayout>

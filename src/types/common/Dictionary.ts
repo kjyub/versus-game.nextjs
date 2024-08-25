@@ -70,4 +70,8 @@ export class Dictionary<T extends KeyTypes, K> {
     delete(key: T) {
         delete this.data[key]
     }
+
+    getData(): Record<T, K> {
+        return this.data
+    }
 }

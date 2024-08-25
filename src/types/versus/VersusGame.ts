@@ -26,6 +26,8 @@ export default class VersusGame extends AbsApiObject {
     private _user: User
     private _isView: booelan // 사용자가 게임을 조회 했었는지 여부
 
+    private _relatedGames: Array<VersusGame>
+
     constructor() {
         super()
         this._id = ""
@@ -50,6 +52,8 @@ export default class VersusGame extends AbsApiObject {
         this._user = new User()
         this._isView = false
         this._isChoice = false
+
+        this._relatedGames = []
     }
 
     parseResponse(json: object) {
@@ -90,6 +94,15 @@ export default class VersusGame extends AbsApiObject {
         if (json.isChoice) {
             this._isChoice = json.isChoice
         }
+
+        if (json.relatedGames && Array.isArray(json.relatedGames)) {
+            this._relatedGames = []
+            json.relatedGames.map((_data) => {
+                const relatedGame = new VersusGame()
+                relatedGame.parseResponse(_data)
+                this._relatedGames.push(relatedGame)
+            })
+        } 
     }
 
     get id(): string {
@@ -139,6 +152,9 @@ export default class VersusGame extends AbsApiObject {
     }
     get isChoice(): boolean {
         return this._isChoice
+    }
+    get relatedGames(): Array<VersusGame> {
+        return this._relatedGames
     }
 
     set title(v: string) {

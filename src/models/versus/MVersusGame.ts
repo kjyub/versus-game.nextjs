@@ -91,6 +91,17 @@ const schema = new Schema(
             type: Boolean,
             default: false,
         },
+
+        // 연관 게임 업데이트 당시 조회수 (자주 업데이트 하는걸 방지)
+        relatedUpdateViewCount: {
+            type: Number,
+            default: 0
+        },
+        // 연관 게임 id 배열
+        relatedGameIds: {
+            type: [String],
+            default: [],
+        }
     },
     { timestamps: true },
 ).index({
