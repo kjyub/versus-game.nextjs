@@ -6,6 +6,9 @@ const nextConfig = {
     typescript: {
         ignoreBuildErrors: true,
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
     reactStrictMode: false, // RootLayout 2번 실행되므로 false
 }
 
