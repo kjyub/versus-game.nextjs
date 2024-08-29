@@ -24,6 +24,11 @@ export default class ApiUtils {
         let requestUrl = url
         let requestData = null
 
+        let apiUrl: string = process.env.NEXT_PUBLIC_API_URL
+        if (CommonUtils.isStringNullOrEmpty(apiUrl)) {
+            apiUrl = ""
+        }
+
         if (query !== null) {
             const queryString = new URLSearchParams(query).toString()
             requestUrl = `${url}?${queryString}`
@@ -44,7 +49,7 @@ export default class ApiUtils {
             requestInit["cache"] = "no-store"
         }
 
-        await fetch(process.env.NEXT_PUBLIC_API_URL + requestUrl, requestInit)
+        await fetch(apiUrl + requestUrl, requestInit)
             .then(async (response) => {
                 // 결과
                 statusCode = response.status
@@ -54,7 +59,7 @@ export default class ApiUtils {
                 resultData = await response.json()
             })
             .catch((error) => {
-                console.log(error, process.env.NEXT_PUBLIC_API_URL + requestUrl)
+                console.log(error, apiUrl + requestUrl)
 
                 resultData = "Api Error"
             })
