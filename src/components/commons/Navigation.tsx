@@ -30,7 +30,11 @@ const Navigation = ({}: INavigation) => {
     }, [session])
 
     const getUserInfo = async () => {
-        if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+        try {
+            if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+                return
+            } 
+        } catch {
             return
         }
         const [bResult, statusCode, response] = await ApiUtils.request(

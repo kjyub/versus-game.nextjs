@@ -13,6 +13,7 @@ import {
     ResponseCookies,
 } from "next/dist/compiled/@edge-runtime/cookies"
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
+import mongoose from "mongoose"
 
 export async function POST(req: NextRequest) {
     const cookie: ReadonlyRequestCookies = cookies()
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
     let result = ""
     if (CommonUtils.isNullOrUndefined(guestIdCookie)) {
         // 게스트id가 저장되어 있지 않는 경우 설정
-        const newGuestId = randomUUID()
+        const newGuestId = new mongoose.Types.ObjectId()
         cookie.set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
     } else {
         const guestId = guestIdCookie?.value
