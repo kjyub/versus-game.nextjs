@@ -4,7 +4,7 @@ import mongoose from "mongoose"
 
 export default class DBUtils {
     static getUri(): string {
-        const uri = `mongodb+srv://${process.env.NEXT_PRIVATE_DB_ID}:${process.env.NEXT_PRIVATE_DB_PASSWORD}@versusgamedev.tibkszx.mongodb.net/${NEXT_PRIVATE_DB_NAME}?retryWrites=true&w=majority&appName=VersusGameDev`
+        const uri = `mongodb+srv://${process.env.NEXT_PRIVATE_DB_ID}:${process.env.NEXT_PRIVATE_DB_PASSWORD}@versusgamedev.tibkszx.mongodb.net/${process.env.NEXT_PRIVATE_DB_NAME}?retryWrites=true&w=majority&appName=VersusGameDev`
         
         return uri
     }
