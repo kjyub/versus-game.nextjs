@@ -23,7 +23,6 @@ export default class User extends AbsApiObject {
         if (CommonUtils.isNullOrUndefined(json)) {
             return
         }
-        console.log(json)
 
         if (json._id) this._id = String(json._id)
         if (json.email) this._email = json.email

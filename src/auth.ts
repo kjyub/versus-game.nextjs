@@ -28,6 +28,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
                             mUser.password,
                         )
                         if (isPasswordCorrect) {
+                            try {
+                                mUser.password = ""
+                            } catch {
+                                //
+                            }
+                            
                             return mUser
                         }
                     }

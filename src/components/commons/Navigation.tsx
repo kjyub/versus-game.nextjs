@@ -12,6 +12,7 @@ import User from "@/types/user/User"
 import Link from "next/link"
 import { UserRole } from "@/types/UserTypes"
 import MobileNav from "./MobileNav"
+import DBUtils from "@/utils/DBUtils"
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
@@ -24,7 +25,6 @@ const Navigation = ({}: INavigation) => {
     const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose()
 
     useEffect(() => {
-        console.log(session)
         if (session.status === "authenticated") {
             getUserInfo()
         }
