@@ -24,6 +24,7 @@ const Navigation = ({}: INavigation) => {
     const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose()
 
     useEffect(() => {
+        console.log(session)
         if (session.status === "authenticated") {
             getUserInfo()
         }
