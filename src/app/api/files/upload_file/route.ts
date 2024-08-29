@@ -16,8 +16,8 @@ const s3Client = new S3Client({
     forcePathStyle: true,
     region: "kr1",
     credentials: {
-        accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY ?? "",
-        secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_KEY ?? "",
+        accessKeyId: process.env.NEXT_PRIVATE_S3_ACCESS_KEY ?? "",
+        secretAccessKey: process.env.NEXT_PRIVATE_S3_SECRET_KEY ?? "",
     },
 })
 
