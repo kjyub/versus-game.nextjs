@@ -4,6 +4,7 @@ export const authConfig = {
     pages: {
         signIn: "/",
     },
+    trustHost: true,
     callbacks: {
         authorized({ auth, request: { nextUrl } }) {
             // 유저 인증 확인

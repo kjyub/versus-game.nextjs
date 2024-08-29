@@ -50,12 +50,10 @@ export default class DBUtils {
 
         try {
             await mongoose.connect(this.getUri(), {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
             })
             console.log("Mongo Connection successfully established.")
         } catch (error) {
-            throw new Error("Error connecting to Mongoose")
+            throw new Error("Error connecting to Mongoose", error)
         }
     }
 }
