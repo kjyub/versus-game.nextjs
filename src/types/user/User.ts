@@ -1,6 +1,7 @@
 import React from "react"
 import { AbsApiObject } from "../ApiTypes"
 import { UserRole } from "../UserTypes"
+import CommonUtils from "@/utils/CommonUtils"
 
 export default class User extends AbsApiObject {
     private _id: string
@@ -19,6 +20,11 @@ export default class User extends AbsApiObject {
     }
 
     parseResponse(json: object) {
+        if (CommonUtils.isNullOrUndefined(json)) {
+            return
+        }
+        console.log(json)
+
         if (json._id) this._id = String(json._id)
         if (json.email) this._email = json.email
         if (json.name) this._name = json.name
