@@ -16,19 +16,19 @@ const s3Client = new S3Client({
     forcePathStyle: true,
     region: "kr1",
     credentials: {
-        accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY,
-        secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_KEY,
+        accessKeyId: process.env.NEXT_PUBLIC_S3_ACCESS_KEY ?? "",
+        secretAccessKey: process.env.NEXT_PUBLIC_S3_SECRET_KEY ?? "",
     },
 })
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
     try {
         const formData: FormData = await req.formData()
-        const file: File = formData.getAll("files")[0]
+        const file: File = formData.getAll("files")[0] as File
 
         const session = await auth()
         // 유저 확인
-        if (!session.user) {
+        if (!session || !session.user) {
             return ApiUtils.notAuth()
         }
 

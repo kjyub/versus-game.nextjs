@@ -35,3 +35,9 @@ export const CookieConsts = {
     GAME_CHOICED_SESSION: "session_game_choiced", // 게임의 nanoId 리스트를 저장, 게임 참여 여부를 임시로 저장
     GAME_LIST_DATA_SESSION: "session_game_list_data" // 게임 리스트 페이지의 현재 상태를 저장. 뒤로가기 시 이전 상태로 다시 되돌아오기 위함
 }
+
+export type ApiParamsType = {
+    params: {
+        [key: string]: string
+    }
+}

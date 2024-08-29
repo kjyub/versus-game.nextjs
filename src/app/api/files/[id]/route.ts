@@ -2,8 +2,9 @@ import DBUtils from "@/utils/DBUtils"
 import ApiUtils from "@/utils/ApiUtils"
 import { NextApiRequest } from "next"
 import MFile from "@/models/file/MFile"
+import { ApiParamsType } from "@/types/ApiTypes"
 
-export async function GET(req: NextApiRequest, { params }: { id: string }) {
+export async function GET(req: NextApiRequest, { params }: ApiParamsType) {
     const { id } = params
 
     await DBUtils.connect()
@@ -15,7 +16,7 @@ export async function GET(req: NextApiRequest, { params }: { id: string }) {
     return ApiUtils.response(file)
 }
 
-export async function PUT(req: NextApiRequest, { params }: { id: string }) {
+export async function PUT(req: NextApiRequest, { params }: ApiParamsType) {
     // const { id } = params
     // const data = await req.json()
     // await DBUtils.connect()
