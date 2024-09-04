@@ -21,8 +21,6 @@ export async function POST(req: NextRequest) {
         CookieConsts.GUEST_ID,
     )
 
-    await DBUtils.connect()
-
     let result = ""
     if (CommonUtils.isNullOrUndefined(guestIdCookie)) {
         // 게스트id가 저장되어 있지 않는 경우 설정
