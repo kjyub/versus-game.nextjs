@@ -5,6 +5,7 @@ import Link from "next/link"
 import User from "@/types/user/User"
 import { UserRole } from "@/types/UserTypes"
 import StyleUtils from "@/utils/StyleUtils"
+import { CookieConsts } from "@/types/ApiTypes"
 
 export interface IMobileNav {
     isModalShow: boolean
@@ -20,13 +21,13 @@ const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
     return (
         <MS.MobileNavContainer $is_staff={user.userRole === UserRole.STAFF} style={{transition: "1s filter linear"}}>
             <MS.MobileNavList onClick={()=>{handleMobileNav()}}>
-                <Link href={"/"}>
+                <Link href={"/"} onClick={() => {sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)}}>
                     <MS.MobileNavButton>
                         <i className="fa-solid fa-gamepad"></i>
                         게임 찾기
                     </MS.MobileNavButton>
                 </Link>
-                <Link href={"/game/add"}>
+                <Link href={"/game/add"} onClick={() => {sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)}}>
                     <MS.MobileNavButton>
                         <i className="fa-solid fa-plus"></i>
                         게임 만들기

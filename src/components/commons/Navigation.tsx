@@ -13,6 +13,7 @@ import Link from "next/link"
 import { UserRole } from "@/types/UserTypes"
 import MobileNav from "./MobileNav"
 import DBUtils from "@/utils/DBUtils"
+import { CookieConsts } from "@/types/ApiTypes"
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
@@ -87,7 +88,7 @@ const Navigation = ({}: INavigation) => {
             {/* 내비게이션 메뉴 (PC) */}
             <MainStyles.NavButtonList className="max-md:hidden md:flex">
                 <MainStyles.ItemAddButtonContainer $is_show={true}>
-                    <Link href={"/game/add"}>
+                    <Link href={"/game/add"} onClick={() => {sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)}}>
                         <MainStyles.NavButton
                             onClick={handleGameAdd}
                         >
@@ -135,7 +136,7 @@ const Navigation = ({}: INavigation) => {
             </MainStyles.NavButtonList>
 
             {/* 내비게이션 로고 */}
-            <Link href={"/"} className="title">
+            <Link href={"/"} className="title" onClick={() => {sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)}}>
                 <span>Versus Game</span>
             </Link>
             
