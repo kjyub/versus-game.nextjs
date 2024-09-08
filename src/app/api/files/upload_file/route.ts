@@ -10,6 +10,7 @@ import {
     S3Client,
 } from "@aws-sdk/client-s3"
 import { auth } from "@/auth"
+import { v4 } from "uuid"
 
 const s3Client = new S3Client({
     endpoint: "https://kr.cafe24obs.com",
@@ -34,10 +35,11 @@ export async function POST(req: NextRequest) {
 
         const userId = session?.user.id
 
-        const encodedName = Buffer.from(file.name).toString("base64")
+        // const encodedName = Buffer.from(file.name).toString("base64")
+        const fileUUID = v4()
         const ext = file.type.split("/")[1]
         const bucketName = "versus.files"
-        const fileUrl = `images/${encodedName}/${file.name}`
+        const fileUrl = `images/${fileUUID}/${file.name}`
 
         const uploadParams = {
             Bucket: bucketName,
