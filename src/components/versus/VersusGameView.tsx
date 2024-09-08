@@ -298,7 +298,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                     }}
                     disabled={isMyAnswerLoading || isShowResult}
                 >
-                    선택 후 결과 보기
+                    선택하고 결과 보기
                 </button>
             </VersusStyles.GameViewSelectLayout>
 

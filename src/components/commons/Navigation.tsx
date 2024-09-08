@@ -137,7 +137,7 @@ const Navigation = ({}: INavigation) => {
 
             {/* 내비게이션 로고 */}
             <Link href={"/"} className="title" onClick={() => {sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)}}>
-                <span>Versus Game</span>
+                <span>VS 게임</span>
             </Link>
             
             {/* 내비게이션 회원 (로그인 상태) */}

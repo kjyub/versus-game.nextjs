@@ -44,23 +44,23 @@ export default function VersusGameViewRelated({ game, user, isShowResult, commen
     return (
         <VS.GameViewRelatedLayout $is_show={isShowResult}>
             <div className="flex justify-between items-center w-full">
-                <span className="font-semibold text-lg text-stone-800">연관 게임</span>
+                <span className="font-bold text-xl text-stone-800">연관 게임</span>
 
                 {!CommonUtils.isNullOrUndefined(commentHelpBox) && commentHelpBox}
             </div>
             <VS.GameViewRelatedList>
                 {relatedGames.map((relatedGame: VersusGame, index: number) => (
                     <>
-                        <div className="max-sm:block sm:hidden">
-                            <VersusGameSimpleBox
+                        <div className="max-sm:hidden sm:block">
+                            <VersusGameBox 
                                 key={index} 
                                 game={relatedGame} 
                                 user={user} 
                                 goLink={handleLink} 
                             />
                         </div>
-                        <div className="max-sm:hidden sm:block">
-                            <VersusGameBox 
+                        <div className="max-sm:block sm:hidden">
+                            <VersusGameSimpleBox
                                 key={index} 
                                 game={relatedGame} 
                                 user={user} 

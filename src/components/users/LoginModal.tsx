@@ -110,7 +110,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
                 <div className="aspect-square h-28 mb-4 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-300"></div>
                 <h1>로그인</h1>
                 <h3>
-                    Versus Game을 <br />더 즐기시려면 로그인해주세요.
+                    VS게임 추즈밍을 <br />더 즐기시려면 로그인해주세요.
                 </h3>
             </UserStyles.LoginTitleBox>
             <div className="flex flex-col w-full space-y-2">

@@ -9,7 +9,7 @@ export const Body = tw.body`
 
 export const NavBox = tw.div`
     flex justify-center items-center w-screen max-md:h-12 md:h-14
-    [&>.title]:text-xl [&>.title]:font-bold [&>.title]:text-black
+    [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-900
 `
 
 export const NavButtonList = tw.div`
