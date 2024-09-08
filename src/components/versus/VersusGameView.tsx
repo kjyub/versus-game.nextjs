@@ -5,7 +5,7 @@ import * as MainStyles from "@/styles/MainStyles"
 import * as VersusStyles from "@/styles/VersusStyles"
 import dynamic from "next/dynamic"
 import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import VersusGame from "@/types/versus/VersusGame"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import VersusFile from "@/types/file/VersusFile"
@@ -21,6 +21,7 @@ import StorageUtils from "@/utils/StorageUtils"
 import { CookieConsts } from "@/types/ApiTypes"
 import VersusGameViewRelated from "./VersusGameViewRelated"
 import User from "@/types/user/User"
+import { TextFormats } from "@/types/CommonTypes"
 
 const INIT_CHOICES = [
     new VersusGameChoice(),
@@ -56,6 +57,9 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
     const [isShowResult, setShowResult] = useState<boolean>(false)
 
     const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true)
+
+    const commentBoxRef = useRef(null)
+    const [commentCount, setCommentCount] = useState<number>(0)
 
     useEffect(() => {
         // const handleBeforeUnload = (event) => {
@@ -252,6 +256,14 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         }
     }
 
+    const handleCommentMove = () => {
+        if (CommonUtils.isNullOrUndefined(commentBoxRef.current)) {
+            return
+        }
+
+        commentBoxRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+
     return (
         <VersusStyles.GameViewLayout>
             <VersusStyles.GameViewHeadLayout>
@@ -294,9 +306,22 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                 game={game}
                 user={user}
                 isShowResult={game.relatedGames.length > 0 && isShowResult}
+                commentHelpBox={
+                    <div
+                        onClick={() => {handleCommentMove()}}
+                        className="sm:hidden max-sm:flex items-center px-4 py-2 rounded-full bg-black/40 text-stone-300 text-sm"
+                    >
+                        <i className="fa-solid fa-comment mr-1"></i>
+                        의견
+
+                        <span className="ml-1 text-stone-200">{CommonUtils.textFormat(commentCount, TextFormats.NUMBER)}</span>
+                    </div>
+                }
             />
 
-            <VersusGameViewComment game={game} answerChoice={answerChoice} isShowResult={isShowResult} />
+            <div ref={commentBoxRef} className="w-full">
+                <VersusGameViewComment game={game} answerChoice={answerChoice} isShowResult={isShowResult} setCommentCount={setCommentCount} />
+            </div>
         </VersusStyles.GameViewLayout>
     )
 }

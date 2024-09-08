@@ -3,7 +3,7 @@
 import Image from "next/image"
 import * as MainStyles from "@/styles/MainStyles"
 import * as VS from "@/styles/VersusStyles"
-import { useCallback, useEffect, useState } from "react"
+import { ReactNode, useCallback, useEffect, useState } from "react"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
@@ -18,6 +18,7 @@ import { EditStateTypes } from "@/types/DataTypes"
 import StyleUtils from "@/utils/StyleUtils"
 import VersusGameBox from "./VersusGameBox"
 import { useRouter } from "next/navigation"
+import VersusGameSimpleBox from "./VersusGameSimpleBox"
 
 const PAGE_SIZE = 5
 
@@ -25,8 +26,9 @@ interface IVersusGameViewRelated {
     game: VersusGame
     user: User
     isShowResult: boolean
+    commentHelpBox: ReactNode
 }
-export default function VersusGameViewRelated({ game, user, isShowResult }: IVersusGameViewRelated) {
+export default function VersusGameViewRelated({ game, user, isShowResult, commentHelpBox }: IVersusGameViewRelated) {
     const router = useRouter()
 
     const [relatedGames, setRelatedGames] = useState<Array<VersusGame>>([])
@@ -41,15 +43,31 @@ export default function VersusGameViewRelated({ game, user, isShowResult }: IVer
 
     return (
         <VS.GameViewRelatedLayout $is_show={isShowResult}>
-            <span className="title">연관 게임</span>
+            <div className="flex justify-between items-center w-full">
+                <span className="font-semibold text-lg text-stone-800">연관 게임</span>
+
+                {!CommonUtils.isNullOrUndefined(commentHelpBox) && commentHelpBox}
+            </div>
             <VS.GameViewRelatedList>
                 {relatedGames.map((relatedGame: VersusGame, index: number) => (
-                    <VersusGameBox 
-                        key={index} 
-                        game={relatedGame} 
-                        user={user} 
-                        goLink={handleLink} 
-                    />
+                    <>
+                        <div className="max-sm:block sm:hidden">
+                            <VersusGameSimpleBox
+                                key={index} 
+                                game={relatedGame} 
+                                user={user} 
+                                goLink={handleLink} 
+                            />
+                        </div>
+                        <div className="max-sm:hidden sm:block">
+                            <VersusGameBox 
+                                key={index} 
+                                game={relatedGame} 
+                                user={user} 
+                                goLink={handleLink} 
+                            />
+                        </div>
+                    </>
                 ))}
             </VS.GameViewRelatedList>
         </VS.GameViewRelatedLayout>

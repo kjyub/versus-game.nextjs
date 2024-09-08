@@ -3,7 +3,7 @@
 import Image from "next/image"
 import * as MainStyles from "@/styles/MainStyles"
 import * as VS from "@/styles/VersusStyles"
-import { useCallback, useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react"
 import VersusGameChoice from "@/types/versus/VersusGameChoice"
 import ApiUtils from "@/utils/ApiUtils"
 import CommonUtils from "@/utils/CommonUtils"
@@ -23,8 +23,9 @@ interface IVersusGameViewComment {
     game: VersusGame
     answerChoice: VersusGameChoice
     isShowResult: boolean
+    setCommentCount: Dispatch<SetStateAction<number>>
 }
-export default function VersusGameViewComment({ game, answerChoice, isShowResult }: IVersusGameViewComment) {
+export default function VersusGameViewComment({ game, answerChoice, isShowResult, setCommentCount }: IVersusGameViewComment) {
     const session = useSession()
     const [user, setUser] = useState<User>(new User())
 
@@ -101,6 +102,8 @@ export default function VersusGameViewComment({ game, answerChoice, isShowResult
         setPageIndex(pagination.pageIndex)
         setItemCount(pagination.itemCount)
         setMaxPage(pagination.maxPage)
+
+        setCommentCount(pagination.itemCount)
     }
 
     const handlePageIndex = async (_pageIndex: number) => {

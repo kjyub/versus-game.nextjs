@@ -18,21 +18,21 @@ export default class StyleUtils {
     }
 
     static initScrollEvent() {
-        window.addEventListener("scroll", (e) => {
-            window.scrollTo({
-                top: 0,
-                left: 0
-            })
-        })
+        // window.addEventListener("scroll", (e) => {
+        //     window.scrollTo({
+        //         top: 0,
+        //         left: 0
+        //     })
+        // })
 
-        const layout = document.getElementById("layout")
-        if (layout) {
-            layout.addEventListener("scroll", (e) => {
-                layout.scrollTo({
-                    top: 0,
-                    left: 0
-                })
-            })
-        }
+        // const layout = document.getElementById("layout")
+        // if (layout) {
+        //     layout.addEventListener("scroll", (e) => {
+        //         layout.scrollTo({
+        //             top: 0,
+        //             left: 0
+        //         })
+        //     })
+        // }
     }
 }
