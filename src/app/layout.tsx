@@ -17,8 +17,8 @@ async function generateGuestId() {
 }
 
 export const metadata: Metadata = {
-    title: "VS 게임",
-    description: "VS 게임",
+    title: "VS 게임 추즈밍",
+    description: "VS 게임 추즈밍",
 }
 
 export default async function RootLayout({
