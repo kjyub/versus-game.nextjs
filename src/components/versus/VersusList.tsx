@@ -75,6 +75,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
         }
 
         if (rollbackRawData()) {
+            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
             return
         }
 

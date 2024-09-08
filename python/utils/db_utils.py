@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import os, certifi
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def connect():
     db_id = os.environ.get("DB_ID")
@@ -16,20 +16,30 @@ def insert_game(datas):
     # print(datas)
     client = connect()
     # print("client", client)
-    db = client["test"]
+    db = client["release"]
     collection = db["versus_games"]
 
-    # result = collection.insert_many(datas)
-    # print(result)
+    start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+    start_of_day = start_of_day - timedelta(days=1)
+    end_of_day = start_of_day + timedelta(days=2)
+    delete_filter = {
+        "created_at": {'$exists': False}
+    }
 
-    result = collection.update_many(
-        {"userId": {"$exists": False}},
-        {"$set": {
-            "createdAt": datetime.now(),
-            "updatedAt": datetime.now(),
-            "userId": "66659f346da52938c4ce47ed",
-        }}
-    )
+    delete_result = collection.delete_many(delete_filter)
+    print(delete_result)
+
+    result = collection.insert_many(datas)
     print(result)
+
+    # result = collection.update_many(
+    #     {"userId": {"$exists": False}},
+    #     {"$set": {
+    #         "createdAt": datetime.now(),
+    #         "updatedAt": datetime.now(),
+    #         "userId": "66659f346da52938c4ce47ed",
+    #     }}
+    # )
+    # print(result)
 
     client.close()
