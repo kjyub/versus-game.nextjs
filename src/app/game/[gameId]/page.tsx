@@ -21,5 +21,20 @@ export default async function GamePage({ params }: { gameId: string }) {
 
     const gameData = await getGame(gameId)
 
-    return <VersusGameView gameData={gameData} />
+    let gameTitle: string = ""
+
+    try {
+        gameTitle = gameData["title"]
+    } catch {
+        //
+    }
+
+    return (
+        <>
+            {gameTitle !== "" && (
+                <title>{gameTitle} - VS 게임 추즈밍</title>
+            )}
+            <VersusGameView gameData={gameData} />
+        </>
+    )
 }
