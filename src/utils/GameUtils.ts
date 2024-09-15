@@ -53,7 +53,7 @@ export default class GameUtils {
 
         const relatedGames = await MVersusGame.aggregate([
             { $match: { _id: { $nin: excludeGameObjectIds } } },  // 제외할 ID들 필터링
-            { $sample: { size: gameCount - excludeGameIds.length } }  // 무작위로 10개 추출
+            { $sample: { size: gameCount - excludeGameIds.length + 1 } }  // 무작위로 10개 추출
         ])
 
         return relatedGames
