@@ -38,8 +38,9 @@ const INIT_CHOICES = [
 
 interface IVersusGameView {
     gameData: object | null
+    userChoiceData: object | null
 }
-export default function VersusGameView({ gameData = null }: IVersusGameView) {
+export default function VersusGameView({ gameData = null, userChoiceData = null }: IVersusGameView) {
     const router = useRouter()
     const session = useSession()
 
@@ -112,14 +113,13 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
 
         // 유저가 선택한 선택지가 있는지 불러온다.
         let isChoice: boolean = false
-        const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game_choice/${_game.nanoId}`, "GET")
-        if (bResult) {
-            const answerId = response.gameChoiceId
+        if (userChoiceData !== null) {
+            const answerId = userChoiceData.gameChoiceId
             let answer = new VersusGameChoice()
-
+    
             for (let i = 0; i < _game.choices.length; i++) {
                 const _choice: VersusGameChoice = _game.choices[i]
-
+    
                 // 선택한 선택지가 있으면 게임 결과 표시
                 if (_choice.id === answerId) {
                     answer = _choice
@@ -128,7 +128,7 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
                     break
                 }
             }
-
+    
             setSelectedChoice(answer)
             setAnswerChoice(answer)
         }
@@ -142,10 +142,10 @@ export default function VersusGameView({ gameData = null }: IVersusGameView) {
         setMyAnswerLoading(false)
 
         // 조회수 증가
-        ApiUtils.request(`/api/versus/game_view_count/${_game.nanoId}`, "POST").then((result) => {
-            const [bResult, statusCode, response] = result
-            //
-        })
+        // ApiUtils.request(`/api/versus/game_view_count/${_game.nanoId}`, "POST").then((result) => {
+        //     const [bResult, statusCode, response] = result
+        //     //
+        // })
     }
 
     const updateUser = async () => {

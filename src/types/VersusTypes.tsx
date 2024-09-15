@@ -35,5 +35,5 @@ export const PrivacyTypeIcons = {
 export const CHOICE_COUNT_CONST = 100 
 
 export const GameConsts = {
-    RELATED_GAME_COUNT: 30
+    RELATED_GAME_COUNT: 10
 }

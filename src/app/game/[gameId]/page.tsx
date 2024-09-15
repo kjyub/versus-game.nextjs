@@ -8,11 +8,32 @@ import AuthUtils from "@/utils/AuthUtils"
 import VersusGameView from "@/components/versus/VersusGameView"
 import Head from "next/head"
 import { Metadata } from "next"
+import { auth } from "@/auth"
 
 const getGame = async (gameId: string) => {
     const [bResult, statusCode, response] = await ApiUtils.request(
         `/api/versus/game/${gameId}`,
         "GET",
+    )
+
+    return response
+}
+const getUserChoice = async (gameId: string, userId: string) => {
+    const [bResult, statusCode, response] = await ApiUtils.request(
+        `/api/versus/game_choice/${gameId}`,
+        "POST",
+        null,
+        { userId: userId }
+    )
+
+    return Object.keys(response).length === 0 ? null : response
+}
+const countGameView = async (gameId: string, userId: string) => {
+    const [bResult, statusCode, response] = await ApiUtils.request(
+        `/api/versus/game_view_count/${gameId}`,
+        "POST",
+        null,
+        { userId: userId }
     )
 
     return response
@@ -36,11 +57,16 @@ export async function generateMetadata({ params }: { gameId: string }): Promise<
 }
 
 export default async function GamePage({ params }: { gameId: string }) {
+    const session = await auth()
+    const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
+
     const { gameId } = params
 
     const gameData = await getGame(gameId)
+    const userChoiceData = await getUserChoice(gameId, userId)
+    await countGameView(gameId, userId)
 
     return (
-        <VersusGameView gameData={gameData} />
+        <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
     )
 }
