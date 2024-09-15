@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import Navigation from "@/components/commons/Navigation"
@@ -63,12 +63,18 @@ const FrontHead = () => {
                 rel="stylesheet"
                 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
             />
-            <meta name="theme-color" content="#f92392" />
-            <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
             {/* <script
                 src="https://kit.fontawesome.com/181af83e33.js"
                 crossOrigin="anonymous"
             ></script> */}
         </>
     )
+}
+
+export const viewport: Viewport = {
+    themeColor: "#f92392",
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false
 }
