@@ -59,12 +59,12 @@ export default class GameUtils {
         const choiceIdSet = new Set(choiceds.map(choiced => choiced.gameId))
         
         if (views.length > 0) {
-            items.map((item) => {                
-                newItems.push({
-                    ...item.toObject(),
-                    isView: viewIdSet.has(String(item._id)),
-                    isChoice: choiceIdSet.has(String(item._id)),
-                })
+            items.map((item) => {    
+                let newItem = item instanceof mongoose.Model ? item.toObject() : item
+
+                newItem.isView = viewIdSet.has(String(item._id))
+                newItem.isChoice = choiceIdSet.has(String(item._id))
+                newItems.push(newItem)
             })
         }
 

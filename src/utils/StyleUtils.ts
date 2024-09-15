@@ -47,23 +47,5 @@ export default class StyleUtils {
         if (layout) {
             layout.addEventListener("scroll", event)
         }
-
-        if ("virtualKeyboard" in navigator) {
-            alert("virtual keyboard")
-            navigator.virtualKeyboard.addEventListener("geometrychange", (event) => {
-              const { x, y, width, height } = event.target.boundingRect;
-              // Test if the keyboard is open, you will have to write this yourself
-              // But just for an example:
-              let keyboardOpen = height > 0;
-              if (keyboardOpen) {
-                  // Make the parent element stop scrolling by making the overflow hidden
-                  document.getElementById("parent-div").style.overflow = "hidden";
-              } else {
-                  // Make the parent element scrollable again
-                  document.getElementById("parent-div").style.overflow = "scroll";
-              }
-          
-            });
-          }
     }
 }
