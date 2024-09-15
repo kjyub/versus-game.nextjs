@@ -248,8 +248,8 @@ export const ListGameSimpleBox = tw(ListGameBox)`
 export const ListGameSimpleContentBox = tw.div`
     absolute z-10 
     flex flex-col w-full h-full mt-0 max-sm:px-2 sm:px-3 max-sm:py-1 sm:py-2
-    backdrop-blur-sm
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent")}
+    backdrop-blur
+    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-rose-800/50")}
 `
 
 
