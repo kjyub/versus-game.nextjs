@@ -2,6 +2,8 @@ import MVersusGame from "@/models/versus/MVersusGame"
 import CommonUtils from "./CommonUtils"
 import MVersusGameView from "@/models/versus/MVersusGameView"
 import { Dictionary } from "@/types/common/Dictionary"
+import { GameConsts } from "@/types/VersusTypes"
+import mongoose from "mongoose"
 
 // 게임 조회수 및 데이터 관련 유틸
 
@@ -30,7 +32,7 @@ export default class GameUtils {
                 { $match: { gameId: { $ne: game._id }, userId: { $in: viewerIds } } },
                 { $group: { _id: "$gameId", viewsCount: { "$sum": 1 } } },
                 { $sort: { viewsCount: -1 } },
-                { $limit: 10 },
+                { $limit: GameConsts.RELATED_GAME_COUNT },
             ])
             // console.log(`2. 연관 게임 조회`, relatedGames)
             
@@ -42,5 +44,18 @@ export default class GameUtils {
         }
 
         console.log("END")
+    }
+
+    static async getRelatedRandomGames(excludeGameIds: Array<string> = [], gameCount: number = GameConsts.RELATED_GAME_COUNT) {
+        const excludeGameObjectIds: Array<mongoose.Types.ObjectId> = excludeGameIds.map(gameId => (
+            new mongoose.Types.ObjectId(gameId)
+        ))
+
+        const relatedGames = await MVersusGame.aggregate([
+            { $match: { _id: { $nin: excludeGameObjectIds } } },  // 제외할 ID들 필터링
+            { $sample: { size: gameCount - excludeGameIds.length } }  // 무작위로 10개 추출
+        ])
+
+        return relatedGames
     }
 }

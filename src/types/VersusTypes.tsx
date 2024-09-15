@@ -33,3 +33,7 @@ export const PrivacyTypeIcons = {
 
 // ChoiceCountType에서 choice의 개수 구할 때 사용 ex) 300 -> 3개, 1200 -> 12개
 export const CHOICE_COUNT_CONST = 100 
+
+export const GameConsts = {
+    RELATED_GAME_COUNT: 30
+}

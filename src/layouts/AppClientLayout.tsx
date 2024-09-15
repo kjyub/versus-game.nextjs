@@ -13,7 +13,7 @@ export default function AppClientLayout({
 }: {
     children: React.ReactNode
 }) {
-    const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(true)
+    const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false)
 
     const pathname = usePathname()
 

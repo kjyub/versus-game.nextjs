@@ -10,6 +10,8 @@ import MFile from "@/models/file/MFile"
 import CommonUtils from "@/utils/CommonUtils"
 import MUser from "@/models/user/MUser"
 import { UserRole } from "@/types/UserTypes"
+import { GameConsts } from "@/types/VersusTypes"
+import GameUtils from "@/utils/GameUtils"
 
 export async function GET(req: NextRequest, { params }: { id: string }) {
     const { id } = params
@@ -37,8 +39,17 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
         return ApiUtils.response(mGame)
     }
 
+    // 연관 게임
     const relatedGames = await MVersusGame.find({ _id: { $in: mGame.relatedGameIds } })
-    mGame.relatedGames = relatedGames
+
+    // 연관 게임이 없으면 게임을 랜덤으로 가져온다.
+    let randomGames: Array<any> = []
+    if (relatedGames.length < GameConsts.RELATED_GAME_COUNT) {
+        const excludeGameIds = relatedGames.length > 0 ? relatedGames.map((rg) => rg._id) : []
+        randomGames = await GameUtils.getRelatedRandomGames(excludeGameIds)
+    }
+    
+    mGame.relatedGames = [...relatedGames, ...randomGames]
 
     return ApiUtils.response(mGame)
 }
