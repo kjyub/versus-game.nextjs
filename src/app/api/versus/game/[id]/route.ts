@@ -16,12 +16,8 @@ import GameUtils from "@/utils/GameUtils"
 export async function GET(req: NextRequest, { params }: { id: string }) {
     const { id } = params
 
-    // const session = await auth()
-    // // 유저 확인
-    // if (CommonUtils.isNullOrUndefined(session.user)) {
-    //     return ApiUtils.notAuth()
-    // }
-    // console.log(session)
+    // 유저 확인
+    const userId = req.nextUrl.searchParams.get("userId")
 
     await DBUtils.connect()
     const mGames = await MVersusGame
@@ -48,8 +44,14 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
         const excludeGameIds = relatedGames.length > 0 ? relatedGames.map((rg) => rg._id) : []
         randomGames = await GameUtils.getRelatedRandomGames(excludeGameIds)
     }
+
+    let relatedGameAll = [...relatedGames, ...randomGames]
+    // 이미 읽은 게시글인지 확인
+    if (!CommonUtils.isStringNullOrEmpty(userId)) {
+        relatedGameAll = await GameUtils.isViewAndChoiceGames(relatedGameAll, userId)
+    }
     
-    mGame.relatedGames = [...relatedGames, ...randomGames]
+    mGame.relatedGames = relatedGameAll
 
     return ApiUtils.response(mGame)
 }

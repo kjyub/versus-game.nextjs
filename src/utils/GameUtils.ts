@@ -4,6 +4,7 @@ import MVersusGameView from "@/models/versus/MVersusGameView"
 import { Dictionary } from "@/types/common/Dictionary"
 import { GameConsts } from "@/types/VersusTypes"
 import mongoose from "mongoose"
+import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer"
 
 // 게임 조회수 및 데이터 관련 유틸
 
@@ -46,6 +47,33 @@ export default class GameUtils {
         console.log("END")
     }
 
+    // 조회하거나 선택했는지 확인
+    static async isViewAndChoiceGames(items: Array<MVersusGame>, userId: string) {
+        let newItems: Array<MVersusGame> = []
+
+        const gameIds = items.map(item => item._id)
+        const views = await MVersusGameView.find({ gameId: { $in : gameIds }, userId: userId })
+        const viewIdSet = new Set(views.map(view => view.gameId))
+
+        const choiceds = await MVersusGameAnswer.find({ gameId: { $in : gameIds }, userId: userId })
+        const choiceIdSet = new Set(choiceds.map(choiced => choiced.gameId))
+        
+        if (views.length > 0) {
+            items.map((item) => {                
+                newItems.push({
+                    ...item.toObject(),
+                    isView: viewIdSet.has(String(item._id)),
+                    isChoice: choiceIdSet.has(String(item._id)),
+                })
+            })
+        }
+
+        // console.log("new Items", newItems)
+
+        return newItems
+    }
+
+    // 연관 랜덤 게임 가져오기
     static async getRelatedRandomGames(excludeGameIds: Array<string> = [], gameCount: number = GameConsts.RELATED_GAME_COUNT) {
         const excludeGameObjectIds: Array<mongoose.Types.ObjectId> = excludeGameIds.map(gameId => (
             new mongoose.Types.ObjectId(gameId)

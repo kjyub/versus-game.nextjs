@@ -9,11 +9,19 @@ import VersusGameView from "@/components/versus/VersusGameView"
 import Head from "next/head"
 import { Metadata } from "next"
 import { auth } from "@/auth"
+import CommonUtils from "@/utils/CommonUtils"
 
-const getGame = async (gameId: string) => {
+const getGame = async (gameId: string, userId: string) => {
+    let params = {}
+
+    if (!CommonUtils.isStringNullOrEmpty(userId)) {
+        params["userId"] = userId
+    }
+
     const [bResult, statusCode, response] = await ApiUtils.request(
         `/api/versus/game/${gameId}`,
         "GET",
+        params,
     )
 
     return response
@@ -62,7 +70,7 @@ export default async function GamePage({ params }: { gameId: string }) {
 
     const { gameId } = params
 
-    const gameData = await getGame(gameId)
+    const gameData = await getGame(gameId, userId)
     const userChoiceData = await getUserChoice(gameId, userId)
     await countGameView(gameId, userId)
 
