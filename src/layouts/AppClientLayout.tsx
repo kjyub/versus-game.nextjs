@@ -1,7 +1,9 @@
 "use client"
 
+import ModalContainer from "@/components/ModalContainer"
 import { CookieConsts } from "@/types/ApiTypes"
 import ApiUtils from "@/utils/ApiUtils"
+import BrowserUtils from "@/utils/BrowserUtils"
 import StyleUtils from "@/utils/StyleUtils"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -11,6 +13,8 @@ export default function AppClientLayout({
 }: {
     children: React.ReactNode
 }) {
+    const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(true)
+
     const pathname = usePathname()
 
     useEffect(() => {
@@ -21,6 +25,10 @@ export default function AppClientLayout({
     }, [])
 
     useEffect(() => {
+        // 인앱 브라우저 인식 후 외부 브라우저로 이동
+        const isRedirect = BrowserUtils.goExternalBrowser()
+        setIsInAppBrowser(isRedirect)
+
         // 모바일 화면 스크롤이 깨지지 않게 유지용
         StyleUtils.rollbackScreen()
         StyleUtils.initScrollEvent()
@@ -32,5 +40,26 @@ export default function AppClientLayout({
         // // alert(resultData["message"] ?? "없음", resultData)
     }
 
-    return children
+    return (
+        <>
+            <ModalContainer
+                isOpen={isInAppBrowser}
+                setIsOpen={()=>{}}
+            >
+                <div className="flex flex-col rounded-xl bg-white/70 backdrop-blur" style={{padding: "1.5rem"}}>
+                    <span className="text-lg font-semibold text-stone-800">
+                        추즈밍은 외부 웹브라우저에서 사용 가능합니다
+                    </span>
+
+                    <button
+                        className="p-2 mt-4 rounded-xl bg-rose-500 text-white"
+                        onClick={()=>{BrowserUtils.redirectToExternalBrowser()}}
+                    >
+                        웹브라우저 열기
+                    </button>
+                </div>
+            </ModalContainer>
+            {children}
+        </>
+    )
 }
