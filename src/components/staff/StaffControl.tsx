@@ -24,7 +24,11 @@ export default function StaffControl() {
             { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}` }
         )
         
-        alert("실행되었습니다.")
+        if (bResult) {
+            alert("실행되었습니다.")
+        } else {
+            alert("요청 실패했습니다.")
+        }
     }
 
     return (
