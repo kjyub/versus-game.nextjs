@@ -106,10 +106,15 @@ export async function GET(req: NextRequest) {
         filter["_id"] = { $lt: new mongoose.Types.ObjectId(lastId) }
     }
     const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50)
-    const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length
+    const itemAll = await MVersusGame.aggregate([
+        ...addFields,
+        ...lookUps,
+        { $match: filter },
+    ])
+    const itemCount = itemAll.length
     const maxPage = Math.ceil(itemCount / pageSize)
 
-    if (itemCount.length === 0) {
+    if (itemCount === 0) {
         const result: IPaginationResponse = {
             itemCount: 0,
             pageIndex: 1,
@@ -123,9 +128,9 @@ export async function GET(req: NextRequest) {
 
     let items = await MVersusGame
         .aggregate([
-            { $match: filter },
             ...addFields,
             ...lookUps,
+            { $match: filter },
             { $sort: sort },
             // { $skip: (pageIndex - 1) * pageSize },
             { $limit: pageSize },
@@ -148,7 +153,7 @@ export async function GET(req: NextRequest) {
     
     // 이미 읽은 게시글인지 확인
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
-        items = await GameUtils.isViewAndChoiceGames(items, userId)
+        items = await GameUtils.setIsViewAndChoiceGames(items, userId)
     }
 
     // const formattedItems = items.map(comment => ({
