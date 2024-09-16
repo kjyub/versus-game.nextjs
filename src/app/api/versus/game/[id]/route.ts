@@ -36,20 +36,19 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
     }
 
     // 연관 게임
-    const relatedGames = await MVersusGame.find({ _id: { $in: mGame.relatedGameIds } })
+    const relatedGames = await GameUtils.getRelatedGames(mGame.relatedGameIds, userId)
 
     // 연관 게임이 없으면 게임을 랜덤으로 가져온다.
     let randomGames: Array<any> = []
     if (relatedGames.length < GameConsts.RELATED_GAME_COUNT) {
         const excludeGameIds = relatedGames.length > 0 ? relatedGames.map((rg) => rg._id) : []
-        randomGames = await GameUtils.getRelatedRandomGames(excludeGameIds)
+        randomGames = await GameUtils.getRelatedRandomGames(excludeGameIds, userId)
     }
 
     let relatedGameAll = [...relatedGames, ...randomGames]
     // 이미 읽은 게시글인지 확인
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
         relatedGameAll = await GameUtils.setIsViewAndChoiceGames(relatedGameAll, userId)
-        
     }
     
     mGame.relatedGames = relatedGameAll
