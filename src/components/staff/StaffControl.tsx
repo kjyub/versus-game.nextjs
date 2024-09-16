@@ -18,6 +18,10 @@ export default function StaffControl() {
         const [bResult, statusCode, response] = await ApiUtils.request(
             `/api/cron/`,
             "GET",
+            null,
+            null,
+            false,
+            { Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}` }
         )
         
         alert("실행되었습니다.")

@@ -76,6 +76,11 @@ const schema = new Schema(
             required: true,
             default: 0,
         },
+        answerCount: {
+            type: Number,
+            required: true,
+            default: 0,
+        },
         state: {
             type: Number,
             required: true,

@@ -18,6 +18,7 @@ export default class VersusGame extends AbsApiObject {
     private _privacyType: PrivacyTypes
     private _views: number
     private _favs: number
+    private _answerCount: number
     private _state: GameState
 
     private _choices: Array<VersusGameChoice>
@@ -39,8 +40,9 @@ export default class VersusGame extends AbsApiObject {
         this._thumbnailImageUrl = ""
         this._thumbnailImageType = ThumbnailImageTypes.IMAGE
         this._privacyType = PrivacyTypes.PUBLIC
-        this._views = ""
-        this._favs = ""
+        this._views = 0
+        this._favs = 0
+        this._answerCount = 0
         this._state = GameState.NORMAL
 
         this._choiceCountType = 200
@@ -71,6 +73,7 @@ export default class VersusGame extends AbsApiObject {
         if (json.privacyType) this._privacyType = json.privacyType
         if (json.views) this._views = json.views
         if (json.favs) this._favs = json.favs
+        if (json.answerCount) this._answerCount = json.answerCount
         if (json.state) this._state = json.state
 
         if (json.choiceCountType) this._choiceCountType = json.choiceCountType
@@ -132,11 +135,14 @@ export default class VersusGame extends AbsApiObject {
     get privacyType(): number {
         return this._privacyType
     }
-    get views(): string {
+    get views(): number {
         return this._views
     }
-    get favs(): string {
+    get favs(): number {
         return this._favs
+    }
+    get answerCount(): number {
+        return this._answerCount
     }
     get state(): GameState {
         return this._state

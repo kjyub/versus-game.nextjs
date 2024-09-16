@@ -36,11 +36,16 @@ export default class GameUtils {
                 { $limit: GameConsts.RELATED_GAME_COUNT },
             ])
             // console.log(`2. 연관 게임 조회`, relatedGames)
+
+            // 3. 게임 참여자
+            const answers = await MVersusGameAnswer.find({ gameId: game._id })
             
             const relatedGameIds = relatedGames.map((rg) => rg._id)
 
             game.relatedUpdateViewCount = viewers.length
             game.relatedGameIds = relatedGameIds
+            game.views = viewers.length
+            game.answerCount = answers.length
             await game.save()
         }
 
@@ -48,7 +53,7 @@ export default class GameUtils {
     }
 
     // 조회하거나 선택했는지 확인
-    static async isViewAndChoiceGames(items: Array<MVersusGame>, userId: string) {
+    static async setIsViewAndChoiceGames(items: Array<MVersusGame>, userId: string) {
         let newItems: Array<MVersusGame> = []
 
         const gameIds = items.map(item => item._id)

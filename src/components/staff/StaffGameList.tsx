@@ -10,6 +10,7 @@ import { useEffect, useState } from "react"
 import * as SS from "@/styles/StaffStyles"
 import ModalContainer from "../ModalContainer"
 import VersusEditor from "../versus/VersusEditor"
+import { TextFormats } from "@/types/CommonTypes"
 
 const PAGE_SIZE = 100
 
@@ -220,6 +221,18 @@ const Game = ({ game, openGameEditor }: IGame) => {
                     <p className="text-stone-300 text-sm">
                         {versusGame.content}
                     </p>
+                </div>
+
+                {/* 집계 */}
+                <div className="flex flex-col w-28 h-full space-y-1">
+                    <SS.GameInfoKeyValueBox>
+                        <span className="label">조회수</span>
+                        <span className="value">{CommonUtils.textFormat(versusGame.views, TextFormats.NUMBER)}회</span>
+                    </SS.GameInfoKeyValueBox>
+                    <SS.GameInfoKeyValueBox>
+                        <span className="label">참여자</span>
+                        <span className="value">{CommonUtils.textFormat(versusGame.answerCount, TextFormats.NUMBER)}명</span>
+                    </SS.GameInfoKeyValueBox>
                 </div>
 
                 {/* 게임 정보 */}

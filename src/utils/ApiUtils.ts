@@ -16,6 +16,7 @@ export default class ApiUtils {
         query: object = null,
         data: object = null,
         useCache: boolean = false, // true로 하면 캐시에 저장되서 한동안 같은 결과가 나온다.
+        headers: object = {},
     ): [boolean, number, object] {
         let bResult: boolean = false
         let statusCode: number = 200
@@ -43,6 +44,7 @@ export default class ApiUtils {
             headers: {
                 "Content-Type": "application/json",
                 credentials: "include",
+                ...headers
             },
         }
         if (!useCache) {

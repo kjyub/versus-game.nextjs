@@ -48,7 +48,8 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
     let relatedGameAll = [...relatedGames, ...randomGames]
     // 이미 읽은 게시글인지 확인
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
-        relatedGameAll = await GameUtils.isViewAndChoiceGames(relatedGameAll, userId)
+        relatedGameAll = await GameUtils.setIsViewAndChoiceGames(relatedGameAll, userId)
+        
     }
     
     mGame.relatedGames = relatedGameAll
