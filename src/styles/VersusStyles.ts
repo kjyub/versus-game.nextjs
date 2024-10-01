@@ -11,7 +11,7 @@ export const ModalLayout = tw.div`
 `
 
 export const MainSearchLayout = tw.div`
-    flex flex-col max-sm:w-screen sm:w-128 px-4 space-y-2
+    flex flex-col max-sm:w-screen sm:w-128 max-md:px-2 md:px-4 space-y-2
 `
 export const MainSearchFilterMenuBox = tw.div`
     flex justify-between items-center w-full
@@ -191,7 +191,7 @@ export const ChoiceTitleBox = tw.div`
 `
 
 export const ListLayout = tw.div`
-    flex flex-col p-4 w-full space-y-4
+    flex flex-col max-md:p-2 md:p-4 w-full space-y-4
 `
 export const ListScrollTopButton = tw.button`
     absolute max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
@@ -202,7 +202,7 @@ export const ListScrollTopButton = tw.button`
 `
 export const ListGrid = tw.div`
     grid max-sm:grid-cols-2 max-md:grid-cols-2 max-lg:grid-cols-3 max-xl:grid-cols-4 max-3xl:grid-cols-5 3xl:grid-cols-6
-    max-sm:gap-2 sm:gap-4
+    max-md:gap-2 md:gap-4
     w-full 
 `
 export const ListGameBox = tw.div`

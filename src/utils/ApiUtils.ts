@@ -67,7 +67,7 @@ export default class ApiUtils {
             })
 
         if (process.env.NEXT_PUBLIC_IS_DEBUG == "1" && resultData === "Api Error") {
-            await fetch("http://192.168.0.42:3000" + requestUrl, requestInit)
+            await fetch("http://172.29.40.238:3000" + requestUrl, requestInit)
                 .then(async (response) => {
                     // 결과
                     statusCode = response.status

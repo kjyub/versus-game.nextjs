@@ -312,7 +312,7 @@ const CommentBox = ({comment, choiceDic, user, getCurrentComments}: ICommentBox)
         <VS.GameViewCommentBox>
             <div className="flex items-center w-full mb-3">
                 {/* 선택지 */}
-                <div className="relative flex flex-center px-4 h-9 rounded-lg overflow-hidden">
+                <div className="relative flex flex-center px-4 h-7 rounded-lg overflow-hidden">
                     {choice.title}
                     <div className="absolute z-0 w-full h-full bg-gradient-to-tr from-emerald-500 to-yellow-500">
                         {!CommonUtils.isStringNullOrEmpty(choice.getThumbnail()) && (
