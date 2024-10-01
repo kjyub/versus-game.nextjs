@@ -126,6 +126,7 @@ export async function GET(req: NextRequest) {
         return ApiUtils.response(result)
     }
 
+
     let items = await MVersusGame
         .aggregate([
             ...addFields,
@@ -166,7 +167,7 @@ export async function GET(req: NextRequest) {
         itemCount: itemCount,
         pageIndex: 1,
         maxPage: maxPage,
-        lastId: items[items.length - 1]._id,
+        lastId: items.length > 0 ? items[items.length - 1]._id : "",
         items: items
     }
 

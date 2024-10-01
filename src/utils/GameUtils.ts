@@ -62,7 +62,7 @@ export default class GameUtils {
 
         const choiceds = await MVersusGameAnswer.find({ gameId: { $in : gameIds }, userId: userId })
         const choiceIdSet = new Set(choiceds.map(choiced => choiced.gameId))
-        
+
         if (views.length > 0) {
             items.map((item) => {    
                 let newItem = item instanceof mongoose.Model ? item.toObject() : item
@@ -71,6 +71,8 @@ export default class GameUtils {
                 newItem.isChoice = choiceIdSet.has(String(item._id))
                 newItems.push(newItem)
             })
+        } else {
+            return items
         }
 
         // console.log("new Items", newItems)
