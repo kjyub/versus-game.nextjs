@@ -45,13 +45,13 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
         randomGames = await GameUtils.getRelatedRandomGames(excludeGameIds, userId)
     }
 
-    let relatedGameAll = [...relatedGames, ...randomGames]
+    let relatedGameAll: Array<any> = [...relatedGames, ...randomGames]
     // 이미 읽은 게시글인지 확인
     if (!CommonUtils.isStringNullOrEmpty(userId)) {
         relatedGameAll = await GameUtils.setIsViewAndChoiceGames(relatedGameAll, userId)
     }
     
-    mGame.relatedGames = relatedGameAll
+    mGame.relatedGames = relatedGameAll.slice(0, GameConsts.RELATED_GAME_COUNT)
 
     return ApiUtils.response(mGame)
 }
