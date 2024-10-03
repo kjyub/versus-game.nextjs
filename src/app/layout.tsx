@@ -68,6 +68,7 @@ const FrontHead = () => {
                 src="https://kit.fontawesome.com/181af83e33.js"
                 crossOrigin="anonymous"
             ></script> */}
+            <meta name="naver-site-verification" content="06d62bf148f52142a78299cd86e47786d11fc182" />
         </>
     )
 }
