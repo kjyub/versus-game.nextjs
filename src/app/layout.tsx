@@ -9,6 +9,7 @@ import { SessionProvider } from "next-auth/react"
 import BgBubbleBox from "@/components/backgrounds/BgBubbleBox"
 import AppClientLayout from "@/layouts/AppClientLayout"
 import ApiUtils from "@/utils/ApiUtils"
+import { SiteConsts } from "@/types/SiteTypes"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,8 +18,8 @@ async function generateGuestId() {
 }
 
 export const metadata: Metadata = {
-    title: "VS 게임 추즈밍",
-    description: "VS 게임 추즈밍",
+    title: SiteConsts.SITE_TITLE,
+    description: SiteConsts.SITE_DESCRIPTION,
 }
 
 export default async function RootLayout({

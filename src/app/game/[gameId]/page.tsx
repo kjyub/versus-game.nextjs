@@ -7,9 +7,10 @@ import ApiUtils from "@/utils/ApiUtils"
 import AuthUtils from "@/utils/AuthUtils"
 import VersusGameView from "@/components/versus/VersusGameView"
 import Head from "next/head"
-import { Metadata } from "next"
+import { Metadata, ResolvingMetadata } from "next"
 import { auth } from "@/auth"
 import CommonUtils from "@/utils/CommonUtils"
+import { SiteConsts } from "@/types/SiteTypes"
 
 const getGame = async (gameId: string, userId: string) => {
     let params = {}
@@ -47,20 +48,32 @@ const countGameView = async (gameId: string, userId: string) => {
     return response
 }
 
-export async function generateMetadata({ params }: { gameId: string }): Promise<Metadata> {
-    let gameTitle: string = "VS 게임 추즈밍"
+type Props = {
+    params: { id: string }
+    searchParams: { [key: string]: string | string[] | undefined }
+}
+   
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    // params에서 id 추출
+    const { gameId } = params
 
-    try {
-        const { gameId } = params
-    
-        const gameData = await getGame(gameId)
-        gameTitle = gameData["title"] + " - " + gameTitle
-    } catch {
-        //
-    }
+    const gameData = await getGame(gameId)
+    const title = gameData["title"] ?? ""
+    const description = gameData["content"] ?? ""
+    const suffix = ` - ${SiteConsts.SITE_TITLE}`
+
+    // 선택적으로 상위 메타데이터에 액세스하고 확장(대체하지 않음)
+    // const previousImages = (await parent).openGraph?.images || []
 
     return {
-        title: gameTitle,
+        title: title + suffix,
+        description: description + suffix,
+        openGraph: {
+            // images: ['/some-specific-page-image.jpg', ...previousImages],
+        },
     }
 }
 
@@ -75,6 +88,9 @@ export default async function GamePage({ params }: { gameId: string }) {
     await countGameView(gameId, userId)
 
     return (
-        <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
+        <>
+            <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
+        </>
     )
 }
+
