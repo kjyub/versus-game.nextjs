@@ -61,20 +61,42 @@ export async function generateMetadata(
     const { gameId } = params
 
     const gameData = await getGame(gameId)
-    const title = gameData["title"] ?? ""
-    const description = gameData["content"] ?? ""
-    const suffix = ` - ${SiteConsts.SITE_TITLE}`
+    const titleRaw = gameData["title"] ?? ""
+    const descriptionRaw = gameData["content"] ?? ""
 
+    const suffix = ` | ${SiteConsts.SITE_TITLE}`
+    const title = titleRaw + suffix
+    const description = CommonUtils.isStringNullOrEmpty(descriptionRaw) ? SiteConsts.SITE_DESCRIPTION : descriptionRaw + suffix
+    
+    let keywords = [titleRaw]
+    if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+        keywords.push(descriptionRaw)
+    }
+    keywords = [...keywords, ...SiteConsts.SITE_KEYWORDS.split(", ")]
+
+    try {
+        keywords = [
+            ...keywords,
+            ...gameData.choices.filter(choice => !CommonUtils.isStringNullOrEmpty(choice.title)).map(choice => choice.title),
+        ]
+    } catch {
+        //
+    }
+
+    
     // 선택적으로 상위 메타데이터에 액세스하고 확장(대체하지 않음)
     // const previousImages = (await parent).openGraph?.images || []
 
-    return {
-        title: title + suffix,
-        description: description + suffix,
+    let metaData = {
+        title: title,
+        description: description,
         openGraph: {
             // images: ['/some-specific-page-image.jpg', ...previousImages],
         },
+        keywords: keywords
     }
+
+    return metaData
 }
 
 export default async function GamePage({ params }: { gameId: string }) {
