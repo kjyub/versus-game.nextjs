@@ -66,7 +66,7 @@ export async function generateMetadata(
 
     const suffix = ` | ${SiteConsts.SITE_TITLE}`
     const title = titleRaw + suffix
-    const description = CommonUtils.isStringNullOrEmpty(descriptionRaw) ? SiteConsts.SITE_DESCRIPTION : descriptionRaw + suffix
+    const description = CommonUtils.isStringNullOrEmpty(descriptionRaw) ? `${titleRaw} 선택해주세요` : descriptionRaw + suffix
     
     let keywords = [titleRaw]
     if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
