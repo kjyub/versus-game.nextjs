@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
     const gameAll = await MVersusGame.find({ isDeleted: false })
 
-    const gameIds = gameAll.map((game) => String(game._id))
+    const gameIds = gameAll.map((game) => String(game.nanoId))
 
     const result: IPaginationResponse = gameIds
 
