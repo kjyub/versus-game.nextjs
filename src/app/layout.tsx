@@ -20,6 +20,8 @@ async function generateGuestId() {
 export const metadata: Metadata = {
     title: SiteConsts.SITE_TITLE,
     description: SiteConsts.SITE_DESCRIPTION,
+    keywords: SiteConsts.SITE_KEYWORDS,
+    robots: "index, follow",
 }
 
 export default async function RootLayout({
