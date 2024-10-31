@@ -65,8 +65,14 @@ export async function generateMetadata(
     const descriptionRaw = gameData["content"] ?? ""
 
     const suffix = ` | ${SiteConsts.SITE_TITLE}`
+    
     const title = titleRaw + suffix
-    const description = CommonUtils.isStringNullOrEmpty(descriptionRaw) ? `${titleRaw} 선택해주세요` : descriptionRaw + suffix
+    let description = ""
+    if (CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+        description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요.`
+    } else {
+        description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요. ${descriptionRaw}`
+    }
     
     let keywords = [titleRaw]
     if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
