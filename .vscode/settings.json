@@ -1,0 +1,11 @@
+{
+    "eslint.workingDirectories": [
+        {
+            "mode": "auto"
+        }
+    ],
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#760e4c",
+        "titleBar.activeForeground": "#FAFAFA"
+    }
+}
