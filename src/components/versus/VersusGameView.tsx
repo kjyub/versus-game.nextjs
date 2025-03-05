@@ -22,6 +22,7 @@ import { CookieConsts } from "@/types/ApiTypes"
 import VersusGameViewRelated from "./VersusGameViewRelated"
 import User from "@/types/user/User"
 import { TextFormats } from "@/types/CommonTypes"
+import VersusGameHead from "./VersusGameHead"
 
 const INIT_CHOICES = [
     new VersusGameChoice(),
@@ -266,10 +267,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
     return (
         <VersusStyles.GameViewLayout>
-            <VersusStyles.GameViewHeadLayout>
-                <span className="title">{game.title}</span>
-                <p className="content">{game.content}</p>
-            </VersusStyles.GameViewHeadLayout>
+            <VersusGameHead game={game} />
 
             <VersusStyles.GameViewChoiceLayout>
                 <VersusChoiceView

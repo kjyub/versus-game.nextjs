@@ -393,3 +393,41 @@ export const PrivacyModalItem = tw.div`
     [&>.info>.title]:font-medium [&>.info>.title]:text-stone-600 [&>.info>.title]:text-lg
     [&>.info>.content]:font-light [&>.info>.content]:text-stone-500 [&>.info>.content]:text-sm
 `
+
+export const ShareBox = tw.div`
+    relative
+    flex justify-between items-center w-10 hover:w-[230px] h-10 px-3 py-1 space-x-1
+    rounded-full hover:bg-black/20
+    duration-300 cursor-pointer
+
+    [&>.icon]:absolute [&>.icon]:top-2.5 [&>.icon]:right-3 [&>.icon]:z-10
+    [&>.icon]:w-4
+`
+export const ShareButton = tw.button`
+    flex items-center px-2 py-1 space-x-1
+    rounded-full hover:bg-black/10
+    text-sm [&>*]:text-stone-200
+    text-nowrap
+    transition-colors
+
+    [&>i]:text-xs
+`
+export const ShareMessage = tw.div`
+    absolute right-0
+    ${({ $is_show }: StyleProps) => ($is_show ? "-top-6 opacity-100 z-10" : "-top-3 opacity-0 -z-10")}
+    flex items-center justify-center px-3 py-1
+    rounded-full
+    !text-stone-200 text-nowrap text-xs
+    !overflow-visible duration-200
+`
+
+export const ShareEmbedModalLayout = tw(ModalLayout)`
+    bg-black/40
+    [&>.title]:text-stone-200
+`
+export const ShareEmbedModalMessage = tw.div`
+    absolute right-0
+    ${({ $is_show }: StyleProps) => ($is_show ? "top-0.5 opacity-100 z-10" : "top-6 opacity-0 -z-10")}
+    !text-stone-200 text-nowrap text-xs
+    duration-200
+`

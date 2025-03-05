@@ -24,6 +24,7 @@
         "next-auth": "5.0.0-beta.18",
         "path-to-regexp": "6.2.2",
         "react": "^18",
+        "react-copy-to-clipboard": "5.1.0",
         "react-dom": "^18",
         "react-intersection-observer": "9.13.0"
     },
