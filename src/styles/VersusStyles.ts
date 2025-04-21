@@ -10,6 +10,11 @@ export const ModalLayout = tw.div`
     [&>.title]:font-semibold [&>.title]:text-stone-700 [&>.title]:text-lg
 `
 
+export const MainTitleLayout = tw.div`
+    flex flex-col flex-center w-full
+    ${({ $is_active }: StyleProps) => ($is_active ? "h-128" : "h-64")}
+    duration-500
+`
 export const MainSearchLayout = tw.div`
     flex flex-col max-sm:w-screen sm:w-128 max-md:px-2 md:px-4 space-y-2
 `
@@ -20,7 +25,10 @@ export const MainSearchFilterMenuBox = tw.div`
 export const MainSearchFilterMenuButton = tw.button`
     flex flex-center px-2 py-0.5
     rounded-md text-sm
-    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600" : "text-stone-300 bg-black/40 hover:bg-black/50")}
+    ${(props: StyleProps) =>
+        props.$is_active
+            ? "bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600"
+            : "text-stone-300 bg-black/40 hover:bg-black/50"}
     duration-200
 `
 
@@ -153,8 +161,7 @@ export const ChoiceLayoutSettingGrid = tw.div`
         props.$choice_count > 2 && props.$choice_count <= 3
             ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3"
             : ""}
-    ${(props: any) =>
-        props.$choice_count > 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : ""}
+    ${(props: any) => (props.$choice_count > 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : "")}
     max-sm:w-full
     duration-300
 `
@@ -252,7 +259,6 @@ export const ListGameSimpleContentBox = tw.div`
     ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-rose-800/50")}
 `
 
-
 export const ListGamePrivacy = tw.div`
     flex items-center space-x-2
     text-sm text-stone-200
@@ -278,7 +284,7 @@ export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
     overflow-y-auto scroll-transparent scroll-overlay
     overflow-visible
 `
-    // max-h-[calc(100vh-192px)]
+// max-h-[calc(100vh-192px)]
 export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
     ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
     ${(props: any) =>
@@ -349,7 +355,8 @@ export const GameViewCommentInputButton = tw.button`
 export const GameViewCommentEditButton = tw.button`
     px-2 py-1
     rounded-md text-sm
-    ${(props: StyleProps) => (props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-400")}
+    ${(props: StyleProps) =>
+        props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-400"}
     duration-200
 `
 
@@ -377,14 +384,14 @@ export const GameViewRelatedList = tw.div`
     sm:[&>div]:min-w-[12rem]
 `
 
-
 export const PrivacyModalLayout = tw(ModalLayout)`
     max-sm:w-[90vw] sm:w-96
 `
 export const PrivacyModalItem = tw.div`
     flex items-center w-full p-3 space-y-0
     rounded-lg border border-transparent
-    ${(props: StyleProps) => (props.$is_active ? "bg-stone-200/70 border-stone-400" : "bg-transparent hover:bg-stone-200/60")}
+    ${(props: StyleProps) =>
+        props.$is_active ? "bg-stone-200/70 border-stone-400" : "bg-transparent hover:bg-stone-200/60"}
     duration-200 cursor-pointer
     
     [&>i]:flex [&>i]:justify-center [&>i]:items-center [&>i]:h-10 [&>i]:aspect-square [&>i]:mr-2 

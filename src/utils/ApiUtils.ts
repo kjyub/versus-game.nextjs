@@ -44,7 +44,7 @@ export default class ApiUtils {
             headers: {
                 "Content-Type": "application/json",
                 credentials: "include",
-                ...headers
+                ...headers,
             },
         }
         if (!useCache) {
@@ -67,15 +67,14 @@ export default class ApiUtils {
             })
 
         if (process.env.NEXT_PUBLIC_IS_DEBUG == "1" && resultData === "Api Error") {
-            await fetch("http://192.168.0.69:3000" + requestUrl, requestInit)
-                .then(async (response) => {
-                    // 결과
-                    statusCode = response.status
-                    if (statusCode >= 200 && statusCode < 300) {
-                        bResult = true
-                    }
-                    resultData = await response.json()
-                })
+            await fetch("http://192.168.0.69:3000" + requestUrl, requestInit).then(async (response) => {
+                // 결과
+                statusCode = response.status
+                if (statusCode >= 200 && statusCode < 300) {
+                    bResult = true
+                }
+                resultData = await response.json()
+            })
         }
 
         return [bResult, statusCode, resultData]

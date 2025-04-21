@@ -2,20 +2,20 @@ export default class StyleUtils {
     static rollbackScreen() {
         window.scrollTo({
             top: 0,
-            left: 0
+            left: 0,
         })
-        document.body.style.overflow = 'hidden'
-        document.body.style.transform = ''
-        document.body.style.transformOrigin = ''
+        document.body.style.overflow = "hidden"
+        document.body.style.transform = ""
+        document.body.style.transformOrigin = ""
 
         let isLayout = 0
         const layout = document.getElementById("layout")
         if (layout) {
             layout.scrollTo({
                 top: 0,
-                left: 0
+                left: 0,
             })
-            isLayout=1
+            isLayout = 1
         }
     }
 

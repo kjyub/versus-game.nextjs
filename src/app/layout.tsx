@@ -4,12 +4,12 @@ import "./globals.css"
 import Navigation from "@/components/commons/Navigation"
 import * as MainStyles from "@/styles/MainStyles"
 
-import { auth } from "@/auth"
 import { SessionProvider } from "next-auth/react"
 import BgBubbleBox from "@/components/backgrounds/BgBubbleBox"
 import AppClientLayout from "@/layouts/AppClientLayout"
 import ApiUtils from "@/utils/ApiUtils"
 import { SiteConsts } from "@/types/SiteTypes"
+import Providers from "@/components/Providers"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -29,7 +29,6 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    const session = await auth()
     // await generateGuestId()
 
     return (
@@ -46,14 +45,14 @@ export default async function RootLayout({
                 }}
             >
                 <BgBubbleBox />
-                <SessionProvider session={session}>
+                <Providers>
                     <div id="layout" className={`absolute z-0 w-screen min-h-full h-full max-h-full overflow-hidden`}>
                         <Navigation />
                         <div id="page-root" className="flex flex-col w-full h-[calc(100%-3rem)] overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay">
                             {children}
                         </div>
                     </div>
-                </SessionProvider>
+                </Providers>
             </MainStyles.Body>
         </html>
     )

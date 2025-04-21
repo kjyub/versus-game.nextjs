@@ -7,10 +7,9 @@ import { auth } from "@/auth"
 import { IPaginationResponse } from "@/types/common/Responses"
 import AuthUtils from "@/utils/AuthUtils"
 import { cookies } from "next/headers"
-// import VersusMainSearch from "@/components/versus/VersusMainSearch"
 
-const VersusMainSearch = dynamic(
-    () => import("@/components/versus/VersusMainSearch"),
+const VersusMainTitle = dynamic(
+    () => import("@/components/versus/VersusMainTitle"),
     { ssr: false },
 )
 const VersusList = dynamic(() => import("@/components/versus/VersusList"), {
@@ -57,7 +56,7 @@ export default async function Home({ params, searchParams }) {
 
     return (
         <MainStyles.PageLayout id="game-list-page">
-            <VersusMainSearch />
+            <VersusMainTitle />
             <VersusList versusGameData={gamePaginationData} />
         </MainStyles.PageLayout>
     )
