@@ -283,7 +283,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
           초기화
         </button>
         <button
-          className="flex-grow bg-indigo-600/70 hover:bg-indigo-700/70"
+          className="grow bg-indigo-600/70 hover:bg-indigo-700/70"
           onClick={() => {
             handleAnswer()
           }}

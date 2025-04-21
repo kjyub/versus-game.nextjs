@@ -190,7 +190,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
       {/* 헤더 */}
       <div className="flex items-center w-full h-28 p-2 space-x-2">
         {/* 썸네일 */}
-        <div className="relative flex flex-center h-full aspect-[4/3] bg-stone-700">
+        <div className="relative flex flex-center h-full aspect-4/3 bg-stone-700">
           {CommonUtils.isStringNullOrEmpty(versusGame.thumbnailImageUrl) ? (
             <span className="text-stone-400">이미지 없음</span>
           ) : (
@@ -311,7 +311,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
         {versusGame.choices.map((choice: VersusGameChoice, index: number) => (
           <div key={index} className="flex flex-col items-center w-full">
             {/* 이미지 */}
-            <div className="relative flex flex-center w-full max-w-[12rem] aspect-[4/3] bg-stone-800">
+            <div className="relative flex flex-center w-full max-w-[12rem] aspect-4/3 bg-stone-800">
               {CommonUtils.isStringNullOrEmpty(choice.imageUrl) ? (
                 <span className="text-stone-400">이미지 없음</span>
               ) : (

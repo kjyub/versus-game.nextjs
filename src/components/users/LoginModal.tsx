@@ -90,11 +90,11 @@ const LoginPage = ({ page, setPage }: IPage) => {
     <UserStyles.LoginPageContainer
       className={`
                 ${page === LoginModalPage.LOGIN ? 'top-0' : '-top-full'}
-                bg-gradient-to-t from-transparent to-stone-300/70 from-10%
+                bg-linear-to-t from-transparent to-stone-300/70 from-10%
             `}
     >
       <UserStyles.LoginTitleBox>
-        <div className="aspect-square h-28 mb-4 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-300"></div>
+        <div className="aspect-square h-28 mb-4 rounded-xl bg-linear-to-tr from-indigo-600 to-sky-300"></div>
         <h1>로그인</h1>
         <h3>
           VS게임 추즈밍을 <br />더 즐기시려면 로그인해주세요.

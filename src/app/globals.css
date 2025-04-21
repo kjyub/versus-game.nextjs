@@ -1,114 +1,124 @@
-@import url("https://webfontworld.github.io/pretendard/Pretendard.css");
+@import url('https://webfontworld.github.io/pretendard/Pretendard.css');
+@import 'tailwindcss';
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --breakpoint-zero: 0px;
+  --breakpoint-3xl: 1800px;
+}
 
-body {
-  /* color: rgb(var(--foreground-rgb));
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+
+  input,
+  textarea,
+  button {
+    appearance: none;
+    border-radius: 0;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  input:focus {
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+  }
+  select:focus {
+    outline: 2px solid transparent !important;
+    outline-offset: 2px !important;
+  }
+  button:focus {
+    outline: none !important;
+    outline-offset: none !important;
+  }
+  textarea:focus {
+    outline: none !important;
+    outline-offset: none !important;
+  }
+}
+
+@layer utilities {
+  body {
+    /* color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb)); */
 
-  font-family: "Pretendard", sans-serif !important;
-  line-height: normal;
+    font-family: 'Pretendard', sans-serif !important;
+    line-height: normal;
 
-  @apply overflow-hidden;
-}
+    @apply overflow-hidden;
+  }
 
-input,
-textarea,
-button {
-  appearance: none;
-  border-radius: 0;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  @apply preventSelect;
-}
-input:focus {
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
-}
-select:focus {
-  outline: 2px solid transparent !important;
-  outline-offset: 2px !important;
-}
-button:focus {
-  outline: none !important;
-  outline-offset: none !important;
-}
-textarea:focus {
-  outline: none !important;
-  outline-offset: none !important;
-}
+  .scroll-transparent {
+  }
+  .scroll-transparent::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+    position: overlay;
+  }
+  .scroll-transparent::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
 
-.preventSelect {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
+    border-radius: 9999px;
+    transition: all 0.3s;
+  }
+  .scroll-overlay {
+    scrollbar-gutter: both-edges;
+  }
 
-.scroll-transparent {
-}
-.scroll-transparent::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-  background: transparent;
-  position: overlay;
-}
-.scroll-transparent::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-
-  border-radius: 9999px;
-  transition: all 0.3s;
-}
-.scroll-overlay {
-  scrollbar-gutter: both-edges;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-
-  border-radius: 9999px;
-  transition: all 0.3s;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.45);
-}
-@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+  }
   ::-webkit-scrollbar-thumb {
-    background: rgba(180, 180, 180, 0.3);
+    background: rgba(0, 0, 0, 0.3);
 
     border-radius: 9999px;
     transition: all 0.3s;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(180, 180, 180, 0.45);
+    background: rgba(0, 0, 0, 0.45);
   }
-}
+  @media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+      background: rgba(180, 180, 180, 0.3);
 
-.flex-center {
-  @apply items-center justify-center;
-}
+      border-radius: 9999px;
+      transition: all 0.3s;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(180, 180, 180, 0.45);
+    }
+  }
 
-.height-fill {
-  height: 100vh;
-  height: -webkit-fill-available;
-}
-/* @supports (-webkit-touch-callout: none) {
+  .flex-center {
+    @apply items-center justify-center;
+  }
+
+  .height-fill {
+    height: 100vh;
+    height: -webkit-fill-available;
+  }
+  .prevent-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  /* @supports (-webkit-touch-callout: none) {
     height: -webkit-fill-available;
 } */
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
 }
 
 .striped-background {

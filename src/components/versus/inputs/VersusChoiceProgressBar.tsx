@@ -1,7 +1,7 @@
 export default function VersusChoiceProgressBar({ percent = 0 }: { percent: number }) {
   return (
     <div
-      className="flex justify-end w-full h-2 bg-gradient-to-r from-rose-600 to-rose-400 rounded-full overflow-hidden"
+      className="flex justify-end w-full h-2 bg-linear-to-r from-rose-600 to-rose-400 rounded-full overflow-hidden"
       role="progressbar"
       aria-valuenow="50"
       aria-valuemin="0"

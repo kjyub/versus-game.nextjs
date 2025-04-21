@@ -183,7 +183,7 @@ export default function VersusGameViewComment({
       <div className="flex flex-col space-y-2">
         <span className="px-1 font-light text-stone-300">내 의견 남기기</span>
         <VS.GameViewCommentInputBox $is_focus={isInputFocus}>
-          <div className="px-3 py-1 font-medium rounded-md bg-gradient-to-tr from-indigo-700 to-indigo-500 text-white">
+          <div className="px-3 py-1 font-medium rounded-md bg-linear-to-tr from-indigo-700 to-indigo-500 text-white">
             {answerChoice.title}
           </div>
           {/* <div className="px-2 py-1 font-semibold text-indigo-400">
@@ -321,7 +321,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
         {/* 선택지 */}
         <div className="relative flex flex-center px-4 h-7 rounded-lg overflow-hidden">
           {choice.title}
-          <div className="absolute z-0 w-full h-full bg-gradient-to-tr from-emerald-500 to-yellow-500">
+          <div className="absolute z-0 w-full h-full bg-linear-to-tr from-emerald-500 to-yellow-500">
             {!CommonUtils.isStringNullOrEmpty(choice.getThumbnail()) && (
               <Image src={choice.getThumbnail()} fill alt={''} objectFit="cover" objectPosition="center" />
             )}

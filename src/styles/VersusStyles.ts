@@ -34,12 +34,12 @@ export const MainSearchFilterMenuButton = tw.button`
 
 export const SearchInputBox = tw.div`
     flex items-center px-5 py-2
-    rounded-full bg-black/50 backdrop-blur
+    rounded-full bg-black/50 backdrop-blur-sm
     text-white/90
 
     [&>input]:w-full [&>input]:bg-transparent
-    [&>i.clear]:ml-2 [&>i.clear]:mr-4 [&>i.clear]:text-stone-400 hover:[&>i.clear]:text-stone-300
-    [&>i.search]:text-stone-300 hover:[&>i.search]:text-stone-100 [&>i.search]:text-lg
+    [&>i.clear]:ml-2 [&>i.clear]:mr-4 [&>i.clear]:text-stone-400 [&>i.clear]:hover:text-stone-300
+    [&>i.search]:text-stone-300 [&>i.search]:hover:text-stone-100 [&>i.search]:text-lg
     [&>i]:cursor-pointer [&>i]:duration-200
 `;
 
@@ -56,13 +56,13 @@ export const EditorDataLayout = tw.div`
 `;
 export const EditBox = tw.div`
     flex flex-col md:min-h-[32rem] md:max-h-[calc(100vh-192px)] max-sm:p-3 sm:p-4
-    rounded-lg bg-black/20 backdrop-blur-sm
+    rounded-lg bg-black/20 backdrop-blur-xs
     overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay
     [&>.title]:mb-2
     [&>.title]:font-medium [&>.title]:text-lg [&>.title]:text-stone-50
 `;
 export const EditInfoBox = tw(EditBox)`
-    flex flex-col flex-shrink-0 
+    flex flex-col shrink-0 
     max-lg:w-full lg:min-w-[384px] lg:w-[30vw]
     space-y-4
 `;
@@ -75,7 +75,7 @@ export const EditorControlLayout = tw.div`
 `;
 export const EditorControlButton = tw.button`
     flex flex-center px-7 h-14
-    rounded-full backdrop-blur
+    rounded-full backdrop-blur-sm
     bg-black/40 hover:bg-black/60
     text-lg text-stone-100
     duration-200
@@ -102,7 +102,7 @@ export const InputBox = tw.div`
     duration-200
     [&>.input]:w-full [&>.input]:bg-transparent
     [&>.input]:text-stone-100 [&>.input]:text-sm
-    [&>.input]:outline-none focus:[&>.input]:outline-none
+    [&>.input]:outline-hidden [&>.input]:focus:outline-hidden
 `;
 export const InputTypeButtonList = tw.div`
     flex flex-wrap space-x-1
@@ -126,7 +126,7 @@ export const ThumbnailImageEditPreviewBox = tw.div`
 export const ThumbnailImageEditPreviewImageBox = tw.div`
     relative
     flex flex-center w-full max-w-[384px] max-h-[288px]
-    aspect-[4/3]
+    aspect-4/3
     rounded-md bg-black/30
     overflow-hidden [&>img]:object-cover
 `;
@@ -143,8 +143,8 @@ export const ThumbnailImageEditUploadDragBox = tw.div`
     duration-200
 `;
 export const ThumbnailImageEditUploadButton = tw.label`
-    flex flex-center flex-shrink-0 max-sm:h-7 sm:h-9
-    rounded-md bg-stone-100/70 hover:bg-stone-100/90 backdrop-blur-sm
+    flex flex-center shrink-0 max-sm:h-7 sm:h-9
+    rounded-md bg-stone-100/70 hover:bg-stone-100/90 backdrop-blur-xs
     max-sm:text-xs sm:text-sm text-stone-700
     cursor-pointer duration-200
 `;
@@ -171,7 +171,7 @@ export const ChoiceBox = tw.div`
 `;
 export const ChoiceThumbnailBox = tw.div`
     relative
-    flex flex-col flex-center w-full aspect-[4/3]
+    flex flex-col flex-center w-full aspect-4/3
     rounded-md bg-black/30
     text-stone-300
     overflow-hidden [&>img]:object-cover
@@ -202,7 +202,7 @@ export const ListScrollTopButton = tw.button`
     absolute max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
     flex flex-center w-10 h-10
     border border-blue-500/50
-    rounded-full bg-blue-400/60 backdrop-blur
+    rounded-full bg-blue-400/60 backdrop-blur-sm
     text-white
 `;
 export const ListGrid = tw.div`
@@ -212,7 +212,7 @@ export const ListGrid = tw.div`
 `;
 export const ListGameBox = tw.div`
     flex flex-col w-full max-sm:p-2 sm:p-3
-    rounded-lg bg-black/30 backdrop-blur
+    rounded-lg bg-black/30 backdrop-blur-sm
     duration-300 [&.hover]:bg-black/40
 `;
 export const ListGameLoadingBox = tw(ListGameBox)`
@@ -221,7 +221,7 @@ export const ListGameLoadingBox = tw(ListGameBox)`
 `;
 export const ListGameThumbnailBox = tw.div`
     relative
-    flex flex-col flex-center w-full aspect-[4/3]
+    flex flex-col flex-center w-full aspect-4/3
     rounded-md bg-stone-800/20
     max-sm:text-xs text-stone-500
     overflow-hidden
@@ -253,7 +253,7 @@ export const ListGameSimpleBox = tw(ListGameBox)`
 export const ListGameSimpleContentBox = tw.div`
     absolute z-10 
     flex flex-col w-full h-full mt-0 max-sm:px-2 sm:px-3 max-sm:py-1 sm:py-2
-    backdrop-blur
+    backdrop-blur-sm
     ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-rose-800/50")}
 `;
 
@@ -270,7 +270,7 @@ export const GameViewSectionLayoutSize = tw.div`
 `;
 export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     flex flex-col space-y-2
-    rounded-md bg-black/30 backdrop-blur
+    rounded-md bg-black/30 backdrop-blur-sm
     duration-300
 
     [&>.title]:text-center [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-100
@@ -288,7 +288,7 @@ export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
     ${(props: any) =>
       props.$status === ChoiceSelectStatus.SELECTED
         ? "ring-[3px] ring-indigo-500 [&>img]:scale-110"
-        : "[&>img]:hover:scale-110"}
+        : "hover:[&>img]:scale-110"}
     ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "[&>.content]:bg-black/30" : "")}
     duration-300 [&>img]:duration-300
 `;
@@ -296,7 +296,7 @@ export const ChoiceImageContentBox = tw.div`
     absolute z-10
     flex flex-col w-full h-full max-sm:px-4 max-sm:py-2 sm:px-4 sm:py-2
     duration-300
-    hover:drop-shadow
+    hover:drop-shadow-sm
 
     [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
     max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-2xl 
@@ -306,7 +306,7 @@ export const GameViewChoiceResultBox = tw.div`
     ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-2 sm:bottom-4" : "-bottom-8")}
     flex items-center px-1 py-1
     sm:divide-x divide-stone-300
-    rounded-full bg-white/80 backdrop-blur
+    rounded-full bg-white/80 backdrop-blur-sm
     font-medium text-rose-600 max-sm:text-xs sm:text-sm
     duration-300
     max-sm:[&>div]:px-1 sm:[&>div]:px-2
@@ -316,14 +316,14 @@ export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
     flex flex-row items-center h-12 space-x-2 py-0
     [&>button]:h-full [&>button]:rounded-full
     [&>button]:font-medium [&>button]:text-white
-    [&>button]:backdrop-blur [&>button]:duration-300
-    disabled:[&>button]:grayscale disabled:[&>button]:text-stone-300
+    [&>button]:backdrop-blur-sm [&>button]:duration-300
+    [&>button]:disabled:grayscale [&>button]:disabled:text-stone-300
 `;
 
 export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
     ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
     flex-col space-y-4
-    rounded-md bg-black/40 backdrop-blur
+    rounded-md bg-black/40 backdrop-blur-sm
     duration-500
     [&>.title]:font-semibold [&>.title]:text-stone-100
 `;
@@ -411,7 +411,7 @@ export const ShareBox = tw.div`
 export const ShareButton = tw.button`
     flex items-center px-2 py-1 space-x-1
     rounded-full hover:bg-black/10
-    text-sm [&>*]:text-stone-200
+    text-sm *:text-stone-200
     text-nowrap
     transition-colors
 

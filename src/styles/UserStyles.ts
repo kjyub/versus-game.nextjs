@@ -4,7 +4,7 @@ import tw from 'tailwind-styled-components'
 export const LoginContainer = tw.div`
     relative
     flex flex-col max-sm:w-64 sm:w-72 h-128
-    rounded-lg bg-white/50 backdrop-blur
+    rounded-lg bg-white/50 backdrop-blur-sm
     drop-shadow-xl
     overflow-hidden
 `
@@ -31,7 +31,7 @@ export const LoginTitleBox = tw.div`
 export const LoginButton = tw.button`
     flex items-center w-fit px-8 py-2
     rounded-xl 
-    ${(props: StyleProps) => (props.disabled ? 'bg-stone-500' : 'bg-gradient-to-r from-rose-700 to-rose-500')}
+    ${(props: StyleProps) => (props.disabled ? 'bg-stone-500' : 'bg-linear-to-r from-rose-700 to-rose-500')}
     text-white font-medium
     shadow-lg hover:shadow-xl
     duration-200
@@ -49,7 +49,7 @@ export const AgreeTitleBox = tw.div`
     flex justify-between items-center w-full
     [&>.title]:font-semibold [&>.title]:text-stone-800
     [&>.agree]:flex [&>.agree]:items-center [&>.agree]:px-2 [&>.agree]:py-1 [&>.agree]:space-x-1 
-    [&>.agree]:rounded-md hover:[&>.agree]:bg-stone-100/40
+    [&>.agree]:rounded-md [&>.agree]:hover:bg-stone-100/40
     [&>.agree]:text-stone-500 [&>.agree.active]:text-indigo-600
     [&>.agree]:duration-200 [&>.agree]:cursor-pointer
 `
@@ -81,7 +81,7 @@ export const InputBox = tw.div`
 export const MyInfoContainer = tw.div`
     relative
     flex flex-col w-64 h-[36rem] p-4
-    rounded-lg bg-white/70 backdrop-blur
+    rounded-lg bg-white/70 backdrop-blur-sm
     drop-shadow-xl
     overflow-hidden
 `
