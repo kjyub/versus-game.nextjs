@@ -1,43 +1,43 @@
-'use client';
+'use client'
 
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react'
 
 interface UiContextProps {
-    isScrollTop: boolean;
+  isScrollTop: boolean
 }
 const initialState: UiContextProps = {
-    isScrollTop: true,
-};
+  isScrollTop: true,
+}
 
-export const UiContext = createContext<UiContextProps>(initialState);
+export const UiContext = createContext<UiContextProps>(initialState)
 
 export const UiProvider = ({ children }: { children: React.ReactNode }) => {
-    const isBrowser = typeof window !== 'undefined';
+  const isBrowser = typeof window !== 'undefined'
 
-    const [isScrollTop, setIsScrollTop] = useState<boolean>(true);
+  const [isScrollTop, setIsScrollTop] = useState<boolean>(true)
 
-    useEffect(() => {
-        if (!isBrowser) return;
+  useEffect(() => {
+    if (!isBrowser) return
 
-        const pageRoot = document.getElementById('page-root');
-        if (!pageRoot) return;
+    const pageRoot = document.getElementById('page-root')
+    if (!pageRoot) return
 
-        const handleScroll = () => {
-            setIsScrollTop(pageRoot.scrollTop === 0);
-        };
+    const handleScroll = () => {
+      setIsScrollTop(pageRoot.scrollTop === 0)
+    }
 
-        pageRoot.addEventListener('scroll', handleScroll);
+    pageRoot.addEventListener('scroll', handleScroll)
 
-        return () => {
-            console.log("remove scroll event listener");
-            pageRoot.removeEventListener('scroll', handleScroll);
-        };
-    }, [isBrowser]);
+    return () => {
+      console.log('remove scroll event listener')
+      pageRoot.removeEventListener('scroll', handleScroll)
+    }
+  }, [isBrowser])
 
-    return (
-        <UiContext.Provider value={{ isScrollTop }}>
-            ss
-            {children}
-        </UiContext.Provider>
-    );
-};
+  return (
+    <UiContext.Provider value={{ isScrollTop }}>
+      ss
+      {children}
+    </UiContext.Provider>
+  )
+}

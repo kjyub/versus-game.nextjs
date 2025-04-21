@@ -1,31 +1,29 @@
-import React from "react"
-
 export enum EditTypes {
-    ADD,
-    MODIFY,
-    REMOVE,
+  ADD,
+  MODIFY,
+  REMOVE,
 }
 
 export enum EditStateTypes {
-    WAIT,
-    DISABLED,
-    EDITED,
-    PENDING,
-    DONE,
-    FAILED,
+  WAIT,
+  DISABLED,
+  EDITED,
+  PENDING,
+  DONE,
+  FAILED,
 }
 
 export interface Paging<T> {
-    pageCount: number
-    datas: Array<T>
+  pageCount: number
+  datas: Array<T>
 }
 
 export const PagingBlank = {
-    pageCount: 1,
-    datas: [],
+  pageCount: 1,
+  datas: [],
 }
 
 export enum DataTypes {
-    TEXT,
-    IMAGE,
+  TEXT,
+  IMAGE,
 }

@@ -1,13 +1,13 @@
 export const AUTH_PROVIDER_TYPES = {
-    NONE: 0,
-    GOOGLE: 1
+  NONE: 0,
+  GOOGLE: 1,
 }
 
 export enum UserRole {
-    GUEST = 0,
-    USER = 1,
-    BAN = 2,
-    STAFF = 3
+  GUEST = 0,
+  USER = 1,
+  BAN = 2,
+  STAFF = 3,
 }
 
 export const SIGNUP_AGREEMENT = `

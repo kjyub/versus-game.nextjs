@@ -1,11 +1,18 @@
 {
-    "eslint.workingDirectories": [
-        {
-            "mode": "auto"
-        }
-    ],
-    "workbench.colorCustomizations": {
-        "titleBar.activeBackground": "#760e4c",
-        "titleBar.activeForeground": "#FAFAFA"
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
     }
+  ],
+  "workbench.colorCustomizations": {
+    "titleBar.activeBackground": "#760e4c",
+    "titleBar.activeForeground": "#FAFAFA"
+  },
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "biome.enableLinting": true,
+  "biome.enableFormatting": true
 }

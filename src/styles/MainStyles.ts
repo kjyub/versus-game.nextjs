@@ -1,5 +1,5 @@
-import { StyleProps } from "@/types/StyleTypes"
-import tw from "tailwind-styled-components"
+import { StyleProps } from '@/types/StyleTypes'
+import tw from 'tailwind-styled-components'
 
 export const Body = tw.body`
     flex flex-col w-screen h-screen max-h-screen
@@ -17,8 +17,7 @@ export const NavButtonList = tw.div`
 `
 
 export const NavButtonContainer = tw.div`
-    ${(props: StyleProps) =>
-        props.$is_show ? "opacity-100 z-10" : "opacity-0 -z-10"}
+    ${(props: StyleProps) => (props.$is_show ? 'opacity-100 z-10' : 'opacity-0 -z-10')}
 `
 export const NavButton = tw.button`
     flex justify-center items-center 
@@ -40,8 +39,7 @@ export const ItemAddButtonContainer = tw(NavButtonContainer)`
 
 export const LoginButtonContainer = tw.div`
     absolute max-md:right-2 md:right-4
-    ${(props: StyleProps) =>
-        props.$is_show ? "opacity-100 z-50" : "opacity-0 -z-10"}
+    ${(props: StyleProps) => (props.$is_show ? 'opacity-100 z-50' : 'opacity-0 -z-10')}
 `
 export const LoginButton = tw.button`
     flex justify-center items-center 
@@ -59,16 +57,14 @@ export const PageLayout = tw.div`
 
 export const LoginLayout = tw.div`
     absolute right-0
-    ${(props: StyleProps) =>
-        props.$is_show ? "max-md:top-10 md:top-12 z-50 opacity-100" : "top-8 -z-20 opacity-0"}
+    ${(props: StyleProps) => (props.$is_show ? 'max-md:top-10 md:top-12 z-50 opacity-100' : 'top-8 -z-20 opacity-0')}
     flex flex-center
     md:duration-200
 `
 
 export const MobileNavLayout = tw.div`
     absolute left-0
-    ${(props: StyleProps) =>
-        props.$is_show ? "top-10 z-50 opacity-100" : "top-8 -z-20 opacity-0"}
+    ${(props: StyleProps) => (props.$is_show ? 'top-10 z-50 opacity-100' : 'top-8 -z-20 opacity-0')}
     flex flex-center
     md:duration-200
 `

@@ -1,123 +1,107 @@
-import Image from "next/image"
-import * as MainStyles from "@/styles/MainStyles"
-import * as VersusStyles from "@/styles/VersusStyles"
-import dynamic from "next/dynamic"
-import VersusEditor from "@/components/versus/VersusEditor"
-import ApiUtils from "@/utils/ApiUtils"
-import AuthUtils from "@/utils/AuthUtils"
-import VersusGameView from "@/components/versus/VersusGameView"
-import Head from "next/head"
-import { Metadata, ResolvingMetadata } from "next"
-import { auth } from "@/auth"
-import CommonUtils from "@/utils/CommonUtils"
-import { SiteConsts } from "@/types/SiteTypes"
+import { auth } from '@/auth'
+import VersusGameView from '@/components/versus/VersusGameView'
+import { SiteConsts } from '@/types/SiteTypes'
+import ApiUtils from '@/utils/ApiUtils'
+import AuthUtils from '@/utils/AuthUtils'
+import CommonUtils from '@/utils/CommonUtils'
+import { Metadata, ResolvingMetadata } from 'next'
 
 const getGame = async (gameId: string, userId: string) => {
-    let params = {}
+  let params = {}
 
-    if (!CommonUtils.isStringNullOrEmpty(userId)) {
-        params["userId"] = userId
-    }
+  if (!CommonUtils.isStringNullOrEmpty(userId)) {
+    params['userId'] = userId
+  }
 
-    const [bResult, statusCode, response] = await ApiUtils.request(
-        `/api/versus/game/${gameId}`,
-        "GET",
-        params,
-    )
+  const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET', params)
 
-    return response
+  return response
 }
 const getUserChoice = async (gameId: string, userId: string) => {
-    const [bResult, statusCode, response] = await ApiUtils.request(
-        `/api/versus/game_choice/${gameId}`,
-        "POST",
-        null,
-        { userId: userId }
-    )
+  const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game_choice/${gameId}`, 'POST', null, {
+    userId: userId,
+  })
 
-    return Object.keys(response).length === 0 ? null : response
+  return Object.keys(response).length === 0 ? null : response
 }
 const countGameView = async (gameId: string, userId: string) => {
-    const [bResult, statusCode, response] = await ApiUtils.request(
-        `/api/versus/game_view_count/${gameId}`,
-        "POST",
-        null,
-        { userId: userId }
-    )
+  const [bResult, statusCode, response] = await ApiUtils.request(
+    `/api/versus/game_view_count/${gameId}`,
+    'POST',
+    null,
+    { userId: userId },
+  )
 
-    return response
+  return response
 }
 
 type Props = {
-    params: { gameId: string }
-    searchParams: { [key: string]: string | string[] | undefined }
+  params: { gameId: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
-export async function generateMetadata(
-    { params, searchParams }: Props,
-    parent: ResolvingMetadata
-): Promise<Metadata> {
-    // params에서 id 추출
-    const { gameId } = params
+export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  // params에서 id 추출
+  const { gameId } = params
 
-    const gameData = await getGame(gameId)
-    const titleRaw = gameData["title"] ?? ""
-    const descriptionRaw = gameData["content"] ?? ""
+  const gameData = await getGame(gameId)
+  const titleRaw = gameData['title'] ?? ''
+  const descriptionRaw = gameData['content'] ?? ''
 
-    const suffix = ` | ${SiteConsts.SITE_TITLE}`
-    
-    const title = titleRaw + suffix
-    let description = ""
-    if (CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
-        description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요.`
-    } else {
-        description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요. ${descriptionRaw}`
-    }
-    
-    let keywords = [titleRaw]
-    if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
-        keywords.push(descriptionRaw)
-    }
-    keywords = [...keywords, ...SiteConsts.SITE_KEYWORDS.split(", ")]
+  const suffix = ` | ${SiteConsts.SITE_TITLE}`
 
-    try {
-        keywords = [
-            ...keywords,
-            ...gameData.choices.filter(choice => !CommonUtils.isStringNullOrEmpty(choice.title)).map(choice => choice.title),
-        ]
-    } catch {
-        //
-    }
+  const title = titleRaw + suffix
+  let description = ''
+  if (CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+    description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요.`
+  } else {
+    description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요. ${descriptionRaw}`
+  }
 
-    
-    // 선택적으로 상위 메타데이터에 액세스하고 확장(대체하지 않음)
-    // const previousImages = (await parent).openGraph?.images || []
+  let keywords = [titleRaw]
+  if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+    keywords.push(descriptionRaw)
+  }
+  keywords = [...keywords, ...SiteConsts.SITE_KEYWORDS.split(', ')]
 
-    let metaData = {
-        title: title,
-        description: description,
-        openGraph: {
-            // images: ['/some-specific-page-image.jpg', ...previousImages],
-        },
-        keywords: keywords
-    }
+  try {
+    keywords = [
+      ...keywords,
+      ...gameData.choices
+        .filter((choice) => !CommonUtils.isStringNullOrEmpty(choice.title))
+        .map((choice) => choice.title),
+    ]
+  } catch {
+    //
+  }
 
-    return metaData
+  // 선택적으로 상위 메타데이터에 액세스하고 확장(대체하지 않음)
+  // const previousImages = (await parent).openGraph?.images || []
+
+  let metaData = {
+    title: title,
+    description: description,
+    openGraph: {
+      // images: ['/some-specific-page-image.jpg', ...previousImages],
+    },
+    keywords: keywords,
+  }
+
+  return metaData
 }
 
 export default async function GamePage({ params }: { gameId: string }) {
-    const session = await auth()
-    const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
+  const session = await auth()
+  const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
 
-    const { gameId } = params
+  const { gameId } = params
 
-    const gameData = await getGame(gameId, userId)
-    const userChoiceData = await getUserChoice(gameId, userId)
-    await countGameView(gameId, userId)
+  const gameData = await getGame(gameId, userId)
+  const userChoiceData = await getUserChoice(gameId, userId)
+  await countGameView(gameId, userId)
 
-    return (
-        <>
-            <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
-        </>
-    )
+  return (
+    <>
+      <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
+    </>
+  )
 }
-

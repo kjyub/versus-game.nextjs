@@ -1,5 +1,5 @@
-import { StyleProps } from "@/types/StyleTypes"
-import tw from "tailwind-styled-components"
+import { StyleProps } from '@/types/StyleTypes'
+import tw from 'tailwind-styled-components'
 
 export const LoginContainer = tw.div`
     relative
@@ -31,10 +31,7 @@ export const LoginTitleBox = tw.div`
 export const LoginButton = tw.button`
     flex items-center w-fit px-8 py-2
     rounded-xl 
-    ${(props: StyleProps) =>
-        props.disabled
-            ? "bg-stone-500"
-            : "bg-gradient-to-r from-rose-700 to-rose-500"}
+    ${(props: StyleProps) => (props.disabled ? 'bg-stone-500' : 'bg-gradient-to-r from-rose-700 to-rose-500')}
     text-white font-medium
     shadow-lg hover:shadow-xl
     duration-200
@@ -74,11 +71,8 @@ export const InputBox = tw.div`
     flex items-center w-full px-4 py-2
     rounded-full 
     ${(props: StyleProps) =>
-        props.$disabled
-            ? "bg-stone-500/10 [&>input]:text-stone-600"
-            : "bg-stone-100/70 [&>input]:text-stone-700"}
-    ${(props: StyleProps) =>
-        props.$is_focus ? "ring-2 ring-indigo-500" : "ring-1 ring-stone-300"}
+      props.$disabled ? 'bg-stone-500/10 [&>input]:text-stone-600' : 'bg-stone-100/70 [&>input]:text-stone-700'}
+    ${(props: StyleProps) => (props.$is_focus ? 'ring-2 ring-indigo-500' : 'ring-1 ring-stone-300')}
     duration-300
     [&>input]:flex [&>input]:items-center [&>input]:w-full 
     [&>input]:bg-transparent [&>input]:text-sm

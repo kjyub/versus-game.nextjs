@@ -1,125 +1,127 @@
-import { ThumbnailImageTypes } from "@/types/VersusTypes"
-import { randomUUID } from "crypto"
-import mongoose from "mongoose"
+import { randomUUID } from 'crypto'
+import mongoose from 'mongoose'
 
 const { Schema } = mongoose
 
 const choiceSchema = new Schema({
-    _id: {
-        type: String,
-        required: false,
-        default: randomUUID,
-    }, // api에서 게임 생성 시 id 생성
-    gameId: {
-        type: String,
-        required: false,
-    },
-    title: {
-        type: String,
-        required: false,
-    },
-    content: {
-        type: String,
-        default: "",
-    },
-    imageId: {
-        type: String,
-    },
-    imageUrl: {
-        type: String,
-    },
-    voteCount: {
-        type: Number,
-        default: 0,
-    },
+  _id: {
+    type: String,
+    required: false,
+    default: randomUUID,
+  }, // api에서 게임 생성 시 id 생성
+  gameId: {
+    type: String,
+    required: false,
+  },
+  title: {
+    type: String,
+    required: false,
+  },
+  content: {
+    type: String,
+    default: '',
+  },
+  imageId: {
+    type: String,
+  },
+  imageUrl: {
+    type: String,
+  },
+  voteCount: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const schema = new Schema(
-    {
-        nanoId: {
-            type: String,
-            required: true,
-        },
-        title: {
-            type: String,
-            required: true,
-        },
-        content: {
-            type: String,
-            default: "",
-        },
-        userId: {
-            type: Schema.Types.ObjectId,
-            ref: "users",
-            required: true,
-        },
-        thumbnailImageId: {
-            type: String,
-        },
-        thumbnailImageUrl: {
-            type: String,
-        },
-        thumbnailImageType: {
-            type: Number,
-        },
-        privacyType: {
-            type: Number,
-            default: 0,
-        },
-        views: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
-        favs: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
-        answerCount: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
-        state: {
-            type: Number,
-            required: true,
-            default: 0,
-        },
-        choices: [choiceSchema],
-        choiceCountType: {
-            type: Number,
-            required: true,
-            default: 200,
-        },
-        isDeleted: {
-            type: Boolean,
-            default: false,
-        },
-
-        // 연관 게임 업데이트 당시 조회수 (자주 업데이트 하는걸 방지)
-        relatedUpdateViewCount: {
-            type: Number,
-            default: 0
-        },
-        // 연관 게임 id 배열
-        relatedGameIds: {
-            type: [String],
-            default: [],
-        }
+  {
+    nanoId: {
+      type: String,
+      required: true,
     },
-    { timestamps: true },
-).index({
-    "title": "text",
-    "content": "text",
-    "choices.title": "text"
-}, {
+    title: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      default: '',
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
+    thumbnailImageId: {
+      type: String,
+    },
+    thumbnailImageUrl: {
+      type: String,
+    },
+    thumbnailImageType: {
+      type: Number,
+    },
+    privacyType: {
+      type: Number,
+      default: 0,
+    },
+    views: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    favs: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    answerCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    state: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    choices: [choiceSchema],
+    choiceCountType: {
+      type: Number,
+      required: true,
+      default: 200,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+
+    // 연관 게임 업데이트 당시 조회수 (자주 업데이트 하는걸 방지)
+    relatedUpdateViewCount: {
+      type: Number,
+      default: 0,
+    },
+    // 연관 게임 id 배열
+    relatedGameIds: {
+      type: [String],
+      default: [],
+    },
+  },
+  { timestamps: true },
+).index(
+  {
+    title: 'text',
+    content: 'text',
+    'choices.title': 'text',
+  },
+  {
     weights: {
-        "title": 5,
-        "content": 4,
-        "choices.title": 1
-    }
-})
+      title: 5,
+      content: 4,
+      'choices.title': 1,
+    },
+  },
+)
 
 // schema.virtual("user", {
 //     ref: "users",
@@ -128,7 +130,6 @@ const schema = new Schema(
 //     justOne: true
 // })
 
-export default mongoose.models.versus_games ||
-    mongoose.model("versus_games", schema)
+export default mongoose.models.versus_games || mongoose.model('versus_games', schema)
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

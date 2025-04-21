@@ -1,7 +1,7 @@
-import * as MainStyles from "@/styles/MainStyles"
-import { StyleProps } from "@/types/StyleTypes"
-import { ChoiceSelectStatus } from "@/types/VersusTypes"
-import tw from "tailwind-styled-components"
+import * as MainStyles from '@/styles/MainStyles'
+import { StyleProps } from '@/types/StyleTypes'
+import { ChoiceSelectStatus } from '@/types/VersusTypes'
+import tw from 'tailwind-styled-components'
 
 export const ModalLayout = tw.div`
     flex flex-col p-4
@@ -12,7 +12,7 @@ export const ModalLayout = tw.div`
 
 export const MainTitleLayout = tw.div`
     flex flex-col flex-center w-full
-    ${({ $is_active }: StyleProps) => ($is_active ? "h-128" : "h-64")}
+    ${({ $is_active }: StyleProps) => ($is_active ? 'h-128' : 'h-64')}
     duration-500
 `
 export const MainSearchLayout = tw.div`
@@ -26,9 +26,9 @@ export const MainSearchFilterMenuButton = tw.button`
     flex flex-center px-2 py-0.5
     rounded-md text-sm
     ${(props: StyleProps) =>
-        props.$is_active
-            ? "bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600"
-            : "text-stone-300 bg-black/40 hover:bg-black/50"}
+      props.$is_active
+        ? 'bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600'
+        : 'text-stone-300 bg-black/40 hover:bg-black/50'}
     duration-200
 `
 
@@ -97,8 +97,8 @@ export const InputBox = tw.div`
     flex items-center w-full px-2 py-2
     rounded-md
     border border-slate-700/20
-    ${(props: StyleProps) => (props.$disabled ? "bg-stone-800/20" : "bg-stone-800/20")}
-    ${(props: StyleProps) => (props.$is_focus ? "border-slate-200/70 bg-stone-800/40" : "")}
+    ${(props: StyleProps) => (props.$disabled ? 'bg-stone-800/20' : 'bg-stone-800/20')}
+    ${(props: StyleProps) => (props.$is_focus ? 'border-slate-200/70 bg-stone-800/40' : '')}
     duration-200
     [&>.input]:w-full [&>.input]:bg-transparent
     [&>.input]:text-stone-100 [&>.input]:text-sm
@@ -111,7 +111,7 @@ export const InputTypeButton = tw.button`
     flex flex-center px-4 py-1.5
     rounded-full text-sm font-light
     ${(props: StyleProps) =>
-        props.$is_show ? "bg-stone-800/50 text-stone-100" : "hover:bg-stone-800/20 text-stone-300"}
+      props.$is_show ? 'bg-stone-800/50 text-stone-100' : 'hover:bg-stone-800/20 text-stone-300'}
     duration-200
 `
 
@@ -136,7 +136,7 @@ export const ThumbnailImageEditUploadBox = tw.div`
 export const ThumbnailImageEditUploadDragBox = tw.div`
     flex flex-center w-full h-full p-1
     rounded-md
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/20 animate-pulse" : "bg-transparent")}
+    ${(props: StyleProps) => (props.$is_active ? 'bg-black/20 animate-pulse' : 'bg-transparent')}
     border-2 border-dashed border-stone-300
     text-stone-200 text-center
     max-md:text-xs md:text-sm
@@ -156,18 +156,16 @@ export const ChoiceLayoutSettingContainer = tw.div`
 export const ChoiceLayoutSettingGrid = tw.div`
     z-10
     grid max-sm:gap-2 sm:gap-4
-    ${(props: any) => (props.$choice_count <= 2 ? "max-sm:grid-cols-2 sm:grid-cols-2" : "")}
+    ${(props: any) => (props.$choice_count <= 2 ? 'max-sm:grid-cols-2 sm:grid-cols-2' : '')}
     ${(props: any) =>
-        props.$choice_count > 2 && props.$choice_count <= 3
-            ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3"
-            : ""}
-    ${(props: any) => (props.$choice_count > 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : "")}
+      props.$choice_count > 2 && props.$choice_count <= 3 ? 'max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3' : ''}
+    ${(props: any) => (props.$choice_count > 3 ? 'max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3' : '')}
     max-sm:w-full
     duration-300
 `
 
 export const ChoiceBox = tw.div`
-    ${(props: StyleProps) => (props.$is_show ? "flex" : "hidden")}
+    ${(props: StyleProps) => (props.$is_show ? 'flex' : 'hidden')}
     flex-col max-sm:w-full max-2xl:w-64 2xl:w-72
     rounded-md 
 `
@@ -181,7 +179,7 @@ export const ChoiceThumbnailBox = tw.div`
 export const ChoiceImageEditBox = tw.div`
     absolute z-10
     flex flex-col w-full h-full max-sm:px-4 max-sm:py-4 sm:px-12 sm:py-8
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/70" : "")}
+    ${(props: StyleProps) => (props.$is_active ? 'bg-black/70' : '')}
 `
 export const ChoiceInfoBox = tw.div`
     flex flex-col w-full mt-2 space-y-2
@@ -192,7 +190,7 @@ export const ChoiceTitleBox = tw.div`
     rounded-md bg-black/20
     text-stone-300
     max-sm:text-sm sm:text-base
-    ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : "")}
+    ${(props: StyleProps) => (props.$is_focus ? 'ring-1 ring-slate-200/70 bg-stone-800/20' : '')}
     duration-200
     [&>input]:bg-transparent [&>input]:text-stone-300
 `
@@ -219,7 +217,7 @@ export const ListGameBox = tw.div`
 `
 export const ListGameLoadingBox = tw(ListGameBox)`
     h-40
-    ${(props: StyleProps) => (props.$is_active ? "animate-pulse opacity-100" : "opacity-0")}
+    ${(props: StyleProps) => (props.$is_active ? 'animate-pulse opacity-100' : 'opacity-0')}
 `
 export const ListGameThumbnailBox = tw.div`
     relative
@@ -256,7 +254,7 @@ export const ListGameSimpleContentBox = tw.div`
     absolute z-10 
     flex flex-col w-full h-full mt-0 max-sm:px-2 sm:px-3 max-sm:py-1 sm:py-2
     backdrop-blur
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-rose-800/50")}
+    ${(props: StyleProps) => (props.$is_active ? 'bg-black/30' : 'bg-rose-800/50')}
 `
 
 export const ListGamePrivacy = tw.div`
@@ -286,12 +284,12 @@ export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
 `
 // max-h-[calc(100vh-192px)]
 export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
-    ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
+    ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? '' : '')}
     ${(props: any) =>
-        props.$status === ChoiceSelectStatus.SELECTED
-            ? "ring-[3px] ring-indigo-500 [&>img]:scale-110"
-            : "[&>img]:hover:scale-110"}
-    ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "[&>.content]:bg-black/30" : "")}
+      props.$status === ChoiceSelectStatus.SELECTED
+        ? 'ring-[3px] ring-indigo-500 [&>img]:scale-110'
+        : '[&>img]:hover:scale-110'}
+    ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? '[&>.content]:bg-black/30' : '')}
     duration-300 [&>img]:duration-300
 `
 export const ChoiceImageContentBox = tw.div`
@@ -305,7 +303,7 @@ export const ChoiceImageContentBox = tw.div`
 `
 export const GameViewChoiceResultBox = tw.div`
     absolute z-10
-    ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-2 sm:bottom-4" : "-bottom-8")}
+    ${(props: StyleProps) => (props.$is_show ? 'max-sm:bottom-2 sm:bottom-4' : '-bottom-8')}
     flex items-center px-1 py-1
     sm:divide-x divide-stone-300
     rounded-full bg-white/80 backdrop-blur
@@ -323,7 +321,7 @@ export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
 `
 
 export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
-    ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
+    ${(props: StyleProps) => (props.$is_show ? 'flex opacity-100' : 'hidden opacity-0')}
     flex-col space-y-4
     rounded-md bg-black/40 backdrop-blur
     duration-500
@@ -340,7 +338,7 @@ export const GameViewCommentInputBox = tw.div`
     flex items-start w-full px-2 py-2 space-x-1
     rounded-md bg-black/40
     border border-stone-500
-    ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}
+    ${(props: StyleProps) => (props.$is_focus ? 'border-stone-200/70' : '')}
     duration-200
     
     [&>textarea]:flex-1 [&>textarea]:p-1 [&>textarea]:resize-none
@@ -348,7 +346,7 @@ export const GameViewCommentInputBox = tw.div`
 `
 export const GameViewCommentInputButton = tw.button`
     px-3 py-1 rounded-md 
-    ${(props: StyleProps) => (props.$is_active ? "text-rose-500 hover:text-rose-600" : "text-stone-400")}
+    ${(props: StyleProps) => (props.$is_active ? 'text-rose-500 hover:text-rose-600' : 'text-stone-400')}
     font-semibold 
     duration-200
 `
@@ -356,7 +354,7 @@ export const GameViewCommentEditButton = tw.button`
     px-2 py-1
     rounded-md text-sm
     ${(props: StyleProps) =>
-        props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-400"}
+      props.$is_active ? 'bg-stone-100/80 hover:bg-stone-100 text-rose-500' : 'hover:bg-black/20 text-stone-400'}
     duration-200
 `
 
@@ -368,11 +366,11 @@ export const CommentPaginationButton = tw.button`
     rounded-full
     text-stone-300
     duration-200
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent hover:bg-black/20")}
+    ${(props: StyleProps) => (props.$is_active ? 'bg-black/30' : 'bg-transparent hover:bg-black/20')}
 `
 
 export const GameViewRelatedLayout = tw(GameViewSectionLayoutSize)`
-    ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
+    ${(props: StyleProps) => (props.$is_show ? 'flex opacity-100' : 'hidden opacity-0')}
     flex-col p-0 space-y-4
 `
 export const GameViewRelatedList = tw.div`
@@ -391,7 +389,7 @@ export const PrivacyModalItem = tw.div`
     flex items-center w-full p-3 space-y-0
     rounded-lg border border-transparent
     ${(props: StyleProps) =>
-        props.$is_active ? "bg-stone-200/70 border-stone-400" : "bg-transparent hover:bg-stone-200/60"}
+      props.$is_active ? 'bg-stone-200/70 border-stone-400' : 'bg-transparent hover:bg-stone-200/60'}
     duration-200 cursor-pointer
     
     [&>i]:flex [&>i]:justify-center [&>i]:items-center [&>i]:h-10 [&>i]:aspect-square [&>i]:mr-2 
@@ -421,7 +419,7 @@ export const ShareButton = tw.button`
 `
 export const ShareMessage = tw.div`
     absolute right-0
-    ${({ $is_show }: StyleProps) => ($is_show ? "-top-6 opacity-100 z-10" : "-top-3 opacity-0 -z-10")}
+    ${({ $is_show }: StyleProps) => ($is_show ? '-top-6 opacity-100 z-10' : '-top-3 opacity-0 -z-10')}
     flex items-center justify-center px-3 py-1
     rounded-full
     !text-stone-200 text-nowrap text-xs
@@ -434,7 +432,7 @@ export const ShareEmbedModalLayout = tw(ModalLayout)`
 `
 export const ShareEmbedModalMessage = tw.div`
     absolute right-0
-    ${({ $is_show }: StyleProps) => ($is_show ? "top-0.5 opacity-100 z-10" : "top-6 opacity-0 -z-10")}
+    ${({ $is_show }: StyleProps) => ($is_show ? 'top-0.5 opacity-100 z-10' : 'top-6 opacity-0 -z-10')}
     !text-stone-200 text-nowrap text-xs
     duration-200
 `

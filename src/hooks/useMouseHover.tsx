@@ -1,32 +1,29 @@
-import react, { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from 'react'
 
-export const useMouseHover = (): [
-    React.MutableRefObject<HTMLElement | null>,
-    boolean,
-] => {
-    const ref = useRef<HTMLElement | null>(null)
+export const useMouseHover = (): [React.MutableRefObject<HTMLElement | null>, boolean] => {
+  const ref = useRef<HTMLElement | null>(null)
 
-    const [showHover, setShowHover] = useState(false)
+  const [showHover, setShowHover] = useState(false)
 
-    const handleMouseOver = () => {
-        setShowHover(true)
+  const handleMouseOver = () => {
+    setShowHover(true)
+  }
+  const handleMouseOut = () => {
+    setShowHover(false)
+  }
+
+  useEffect(() => {
+    const node = ref.current
+    if (node) {
+      node.addEventListener('mouseover', handleMouseOver)
+      node.addEventListener('mouseout', handleMouseOut)
+
+      return () => {
+        node.removeEventListener('mouseover', handleMouseOver)
+        node.removeEventListener('mouseout', handleMouseOut)
+      }
     }
-    const handleMouseOut = () => {
-        setShowHover(false)
-    }
+  }, [ref.current])
 
-    useEffect(() => {
-        const node = ref.current
-        if (node) {
-            node.addEventListener("mouseover", handleMouseOver)
-            node.addEventListener("mouseout", handleMouseOut)
-
-            return () => {
-                node.removeEventListener("mouseover", handleMouseOver)
-                node.removeEventListener("mouseout", handleMouseOut)
-            }
-        }
-    }, [ref.current])
-
-    return [ref, showHover]
+  return [ref, showHover]
 }

@@ -1,325 +1,324 @@
-"use client"
-
-import Image from "next/image"
-import * as MainStyles from "@/styles/MainStyles"
-import * as VersusStyles from "@/styles/VersusStyles"
-import dynamic from "next/dynamic"
-import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs"
-import { useCallback, useEffect, useRef, useState } from "react"
-import VersusGame from "@/types/versus/VersusGame"
-import VersusGameChoice from "@/types/versus/VersusGameChoice"
-import VersusFile from "@/types/file/VersusFile"
-import ApiUtils from "@/utils/ApiUtils"
-import { useRouter } from "next/navigation"
-import CommonUtils from "@/utils/CommonUtils"
-import { useSession } from "next-auth/react"
-import VersusChoiceView from "./inputs/VersusChoiceView"
-import { nanoid } from "nanoid"
-import { Dictionary } from "@/types/common/Dictionary"
-import VersusGameViewComment from "./VersusGameViewComment"
-import StorageUtils from "@/utils/StorageUtils"
-import { CookieConsts } from "@/types/ApiTypes"
-import VersusGameViewRelated from "./VersusGameViewRelated"
-import User from "@/types/user/User"
-import { TextFormats } from "@/types/CommonTypes"
-import VersusGameHead from "./VersusGameHead"
+'use client'
+import * as VersusStyles from '@/styles/VersusStyles'
+import { CookieConsts } from '@/types/ApiTypes'
+import { TextFormats } from '@/types/CommonTypes'
+import { Dictionary } from '@/types/common/Dictionary'
+import User from '@/types/user/User'
+import VersusGame from '@/types/versus/VersusGame'
+import VersusGameChoice from '@/types/versus/VersusGameChoice'
+import ApiUtils from '@/utils/ApiUtils'
+import CommonUtils from '@/utils/CommonUtils'
+import StorageUtils from '@/utils/StorageUtils'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState } from 'react'
+import VersusGameHead from './VersusGameHead'
+import VersusGameViewComment from './VersusGameViewComment'
+import VersusGameViewRelated from './VersusGameViewRelated'
+import VersusChoiceView from './inputs/VersusChoiceView'
 
 const INIT_CHOICES = [
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
-    new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
+  new VersusGameChoice(),
 ]
 
 interface IVersusGameView {
-    gameData: object | null
-    userChoiceData: object | null
+  gameData: object | null
+  userChoiceData: object | null
 }
 export default function VersusGameView({ gameData = null, userChoiceData = null }: IVersusGameView) {
-    const router = useRouter()
-    const session = useSession()
+  const router = useRouter()
+  const session = useSession()
 
-    const [user, setUser] = useState<User>(new User())
+  const [user, setUser] = useState<User>(new User())
 
-    const [game, setGame] = useState<VersusGame>(new VersusGame())
-    const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES)
-    const [totalVotes, setTotalVotes] = useState<number>(0)
+  const [game, setGame] = useState<VersusGame>(new VersusGame())
+  const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES)
+  const [totalVotes, setTotalVotes] = useState<number>(0)
 
-    // 선택할 예정인 선택지
-    const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(new VersusGameChoice())
-    // 선택 확정한 선택지
-    const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(new VersusGameChoice())
+  // 선택할 예정인 선택지
+  const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(new VersusGameChoice())
+  // 선택 확정한 선택지
+  const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(new VersusGameChoice())
 
-    const [isShowResult, setShowResult] = useState<boolean>(false)
+  const [isShowResult, setShowResult] = useState<boolean>(false)
 
-    const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true)
+  const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true)
 
-    const commentBoxRef = useRef(null)
-    const [commentCount, setCommentCount] = useState<number>(0)
+  const commentBoxRef = useRef(null)
+  const [commentCount, setCommentCount] = useState<number>(0)
 
-    useEffect(() => {
-        // const handleBeforeUnload = (event) => {
-        //     event.preventDefault()
-        //     event.returnValue = "" // 이 줄은 일부 브라우저에서 필수입니다.
-        // }
-        // window.addEventListener("beforeunload", handleBeforeUnload)
-        // window.addEventListener("popstate", handleBeforeUnload)
-        // return () => {
-        //     window.removeEventListener("beforeunload", handleBeforeUnload)
-        //     window.removeEventListener("popstate", handleBeforeUnload)
-        // }
-    }, [])
+  useEffect(() => {
+    // const handleBeforeUnload = (event) => {
+    //     event.preventDefault()
+    //     event.returnValue = "" // 이 줄은 일부 브라우저에서 필수입니다.
+    // }
+    // window.addEventListener("beforeunload", handleBeforeUnload)
+    // window.addEventListener("popstate", handleBeforeUnload)
+    // return () => {
+    //     window.removeEventListener("beforeunload", handleBeforeUnload)
+    //     window.removeEventListener("popstate", handleBeforeUnload)
+    // }
+  }, [])
 
-    useEffect(() => {
-        updateGameInit(gameData)
-    }, [gameData, session.status, session])
+  useEffect(() => {
+    updateGameInit(gameData)
+  }, [gameData, session.status, session])
 
-    useEffect(() => {
-        if (isShowResult) {
-            getAnswerResults()
-        }
-    }, [isShowResult])
+  useEffect(() => {
+    if (isShowResult) {
+      getAnswerResults()
+    }
+  }, [isShowResult])
 
-    // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
-    const updateGameInit = async (data: object) => {
-        // 세션 불러오는 중에는 넘어가기
-        if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
-            return
-        }
-
-        if (CommonUtils.isNullOrUndefined(data) || data === {}) {
-            alert("게임을 찾을 수 없습니다")
-            return
-        }
-
-        updateUser()
-
-        setMyAnswerLoading(true)
-        const _game = new VersusGame()
-        _game.parseResponse(data)
-
-        if (CommonUtils.isStringNullOrEmpty(_game.id)) {
-            alert("데이터가 잘못되었습니다")
-            return
-        }
-
-        setGame(_game)
-        setChoices(_game.choices)
-
-        // 유저가 선택한 선택지가 있는지 불러온다.
-        let isChoice: boolean = false
-        if (userChoiceData !== null) {
-            const answerId = userChoiceData.gameChoiceId
-            let answer = new VersusGameChoice()
-    
-            for (let i = 0; i < _game.choices.length; i++) {
-                const _choice: VersusGameChoice = _game.choices[i]
-    
-                // 선택한 선택지가 있으면 게임 결과 표시
-                if (_choice.id === answerId) {
-                    answer = _choice
-                    isChoice = true
-                    setShowResult(true)
-                    break
-                }
-            }
-    
-            setSelectedChoice(answer)
-            setAnswerChoice(answer)
-        }
-
-        if (!isChoice) {
-            setShowResult(false)
-            setSelectedChoice(new VersusGameChoice())
-            setAnswerChoice(new VersusGameChoice())
-        }
-
-        setMyAnswerLoading(false)
-
-        // 조회수 증가
-        // ApiUtils.request(`/api/versus/game_view_count/${_game.nanoId}`, "POST").then((result) => {
-        //     const [bResult, statusCode, response] = result
-        //     //
-        // })
+  // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
+  const updateGameInit = async (data: object) => {
+    // 세션 불러오는 중에는 넘어가기
+    if (CommonUtils.isNullOrUndefined(session) || session.status === 'loading') {
+      return
     }
 
-    const updateUser = async () => {
-        if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
-            return
-        }
-
-        const [bResult, statusCode, response] = await ApiUtils.request(
-            `/api/users/user_info/${session.data?.user._id}`,
-            "GET",
-        )
-
-        if (bResult) {
-            const user = new User()
-            user.parseResponse(response)
-            setUser(user)
-        } else {
-            alert(response)
-        }
-    }
- 
-    const getAnswerResults = async () => {
-        const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "GET", {
-            gameNanoId: game.nanoId,
-        })
-
-        if (!bResult) {
-            return
-        }
-
-        // 데이터 정리
-        const totalDatas: Array<object> = response["totalCount"] ?? []
-        if (totalDatas.length === 0) {
-            return
-        }
-        const totalData: Array<object> = totalDatas[0]
-        const _totalVotes = totalData["total"] ?? 0
-        const choicesData: Array<object> = response["choices"] ?? []
-        if (choicesData.length === 0 || _totalVotes === 0) {
-            return
-        }
-
-        setTotalVotes(_totalVotes)
-        const choiceDic: Dictionary<string, number> = new Dictionary<string, number>()
-        choicesData.map((choiceData) => {
-            choiceDic.push(choiceData["_id"] ?? "", choiceData["count"] ?? 0)
-        })
-
-        // 선택지 결과 계산 및 값 설정
-        let _choices = choices.map((_choice) => {
-            if (choiceDic.contains(_choice.id)) {
-                _choice.voteCount = choiceDic.getValue(_choice.id)
-                _choice.voteRate = (_choice.voteCount / _totalVotes) * 100
-            }
-
-            return _choice
-        })
-        setChoices(_choices)
+    if (CommonUtils.isNullOrUndefined(data) || data === {}) {
+      alert('게임을 찾을 수 없습니다')
+      return
     }
 
-    const handleSelectChoice = (choice: VersusGameChoice) => {
-        if (isShowResult) {
-            return
-        }
+    updateUser()
 
-        if (selectedChoice.id === choice.id) {
-            setSelectedChoice(new VersusGameChoice())
-        } else {
-            setSelectedChoice(choice)
-        }
+    setMyAnswerLoading(true)
+    const _game = new VersusGame()
+    _game.parseResponse(data)
+
+    if (CommonUtils.isStringNullOrEmpty(_game.id)) {
+      alert('데이터가 잘못되었습니다')
+      return
     }
 
-    const handleAnswer = async () => {
-        if (CommonUtils.isStringNullOrEmpty(selectedChoice.id)) {
-            alert("선택지를 선택해주세요.")
-            return
+    setGame(_game)
+    setChoices(_game.choices)
+
+    // 유저가 선택한 선택지가 있는지 불러온다.
+    let isChoice: boolean = false
+    if (userChoiceData !== null) {
+      const answerId = userChoiceData.gameChoiceId
+      let answer = new VersusGameChoice()
+
+      for (let i = 0; i < _game.choices.length; i++) {
+        const _choice: VersusGameChoice = _game.choices[i]
+
+        // 선택한 선택지가 있으면 게임 결과 표시
+        if (_choice.id === answerId) {
+          answer = _choice
+          isChoice = true
+          setShowResult(true)
+          break
         }
+      }
 
-        const data = {
-            gameId: game.id,
-            gameAnswerId: selectedChoice.id,
-        }
-
-        const [bResult, statusCode, response] = await ApiUtils.request("/api/versus/game_choice", "POST", null, data)
-
-        if (bResult) {
-            setAnswerChoice(selectedChoice)
-            setShowResult(true)
-
-            StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId)
-        } else {
-            alert(response["message"] ?? "요청 실패했습니다.")
-        }
-    }
-    const handleReset = () => {
-        if (isShowResult) {
-            // 이미 선택을 한 경우
-            if (!confirm("선택을 취소하시겠습니까?")) {
-                return
-            }
-
-            setAnswerChoice(new VersusGameChoice())
-            setSelectedChoice(new VersusGameChoice())
-            setShowResult(false)
-        } else {
-            // 처음 선택하는 경우
-            setSelectedChoice(new VersusGameChoice())
-        }
+      setSelectedChoice(answer)
+      setAnswerChoice(answer)
     }
 
-    const handleCommentMove = () => {
-        if (CommonUtils.isNullOrUndefined(commentBoxRef.current)) {
-            return
-        }
-
-        commentBoxRef.current.scrollIntoView({ behavior: 'smooth' })
+    if (!isChoice) {
+      setShowResult(false)
+      setSelectedChoice(new VersusGameChoice())
+      setAnswerChoice(new VersusGameChoice())
     }
 
-    return (
-        <VersusStyles.GameViewLayout>
-            <VersusGameHead game={game} />
+    setMyAnswerLoading(false)
 
-            <VersusStyles.GameViewChoiceLayout>
-                <VersusChoiceView
-                    game={game}
-                    choices={choices}
-                    selectChoice={handleSelectChoice}
-                    selectedChoice={selectedChoice}
-                    isShowResult={isShowResult}
-                />
-            </VersusStyles.GameViewChoiceLayout>
+    // 조회수 증가
+    // ApiUtils.request(`/api/versus/game_view_count/${_game.nanoId}`, "POST").then((result) => {
+    //     const [bResult, statusCode, response] = result
+    //     //
+    // })
+  }
 
-            <VersusStyles.GameViewSelectLayout>
-                <button
-                    className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
-                    onClick={() => {
-                        handleReset()
-                    }}
-                    disabled={isMyAnswerLoading}
-                >
-                    초기화
-                </button>
-                <button
-                    className="flex-grow bg-indigo-600/70 hover:bg-indigo-700/70"
-                    onClick={() => {
-                        handleAnswer()
-                    }}
-                    disabled={isMyAnswerLoading || isShowResult}
-                >
-                    선택하고 결과 보기
-                </button>
-            </VersusStyles.GameViewSelectLayout>
+  const updateUser = async () => {
+    if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+      return
+    }
 
-            <VersusGameViewRelated
-                game={game}
-                user={user}
-                isShowResult={game.relatedGames.length > 0 && isShowResult}
-                commentHelpBox={
-                    <div
-                        onClick={() => {handleCommentMove()}}
-                        className="sm:hidden max-sm:flex items-center px-4 py-2 rounded-full bg-black/40 text-stone-300 text-sm"
-                    >
-                        <i className="fa-solid fa-comment mr-1"></i>
-                        의견
-
-                        <span className="ml-1 text-stone-200">{CommonUtils.textFormat(commentCount, TextFormats.NUMBER)}</span>
-                    </div>
-                }
-            />
-
-            <div ref={commentBoxRef} className="w-full">
-                <VersusGameViewComment game={game} answerChoice={answerChoice} isShowResult={isShowResult} setCommentCount={setCommentCount} />
-            </div>
-        </VersusStyles.GameViewLayout>
+    const [bResult, statusCode, response] = await ApiUtils.request(
+      `/api/users/user_info/${session.data?.user._id}`,
+      'GET',
     )
+
+    if (bResult) {
+      const user = new User()
+      user.parseResponse(response)
+      setUser(user)
+    } else {
+      alert(response)
+    }
+  }
+
+  const getAnswerResults = async () => {
+    const [bResult, statusCode, response] = await ApiUtils.request('/api/versus/game_choice', 'GET', {
+      gameNanoId: game.nanoId,
+    })
+
+    if (!bResult) {
+      return
+    }
+
+    // 데이터 정리
+    const totalDatas: Array<object> = response['totalCount'] ?? []
+    if (totalDatas.length === 0) {
+      return
+    }
+    const totalData: Array<object> = totalDatas[0]
+    const _totalVotes = totalData['total'] ?? 0
+    const choicesData: Array<object> = response['choices'] ?? []
+    if (choicesData.length === 0 || _totalVotes === 0) {
+      return
+    }
+
+    setTotalVotes(_totalVotes)
+    const choiceDic: Dictionary<string, number> = new Dictionary<string, number>()
+    choicesData.map((choiceData) => {
+      choiceDic.push(choiceData['_id'] ?? '', choiceData['count'] ?? 0)
+    })
+
+    // 선택지 결과 계산 및 값 설정
+    let _choices = choices.map((_choice) => {
+      if (choiceDic.contains(_choice.id)) {
+        _choice.voteCount = choiceDic.getValue(_choice.id)
+        _choice.voteRate = (_choice.voteCount / _totalVotes) * 100
+      }
+
+      return _choice
+    })
+    setChoices(_choices)
+  }
+
+  const handleSelectChoice = (choice: VersusGameChoice) => {
+    if (isShowResult) {
+      return
+    }
+
+    if (selectedChoice.id === choice.id) {
+      setSelectedChoice(new VersusGameChoice())
+    } else {
+      setSelectedChoice(choice)
+    }
+  }
+
+  const handleAnswer = async () => {
+    if (CommonUtils.isStringNullOrEmpty(selectedChoice.id)) {
+      alert('선택지를 선택해주세요.')
+      return
+    }
+
+    const data = {
+      gameId: game.id,
+      gameAnswerId: selectedChoice.id,
+    }
+
+    const [bResult, statusCode, response] = await ApiUtils.request('/api/versus/game_choice', 'POST', null, data)
+
+    if (bResult) {
+      setAnswerChoice(selectedChoice)
+      setShowResult(true)
+
+      StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId)
+    } else {
+      alert(response['message'] ?? '요청 실패했습니다.')
+    }
+  }
+  const handleReset = () => {
+    if (isShowResult) {
+      // 이미 선택을 한 경우
+      if (!confirm('선택을 취소하시겠습니까?')) {
+        return
+      }
+
+      setAnswerChoice(new VersusGameChoice())
+      setSelectedChoice(new VersusGameChoice())
+      setShowResult(false)
+    } else {
+      // 처음 선택하는 경우
+      setSelectedChoice(new VersusGameChoice())
+    }
+  }
+
+  const handleCommentMove = () => {
+    if (CommonUtils.isNullOrUndefined(commentBoxRef.current)) {
+      return
+    }
+
+    commentBoxRef.current.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  return (
+    <VersusStyles.GameViewLayout>
+      <VersusGameHead game={game} />
+
+      <VersusStyles.GameViewChoiceLayout>
+        <VersusChoiceView
+          game={game}
+          choices={choices}
+          selectChoice={handleSelectChoice}
+          selectedChoice={selectedChoice}
+          isShowResult={isShowResult}
+        />
+      </VersusStyles.GameViewChoiceLayout>
+
+      <VersusStyles.GameViewSelectLayout>
+        <button
+          className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
+          onClick={() => {
+            handleReset()
+          }}
+          disabled={isMyAnswerLoading}
+        >
+          초기화
+        </button>
+        <button
+          className="flex-grow bg-indigo-600/70 hover:bg-indigo-700/70"
+          onClick={() => {
+            handleAnswer()
+          }}
+          disabled={isMyAnswerLoading || isShowResult}
+        >
+          선택하고 결과 보기
+        </button>
+      </VersusStyles.GameViewSelectLayout>
+
+      <VersusGameViewRelated
+        game={game}
+        user={user}
+        isShowResult={game.relatedGames.length > 0 && isShowResult}
+        commentHelpBox={
+          <div
+            onClick={() => {
+              handleCommentMove()
+            }}
+            className="sm:hidden max-sm:flex items-center px-4 py-2 rounded-full bg-black/40 text-stone-300 text-sm"
+          >
+            <i className="fa-solid fa-comment mr-1"></i>
+            의견
+            <span className="ml-1 text-stone-200">{CommonUtils.textFormat(commentCount, TextFormats.NUMBER)}</span>
+          </div>
+        }
+      />
+
+      <div ref={commentBoxRef} className="w-full">
+        <VersusGameViewComment
+          game={game}
+          answerChoice={answerChoice}
+          isShowResult={isShowResult}
+          setCommentCount={setCommentCount}
+        />
+      </div>
+    </VersusStyles.GameViewLayout>
+  )
 }
