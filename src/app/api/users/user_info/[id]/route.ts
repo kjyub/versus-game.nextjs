@@ -8,7 +8,7 @@ import { nanoid } from 'nanoid'
 import { NextApiRequest } from 'next'
 
 export async function GET(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params;
+  const params = await props.params
   const { id } = params
 
   await DBUtils.connect()
@@ -26,7 +26,7 @@ export async function GET(req: NextApiRequest, props: { id: string }) {
 }
 
 export async function PUT(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params;
+  const params = await props.params
   const { id } = params
   let data = await req.json()
 
@@ -79,7 +79,7 @@ export async function PUT(req: NextApiRequest, props: { id: string }) {
 }
 
 export async function DELETE(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params;
+  const params = await props.params
   const { id } = params
   let data = await req.json()
 

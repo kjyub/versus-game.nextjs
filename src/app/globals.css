@@ -1,5 +1,5 @@
-@import url('https://webfontworld.github.io/pretendard/Pretendard.css');
-@import 'tailwindcss';
+@import url("https://webfontworld.github.io/pretendard/Pretendard.css");
+@import "tailwindcss";
 
 @theme {
   --breakpoint-zero: 0px;
@@ -55,7 +55,7 @@
     /* color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb)); */
 
-    font-family: 'Pretendard', sans-serif !important;
+    font-family: "Pretendard", sans-serif !important;
     line-height: normal;
 
     @apply overflow-hidden;

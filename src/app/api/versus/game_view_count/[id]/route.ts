@@ -6,7 +6,7 @@ import DBUtils from '@/utils/DBUtils'
 import { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest, props: { id: string }) {
-  const params = await props.params;
+  const params = await props.params
   const { id } = params
   const { userId } = await req.json()
 

@@ -12,7 +12,7 @@ const getGame = async (gameId: string) => {
 }
 
 export default async function GameUpdatePage(props: { gameId: string }) {
-  const params = await props.params;
+  const params = await props.params
   const { gameId } = params
 
   const gameData = await getGame(gameId)

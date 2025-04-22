@@ -1,33 +1,33 @@
-"use client";
-import * as VS from "@/styles/VersusStyles";
-import User from "@/types/user/User";
-import VersusGame from "@/types/versus/VersusGame";
-import CommonUtils from "@/utils/CommonUtils";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
-import VersusGameBox from "./VersusGameBox";
-import VersusGameSimpleBox from "./VersusGameSimpleBox";
+'use client'
+import * as VS from '@/styles/VersusStyles'
+import User from '@/types/user/User'
+import VersusGame from '@/types/versus/VersusGame'
+import CommonUtils from '@/utils/CommonUtils'
+import { useRouter } from 'next/navigation'
+import { ReactNode, useEffect, useState } from 'react'
+import VersusGameBox from './VersusGameBox'
+import VersusGameSimpleBox from './VersusGameSimpleBox'
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 5
 
 interface IVersusGameViewRelated {
-  game: VersusGame;
-  user: User;
-  isShowResult: boolean;
-  commentHelpBox: ReactNode;
+  game: VersusGame
+  user: User
+  isShowResult: boolean
+  commentHelpBox: ReactNode
 }
 export default function VersusGameViewRelated({ game, user, isShowResult, commentHelpBox }: IVersusGameViewRelated) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [relatedGames, setRelatedGames] = useState<Array<VersusGame>>([]);
+  const [relatedGames, setRelatedGames] = useState<Array<VersusGame>>([])
 
   useEffect(() => {
-    setRelatedGames(game.relatedGames.filter((rg) => rg.id !== game.id));
-  }, [game]);
+    setRelatedGames(game.relatedGames.filter((rg) => rg.id !== game.id))
+  }, [game])
 
   const handleLink = (link: string) => {
-    router.push(link);
-  };
+    router.push(link)
+  }
 
   return (
     <VS.GameViewRelatedLayout $is_show={isShowResult}>
@@ -49,5 +49,5 @@ export default function VersusGameViewRelated({ game, user, isShowResult, commen
         ))}
       </VS.GameViewRelatedList>
     </VS.GameViewRelatedLayout>
-  );
+  )
 }

@@ -1,23 +1,23 @@
-"use client";
+'use client'
 
-import * as VS from "@/styles/VersusStyles";
-import { TextFormats } from "@/types/CommonTypes";
-import { CHOICE_COUNT_CONST, ChoiceSelectStatus } from "@/types/VersusTypes";
-import VersusFile from "@/types/file/VersusFile";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import VersusChoiceProgressBar from "./VersusChoiceProgressBar";
+import * as VS from '@/styles/VersusStyles'
+import { TextFormats } from '@/types/CommonTypes'
+import { CHOICE_COUNT_CONST, ChoiceSelectStatus } from '@/types/VersusTypes'
+import VersusFile from '@/types/file/VersusFile'
+import VersusGame from '@/types/versus/VersusGame'
+import VersusGameChoice from '@/types/versus/VersusGameChoice'
+import ApiUtils from '@/utils/ApiUtils'
+import CommonUtils from '@/utils/CommonUtils'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import VersusChoiceProgressBar from './VersusChoiceProgressBar'
 
 interface IVersusChoiceView {
-  game: VersusGame;
-  choices: Array<VersusGameChoice>;
-  selectChoice: (choice: VersusGameChoice) => void;
-  selectedChoice: VersusGameChoice;
-  isShowResult: boolean;
+  game: VersusGame
+  choices: Array<VersusGameChoice>
+  selectChoice: (choice: VersusGameChoice) => void
+  selectedChoice: VersusGameChoice
+  isShowResult: boolean
 }
 export default function VersusChoiceView({
   game,
@@ -39,39 +39,39 @@ export default function VersusChoiceView({
         />
       ))}
     </VS.ChoiceLayoutSettingGrid>
-  );
+  )
 }
 
 interface IChoiceView {
-  index: number;
-  choice: VersusGameChoice;
-  selectChoice: (choice: VersusGameChoice) => void;
-  selectedChoice: VersusGameChoice;
-  isShowResult: boolean;
+  index: number
+  choice: VersusGameChoice
+  selectChoice: (choice: VersusGameChoice) => void
+  selectedChoice: VersusGameChoice
+  isShowResult: boolean
 }
 const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult }: IChoiceView) => {
-  const [selectStatus, setSelectStatus] = useState<ChoiceSelectStatus>(ChoiceSelectStatus.WAIT);
+  const [selectStatus, setSelectStatus] = useState<ChoiceSelectStatus>(ChoiceSelectStatus.WAIT)
 
   useEffect(() => {
-    updateSelectStatus();
-  }, [selectedChoice]);
+    updateSelectStatus()
+  }, [selectedChoice])
 
   const updateSelectStatus = () => {
     if (CommonUtils.isStringNullOrEmpty(selectedChoice.id)) {
-      setSelectStatus(ChoiceSelectStatus.WAIT);
-      return;
+      setSelectStatus(ChoiceSelectStatus.WAIT)
+      return
     }
 
     if (selectedChoice.id === choice.id) {
-      setSelectStatus(ChoiceSelectStatus.SELECTED);
+      setSelectStatus(ChoiceSelectStatus.SELECTED)
     } else {
-      setSelectStatus(ChoiceSelectStatus.UNSELECTED);
+      setSelectStatus(ChoiceSelectStatus.UNSELECTED)
     }
-  };
+  }
 
   const handleSelectChoice = () => {
-    selectChoice(choice);
-  };
+    selectChoice(choice)
+  }
 
   return (
     <VS.ChoiceBox>
@@ -80,13 +80,13 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
           className="content"
           $status={selectStatus}
           onClick={() => {
-            handleSelectChoice();
+            handleSelectChoice()
           }}
         >
           <span
             className="title"
             style={{
-              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
+              textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
             }}
           >
             {choice.title}
@@ -106,5 +106,5 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
         </VS.GameViewChoiceResultBox>
       </VS.GameViewChoiceThumbnailBox>
     </VS.ChoiceBox>
-  );
-};
+  )
+}

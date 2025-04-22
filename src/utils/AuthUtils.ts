@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto'
 import { CookieConsts } from '@/types/ApiTypes'
 import mongoose from 'mongoose'
 import { Session } from 'next-auth'
-import { cookies, type UnsafeUnwrappedCookies } from 'next/headers';
+import { type UnsafeUnwrappedCookies, cookies } from 'next/headers'
 import CommonUtils from './CommonUtils'
 
 export default class AuthUtils {
@@ -72,8 +72,11 @@ export default class AuthUtils {
       const guestIdCookie = req.cookies.get(CookieConsts.GUEST_ID)
       userId = new mongoose.Types.ObjectId(guestIdCookie.value)
     } else {
-      const newGuestId = randomUUID()
-      (cookies() as unknown as UnsafeUnwrappedCookies).set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true })
+      const newGuestId = randomUUID()(cookies() as unknown as UnsafeUnwrappedCookies).set(
+        CookieConsts.GUEST_ID,
+        newGuestId,
+        { httpOnly: true },
+      )
     }
 
     return userId
@@ -81,7 +84,7 @@ export default class AuthUtils {
   static getUserOrGuestIdBySSR(session: Session | null) {
     let userId: string = ''
 
-    const currentCookies = (cookies() as unknown as UnsafeUnwrappedCookies)
+    const currentCookies = cookies() as unknown as UnsafeUnwrappedCookies
 
     // 유저 확인 없으면 게스트
     if (this.isSessionAuth(session)) {
