@@ -155,18 +155,18 @@ export const ChoiceLayoutSettingContainer = tw.div`
 `;
 export const ChoiceLayoutSettingGrid = tw.div`
     z-10
-    grid max-sm:gap-2 max-sm:grid-cols-1 sm:grid-cols-1 sm:gap-4
-    max-sm:w-full
+    grid max-sm:gap-2 max-sm:grid-cols-1 sm:grid-cols-2 sm:gap-4
+    max-sm:w-full sm:w-136
     duration-300
 `;
 
 export const ChoiceBox = tw.div`
-    flex flex-col w-full
+    flex flex-col w-full h-24
     rounded-md 
 `;
 export const ChoiceThumbnailBox = tw.div`
     relative
-    flex flex-col flex-center w-full aspect-4/3
+    flex flex-col flex-center w-full h-full
     rounded-md bg-black/30
     text-stone-300
     overflow-hidden [&>img]:object-cover
@@ -300,7 +300,7 @@ export const ChoiceImageContentBox = tw.div`
     hover:drop-shadow-sm
 
     [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
-    max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-2xl 
+    max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-xl 
 `;
 export const GameViewChoiceResultBox = tw.div`
     absolute z-10
