@@ -2,6 +2,7 @@
 import * as VS from "@/styles/VersusStyles";
 import {
   CHOICE_COUNT_CONST,
+  DEFAULT_CHOICE_COUNT,
   GameState,
   PrivacyTypeIcons,
   PrivacyTypeNames,
@@ -41,26 +42,16 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC);
-  const [choiceCountType, setChoiceCountType] = useState<number>(200); // 백자리 수 부턴 선택 개수, 십자리 수 까진 개수별 레이아웃
+  const [choiceCount, setChoiceCount] = useState<number>(DEFAULT_CHOICE_COUNT);
 
   const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false);
 
   useEffect(() => {
-    // const handleBeforeUnload = (event) => {
-    //     event.preventDefault()
-    //     event.returnValue = "" // 이 줄은 일부 브라우저에서 필수입니다.
-    // }
-    // window.addEventListener("beforeunload", handleBeforeUnload)
-    // window.addEventListener("popstate", handleBeforeUnload)
-    // return () => {
-    //     window.removeEventListener("beforeunload", handleBeforeUnload)
-    //     window.removeEventListener("popstate", handleBeforeUnload)
-    // }
     StyleUtils.rollbackScreen();
   }, []);
 
   useEffect(() => {
-    updateGameInit(gameData);
+    loadGameData(gameData);
   }, [isUpdate, gameData, session.status]);
 
   useEffect(() => {
@@ -76,7 +67,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   }, [privacyType]);
 
   // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
-  const updateGameInit = (data: object) => {
+  const loadGameData = (data: object) => {
     // 세션 불러오는 중에는 넘어가기
     if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
       return;
@@ -109,22 +100,13 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     setGame(_game);
     setTitle(_game.title);
     setContent(_game.content);
-    setChoiceCountType(_game.choiceCountType);
+    setChoiceCount(_game.choiceCount);
     setPrivacyType(_game.privacyType);
 
     // 게임이 차단된 경우
     if (_game.state === GameState.BLOCK) {
       alert("관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.");
     }
-  };
-
-  const updateThumbnail = (file: VersusFile) => {
-    game.thumbnailImageId = file.id;
-    game.thumbnailImageUrl = file.url;
-  };
-
-  const updateChoice = (index: number, choice: VersusGameChoice) => {
-    game.updateChoice(index, choice);
   };
 
   // 게임 저장 유효성 검사
@@ -136,15 +118,9 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     }
 
     // 2. 썸네일 확인 (아직은 선택)
-
-    // 3. 선택지 확인 (선택지의 제목은 반드시 입력되어야 함)
-    let choiceCount = Math.floor(choiceCountType / CHOICE_COUNT_CONST);
-    for (let i = 0; i < choiceCount; i++) {
-      const choice: VersusGameChoice = game.choices[i];
-
-      if (CommonUtils.isStringNullOrEmpty(choice.title)) {
-        errorMessages.push(`${i + 1}번 선택지의 제목을 입력해주세요`);
-      }
+    const isChoicesValid = game.choices.filter((_c) => _c.title).length > 0;
+    if (!isChoicesValid) {
+      errorMessages.push("선택지를 최소 하나 이상 입력해 주세요.");
     }
 
     if (errorMessages.length > 0) {
@@ -165,10 +141,9 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     const data = {
       title: game.title,
       content: game.content,
-      thumbnailImageId: game.thumbnailImageId,
       privacyType: game.privacyType,
-      choices: game.choices.map((_c) => _c.parseRequest()),
-      choiceCountType: choiceCountType,
+      choices: game.choices.filter((_c) => _c.title).map((_c) => _c.parseRequest()),
+      choiceCount: choiceCount,
     };
 
     // 저장 성공 여부
@@ -255,10 +230,10 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
           <VersusInputText label={"제목"} placeholder={"제목을 입력해주세요."} value={title} setValue={setTitle} />
 
           {/* 썸네일 */}
-          <VS.InputContainer>
+          {/* <VS.InputContainer>
             <VS.InputTitle className="mb-2">썸네일</VS.InputTitle>
             <VersusThumbnailImageEdit oldImageId={game.images[0]?.id} updateThumbnail={updateThumbnail} />
-          </VS.InputContainer>
+          </VS.InputContainer> */}
 
           {/* 내용 */}
           <VersusInputTextArea
@@ -271,12 +246,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
         </VS.EditInfoBox>
         <VS.EditChoiceBox>
           <span className="title">선택지</span>
-          <VersusChoiceEdit
-            game={game}
-            updateChoice={updateChoice}
-            choiceCountType={choiceCountType}
-            setChoiceCountType={setChoiceCountType}
-          />
+          <VersusChoiceEdit game={game} choiceCount={choiceCount} setChoiceCount={setChoiceCount} />
         </VS.EditChoiceBox>
       </VS.EditorDataLayout>
 

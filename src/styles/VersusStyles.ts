@@ -150,23 +150,18 @@ export const ThumbnailImageEditUploadButton = tw.label`
 `;
 
 export const ChoiceLayoutSettingContainer = tw.div`
-    flex flex-center w-full max-md:min-h-[16rem] md:min-h-[32rem]
+    flex flex-col w-full max-md:min-h-[16rem] md:min-h-[32rem] gap-2
     rounded-md 
 `;
 export const ChoiceLayoutSettingGrid = tw.div`
     z-10
-    grid max-sm:gap-2 sm:gap-4
-    ${(props: any) => (props.$choice_count <= 2 ? "max-sm:grid-cols-2 sm:grid-cols-2" : "")}
-    ${(props: any) =>
-      props.$choice_count > 2 && props.$choice_count <= 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : ""}
-    ${(props: any) => (props.$choice_count > 3 ? "max-sm:grid-cols-2 max-xl:grid-cols-2 xl:grid-cols-3" : "")}
+    grid max-sm:gap-2 max-sm:grid-cols-1 sm:grid-cols-1 sm:gap-4
     max-sm:w-full
     duration-300
 `;
 
 export const ChoiceBox = tw.div`
-    ${(props: StyleProps) => (props.$is_show ? "flex" : "hidden")}
-    flex-col max-sm:w-full max-2xl:w-64 2xl:w-72
+    flex flex-col w-full
     rounded-md 
 `;
 export const ChoiceThumbnailBox = tw.div`
@@ -182,17 +177,23 @@ export const ChoiceImageEditBox = tw.div`
     ${(props: StyleProps) => (props.$is_active ? "bg-black/70" : "")}
 `;
 export const ChoiceInfoBox = tw.div`
-    flex flex-col w-full mt-2 space-y-2
+    flex flex-col w-full space-y-2
     text-stone-300
 `;
 export const ChoiceTitleBox = tw.div`
     flex items-center w-full px-3 py-2
     rounded-md bg-black/20
-    text-stone-300
-    max-sm:text-sm sm:text-base
+    text-sm text-stone-300
     ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : "")}
     duration-200
+    [&>input]:w-full
     [&>input]:bg-transparent [&>input]:text-stone-300
+`;
+export const ChoiceAddBox = tw.button`
+  w-full h-10
+  rounded-md bg-black/30 hover:bg-black/40
+  text-stone-300 text-sm
+  duration-200
 `;
 
 export const ListLayout = tw.div`

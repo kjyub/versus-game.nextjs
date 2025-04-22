@@ -1,7 +1,9 @@
-import { randomUUID } from 'crypto'
-import mongoose from 'mongoose'
+import { randomUUID } from "crypto";
+import mongoose from "mongoose";
+import MFile from "../file/MFile";
+import { DEFAULT_CHOICE_COUNT } from "@/types/VersusTypes";
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const choiceSchema = new Schema({
   _id: {
@@ -19,19 +21,13 @@ const choiceSchema = new Schema({
   },
   content: {
     type: String,
-    default: '',
-  },
-  imageId: {
-    type: String,
-  },
-  imageUrl: {
-    type: String,
+    default: "",
   },
   voteCount: {
     type: Number,
     default: 0,
   },
-})
+});
 
 const schema = new Schema(
   {
@@ -45,21 +41,16 @@ const schema = new Schema(
     },
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'users',
+      ref: "users",
       required: true,
     },
-    thumbnailImageId: {
-      type: String,
-    },
-    thumbnailImageUrl: {
-      type: String,
-    },
-    thumbnailImageType: {
-      type: Number,
+    images: {
+      type: [MFile.schema],
+      default: [],
     },
     privacyType: {
       type: Number,
@@ -86,10 +77,10 @@ const schema = new Schema(
       default: 0,
     },
     choices: [choiceSchema],
-    choiceCountType: {
+    choiceCount: {
       type: Number,
       required: true,
-      default: 200,
+      default: DEFAULT_CHOICE_COUNT,
     },
     isDeleted: {
       type: Boolean,
@@ -107,21 +98,21 @@ const schema = new Schema(
       default: [],
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 ).index(
   {
-    title: 'text',
-    content: 'text',
-    'choices.title': 'text',
+    title: "text",
+    content: "text",
+    "choices.title": "text",
   },
   {
     weights: {
       title: 5,
       content: 4,
-      'choices.title': 1,
+      "choices.title": 1,
     },
-  },
-)
+  }
+);
 
 // schema.virtual("user", {
 //     ref: "users",
@@ -130,6 +121,6 @@ const schema = new Schema(
 //     justOne: true
 // })
 
-export default mongoose.models.versus_games || mongoose.model('versus_games', schema)
+export default mongoose.models.versus_games || mongoose.model("versus_games", schema);
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

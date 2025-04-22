@@ -13,6 +13,7 @@ export default class VersusGame extends AbsApiObject {
   private _content: string;
   private _userId: string;
   private _images: Array<VersusFile>;
+  private _choiceCount: number;
   private _privacyType: PrivacyTypes;
   private _views: number;
   private _favs: number;
@@ -36,6 +37,7 @@ export default class VersusGame extends AbsApiObject {
     this._userId = "";
     this._images = [];
     this._privacyType = PrivacyTypes.PUBLIC;
+    this._choiceCount = 4;
     this._views = 0;
     this._favs = 0;
     this._answerCount = 0;
@@ -69,6 +71,7 @@ export default class VersusGame extends AbsApiObject {
       });
     }
     if (json.privacyType) this._privacyType = json.privacyType;
+    if (json.choiceCount) this._choiceCount = json.choiceCount;
     if (json.views) this._views = json.views;
     if (json.favs) this._favs = json.favs;
     if (json.answerCount) this._answerCount = json.answerCount;
@@ -127,6 +130,9 @@ export default class VersusGame extends AbsApiObject {
   get privacyType(): number {
     return this._privacyType;
   }
+  get choiceCount(): number {
+    return this._choiceCount;
+  }
   get views(): number {
     return this._views;
   }
@@ -167,6 +173,9 @@ export default class VersusGame extends AbsApiObject {
   set privacyType(v: PrivacyTypes) {
     this._privacyType = v;
   }
+  set choiceCount(v: number) {
+    this._choiceCount = v;
+  }
   set state(v: GameState) {
     this._state = v;
   }
@@ -185,10 +194,18 @@ export default class VersusGame extends AbsApiObject {
   }
 
   updateChoice(index: number, _choice: VersusGameChoice) {
-    try {
+    if (index < 0) return;
+
+    if (this._choices.length >= index) {
       this._choices[index] = _choice;
-    } catch {
-      //
+      return;
     }
+
+    // 배열이 필요한 길이보다 짧은 경우, 새로운 VersusGameChoice 객체로 채웁니다
+    const diff = index - this._choices.length;
+    const newChoices = new Array<VersusGameChoice>(diff).fill(new VersusGameChoice());
+    this._choices.push(...newChoices);
+
+    this._choices[index] = _choice;
   }
 }

@@ -45,6 +45,9 @@
     outline: none !important;
     outline-offset: none !important;
   }
+  button {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {
