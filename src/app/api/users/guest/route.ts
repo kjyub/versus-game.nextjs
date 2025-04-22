@@ -7,7 +7,7 @@ import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adap
 import { cookies } from 'next/headers'
 
 export async function POST() {
-  const cookie: ReadonlyRequestCookies = cookies()
+  const cookie: ReadonlyRequestCookies = await cookies()
   const guestIdCookie: RequestCookie | undefined = cookie.get(CookieConsts.GUEST_ID)
 
   let result = ''

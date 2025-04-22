@@ -4,7 +4,8 @@ import ApiUtils from '@/utils/ApiUtils'
 import DBUtils from '@/utils/DBUtils'
 import { NextApiRequest } from 'next'
 
-export async function GET(_req: NextApiRequest, { params }: ApiParamsType) {
+export async function GET(_req: NextApiRequest, props: ApiParamsType) {
+  const params = await props.params;
   const { id } = params
 
   await DBUtils.connect()

@@ -7,7 +7,8 @@ import bcryptjs from 'bcryptjs'
 import { nanoid } from 'nanoid'
 import { NextApiRequest } from 'next'
 
-export async function GET(req: NextApiRequest, { params }: { id: string }) {
+export async function GET(req: NextApiRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   await DBUtils.connect()
@@ -24,7 +25,8 @@ export async function GET(req: NextApiRequest, { params }: { id: string }) {
   return ApiUtils.response(user)
 }
 
-export async function PUT(req: NextApiRequest, { params }: { id: string }) {
+export async function PUT(req: NextApiRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
   let data = await req.json()
 
@@ -76,7 +78,8 @@ export async function PUT(req: NextApiRequest, { params }: { id: string }) {
   return ApiUtils.response(updatedUser)
 }
 
-export async function DELETE(req: NextApiRequest, { params }: { id: string }) {
+export async function DELETE(req: NextApiRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
   let data = await req.json()
 

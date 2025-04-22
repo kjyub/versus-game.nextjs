@@ -6,7 +6,8 @@ import ApiUtils from '@/utils/ApiUtils'
 import DBUtils from '@/utils/DBUtils'
 import { NextRequest } from 'next/server'
 
-export async function GET(req: NextRequest, { params }: { id: string }) {
+export async function GET(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   // const session = await auth()
@@ -26,7 +27,8 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
   return ApiUtils.response(mGame)
 }
 
-export async function PUT(req: NextRequest, { params }: { id: string }) {
+export async function PUT(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
   const { state, privacyType } = await req.json()
 
@@ -59,7 +61,8 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { id: string }) {
+export async function DELETE(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   await DBUtils.connect()

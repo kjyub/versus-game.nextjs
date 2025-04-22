@@ -36,7 +36,8 @@ const getGameList = async (search: string | undefined, myGames: boolean, choiced
   return response
 }
 
-export default async function Home({ params, searchParams }) {
+export default async function Home(props) {
+  const searchParams = await props.searchParams;
   const session = await auth()
   const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
 

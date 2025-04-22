@@ -36,10 +36,11 @@ const countGameView = async (gameId: string, userId: string) => {
 }
 
 type Props = {
-  params: { gameId: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  params: Promise<{ gameId: string }>
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
-export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   // params에서 id 추출
   const { gameId } = params
 
@@ -89,7 +90,8 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
   return metaData
 }
 
-export default async function GamePage({ params }: { gameId: string }) {
+export default async function GamePage(props: { gameId: string }) {
+  const params = await props.params;
   const session = await auth()
   const userId: string = AuthUtils.getUserOrGuestIdBySSR(session)
 

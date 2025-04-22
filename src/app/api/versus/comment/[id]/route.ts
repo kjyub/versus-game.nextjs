@@ -88,7 +88,8 @@ export async function GET(req: NextRequest) {
 }
 
 // 유저가 댓글을 수정한다.
-export async function PUT(req: NextRequest, { params }: { id: string }) {
+export async function PUT(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { content } = await req.json()
   const { id } = params
 
@@ -129,7 +130,8 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
 }
 
 // 유저가 댓글을 삭제한다.
-export async function DELETE(req: NextRequest, { params }: { id: string }) {
+export async function DELETE(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   await DBUtils.connect()

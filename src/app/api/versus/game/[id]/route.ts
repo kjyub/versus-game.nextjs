@@ -10,7 +10,8 @@ import DBUtils from '@/utils/DBUtils'
 import GameUtils from '@/utils/GameUtils'
 import { NextRequest } from 'next/server'
 
-export async function GET(req: NextRequest, { params }: { id: string }) {
+export async function GET(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   // 유저 확인
@@ -52,7 +53,8 @@ export async function GET(req: NextRequest, { params }: { id: string }) {
   return ApiUtils.response(mGame)
 }
 
-export async function PUT(req: NextRequest, { params }: { id: string }) {
+export async function PUT(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
   const { title, content, thumbnailImageId, thumbnailImageType, privacyType, choices, choiceCountType } =
     await req.json()
@@ -115,7 +117,8 @@ export async function PUT(req: NextRequest, { params }: { id: string }) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { id: string }) {
+export async function DELETE(req: NextRequest, props: { id: string }) {
+  const params = await props.params;
   const { id } = params
 
   await DBUtils.connect()
