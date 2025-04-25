@@ -233,8 +233,10 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
       return;
     }
 
-    const { result, data } = await ApiUtils.request("/api/users/email_check", "POST", null, {
-      email: email,
+    const { result, data } = await ApiUtils.request("/api/users/email_check", "POST", {
+      data: {
+        email: email,
+      },
     });
 
     setEmailMessage(result ? "이미 존재하는 이메일입니다." : "");
@@ -261,7 +263,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
       password: password1,
       name: name,
     };
-    const { result, data: responseData } = await ApiUtils.request("/api/users/regist", "POST", null, data);
+    const { result, data: responseData } = await ApiUtils.request("/api/users/regist", "POST", { data });
 
     if (result) {
       alert("회원가입되었습니다.");

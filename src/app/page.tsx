@@ -29,7 +29,7 @@ const getGameList = async (search: string | undefined, myGames: boolean, choiced
     params["userId"] = userId;
   }
 
-  const { data } = await ApiUtils.request("/api/versus/game", "GET", params);
+  const { data } = await ApiUtils.request("/api/versus/game", "GET", { params });
 
   // if (!Array.isArray(response)) {
   //     return []

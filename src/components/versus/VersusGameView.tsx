@@ -159,7 +159,9 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
   const getAnswerResults = async () => {
     const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "GET", {
-      gameNanoId: game.nanoId,
+      params: {
+        gameNanoId: game.nanoId,
+      },
     });
 
     if (!result) {
@@ -219,7 +221,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       gameAnswerId: selectedChoice.id,
     };
 
-    const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "POST", null, data);
+    const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "POST", { data });
 
     if (result) {
       setAnswerChoice(selectedChoice);

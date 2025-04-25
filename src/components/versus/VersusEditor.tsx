@@ -150,7 +150,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     let saveResult: boolean = false;
 
     if (CommonUtils.isStringNullOrEmpty(game.id)) {
-      const { result, data: responseData } = await ApiUtils.request("/api/versus/game", "POST", null, data);
+      const { result, data: responseData } = await ApiUtils.request("/api/versus/game", "POST", { data });
 
       if (!result) {
         if (responseData["message"]) {
@@ -169,12 +169,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
         saveResult = true;
       }
     } else {
-      const { result, data: responseData } = await ApiUtils.request(
-        `/api/versus/game/${game.nanoId}`,
-        "PUT",
-        null,
-        data
-      );
+      const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "PUT", { data });
 
       if (!result) {
         if (responseData["message"]) {
@@ -205,7 +200,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
       return;
     }
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "DELETE", null);
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "DELETE");
 
     if (!result) {
       if (responseData["message"]) {

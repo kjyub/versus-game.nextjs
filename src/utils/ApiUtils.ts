@@ -4,6 +4,13 @@ import CommonUtils from "./CommonUtils";
 
 type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {});
 
+interface RequestOption {
+  params?: object;
+  data?: object;
+  useCache?: boolean;
+  headers?: object;
+}
+
 interface RequestResult {
   result: boolean;
   statusCode: number;
@@ -15,10 +22,7 @@ export default class ApiUtils {
   static async request(
     url: string,
     method: RequestMethodTypes,
-    query: object = null,
-    data: object = null,
-    useCache: boolean = false, // true로 하면 캐시에 저장되서 한동안 같은 결과가 나온다.
-    headers: object = {}
+    { params, data, useCache = false, headers = {} }: RequestOption
   ): Promise<RequestResult> {
     let bResult: boolean = false;
     let statusCode: number = 200;
@@ -32,11 +36,11 @@ export default class ApiUtils {
       apiUrl = "";
     }
 
-    if (query !== null) {
-      const queryString = new URLSearchParams(query).toString();
+    if (params) {
+      const queryString = new URLSearchParams(params).toString();
       requestUrl = `${url}?${queryString}`;
     }
-    if (data !== null) {
+    if (data) {
       requestData = JSON.stringify(data);
     }
 

@@ -6,8 +6,10 @@ const PAGE_SIZE = 100;
 
 export default function StaffControl() {
   const handleCron = async () => {
-    const { result, data } = await ApiUtils.request(`/api/cron/`, "GET", null, null, false, {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
+    const { result, data } = await ApiUtils.request(`/api/cron/`, "GET", {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
+      },
     });
 
     if (result) {

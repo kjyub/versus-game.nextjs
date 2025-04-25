@@ -13,19 +13,25 @@ const getGame = async (gameId: string, userId: string) => {
     params["userId"] = userId;
   }
 
-  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET", params);
+  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET", { params });
 
   return data;
 };
 const getUserChoice = async (gameId: string, userId: string) => {
-  const { data } = await ApiUtils.request(`/api/versus/game_choice/${gameId}`, "POST", null, {
-    userId: userId,
+  const { data } = await ApiUtils.request(`/api/versus/game_choice/${gameId}`, "POST", {
+    data: {
+      userId: userId,
+    },
   });
 
   return Object.keys(data).length === 0 ? null : data;
 };
 const countGameView = async (gameId: string, userId: string) => {
-  const { data } = await ApiUtils.request(`/api/versus/game_view_count/${gameId}`, "POST", null, { userId: userId });
+  const { data } = await ApiUtils.request(`/api/versus/game_view_count/${gameId}`, "POST", {
+    data: {
+      userId: userId,
+    },
+  });
 
   return data;
 };

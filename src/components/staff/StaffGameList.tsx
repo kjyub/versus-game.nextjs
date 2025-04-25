@@ -33,8 +33,10 @@ export default function StaffGameList() {
 
   const getGameList = async (_pageIndex = 1, _search = "") => {
     const { result, data } = await ApiUtils.request(`/api/versus/game`, "GET", {
-      pageIndex: _pageIndex,
-      pageSize: PAGE_SIZE,
+      params: {
+        pageIndex: _pageIndex,
+        pageSize: PAGE_SIZE,
+      },
     });
 
     if (!result) {
@@ -118,12 +120,9 @@ const Game = ({ game, openGameEditor }: IGame) => {
     // 저장 성공 여부
     let saveResult: boolean = false;
 
-    const { result, data: responseData } = await ApiUtils.request(
-      `/api/versus/game_state/${game.nanoId}`,
-      "PUT",
-      null,
-      data
-    );
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, "PUT", {
+      data,
+    });
 
     if (!result) {
       if (responseData["message"]) {
@@ -151,12 +150,9 @@ const Game = ({ game, openGameEditor }: IGame) => {
     // 저장 성공 여부
     let saveResult: boolean = false;
 
-    const { result, data: responseData } = await ApiUtils.request(
-      `/api/versus/game_state/${game.nanoId}`,
-      "PUT",
-      null,
-      data
-    );
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, "PUT", {
+      data,
+    });
 
     if (!result) {
       if (responseData["message"]) {

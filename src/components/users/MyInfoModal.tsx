@@ -65,7 +65,9 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       passwordNew: password1,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/users/user_info/${user.id}`, "PUT", null, data);
+    const { result, data: responseData } = await ApiUtils.request(`/api/users/user_info/${user.id}`, "PUT", {
+      data,
+    });
 
     if (result) {
       const user = new User();
@@ -95,12 +97,9 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       passwordCurrent,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(
-      `/api/users/user_info/${user.id}`,
-      "DELETE",
-      null,
-      data
-    );
+    const { result, data: responseData } = await ApiUtils.request(`/api/users/user_info/${user.id}`, "DELETE", {
+      data,
+    });
 
     if (result) {
       alert("회원 탈퇴 처리되었습니다.");

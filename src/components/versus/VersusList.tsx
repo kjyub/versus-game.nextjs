@@ -147,7 +147,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
       params["userId"] = user.id;
     }
 
-    const { result, data } = await ApiUtils.request("/api/versus/game", "GET", params);
+    const { result, data } = await ApiUtils.request("/api/versus/game", "GET", { params });
 
     if (!result) {
       setScrollLoading(false);

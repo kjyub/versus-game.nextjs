@@ -83,9 +83,11 @@ export default function VersusGameViewComment({
     }
 
     const { result, data } = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, "GET", {
-      gameNanoId: game.nanoId,
-      pageIndex: _pageIndex,
-      pageSize: PAGE_SIZE,
+      params: {
+        gameNanoId: game.nanoId,
+        pageIndex: _pageIndex,
+        pageSize: PAGE_SIZE,
+      },
     });
 
     if (!result) {
@@ -127,7 +129,7 @@ export default function VersusGameViewComment({
       content: content,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment`, "POST", null, data);
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment`, "POST", { data });
 
     if (!result) {
       setWriteLoading(false);
@@ -250,12 +252,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       content: content,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(
-      `/api/versus/comment/${comment.id}`,
-      "PUT",
-      null,
-      data
-    );
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, "PUT", { data });
 
     if (!result) {
       setWriteLoading(false);
