@@ -1,28 +1,28 @@
-'use client'
+"use client";
 
-import * as VS from '@/styles/VersusStyles'
-import { EditStateTypes } from '@/types/DataTypes'
-import { Dictionary } from '@/types/common/Dictionary'
-import { IPaginationResponse } from '@/types/common/Responses'
-import User from '@/types/user/User'
-import VersusGame from '@/types/versus/VersusGame'
-import VersusGameChoice from '@/types/versus/VersusGameChoice'
-import VersusGameComment from '@/types/versus/VersusGameComment'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import StyleUtils from '@/utils/StyleUtils'
-import { useSession } from 'next-auth/react'
-import Image from 'next/image'
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
-import VersusCommentPagination from './VersusCommentPagination'
+import * as VS from "@/styles/VersusStyles";
+import { EditStateTypes } from "@/types/DataTypes";
+import { Dictionary } from "@/types/common/Dictionary";
+import { IPaginationResponse } from "@/types/common/Responses";
+import User from "@/types/user/User";
+import VersusGame from "@/types/versus/VersusGame";
+import VersusGameChoice from "@/types/versus/VersusGameChoice";
+import VersusGameComment from "@/types/versus/VersusGameComment";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import StyleUtils from "@/utils/StyleUtils";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import VersusCommentPagination from "./VersusCommentPagination";
 
-const PAGE_SIZE = 5
+const PAGE_SIZE = 5;
 
 interface IVersusGameViewComment {
-  game: VersusGame
-  answerChoice: VersusGameChoice
-  isShowResult: boolean
-  setCommentCount: Dispatch<SetStateAction<number>>
+  game: VersusGame;
+  answerChoice: VersusGameChoice;
+  isShowResult: boolean;
+  setCommentCount: Dispatch<SetStateAction<number>>;
 }
 export default function VersusGameViewComment({
   game,
@@ -30,129 +30,126 @@ export default function VersusGameViewComment({
   isShowResult,
   setCommentCount,
 }: IVersusGameViewComment) {
-  const session = useSession()
-  const [user, setUser] = useState<User>(new User())
+  const session = useSession();
+  const [user, setUser] = useState<User>(new User());
 
   const [choiceDic, setChoiceDic] = useState<Dictionary<string, VersusGameChoice>>(
-    new Dictionary<string, VersusGameChoice>(),
-  )
+    new Dictionary<string, VersusGameChoice>()
+  );
 
-  const [comments, setComments] = useState<Array<VersusGameComment>>([])
-  const [pageIndex, setPageIndex] = useState<number>(1)
-  const [itemCount, setItemCount] = useState<number>(0)
-  const [maxPage, setMaxPage] = useState<number>(0)
+  const [comments, setComments] = useState<Array<VersusGameComment>>([]);
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [itemCount, setItemCount] = useState<number>(0);
+  const [maxPage, setMaxPage] = useState<number>(0);
 
-  const [content, setContent] = useState<string>('')
-  const [isInputFocus, setInputFocus] = useState<boolean>(false)
-  const [isWriteLoading, setWriteLoading] = useState<boolean>(false)
-
-  useEffect(() => {
-    getComments(-1)
-  }, [isShowResult])
+  const [content, setContent] = useState<string>("");
+  const [isInputFocus, setInputFocus] = useState<boolean>(false);
+  const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    getUser()
-  }, [session.status])
+    getComments(-1);
+  }, [isShowResult]);
+
+  useEffect(() => {
+    getUser();
+  }, [session.status]);
 
   useEffect(() => {
     // 댓글의 선택지란에 들어갈 데이터를 위해 딕셔너리화 한다.
-    const newChoiceDic = new Dictionary<string, VersusGameChoice>()
+    const newChoiceDic = new Dictionary<string, VersusGameChoice>();
     game.choices.map((choice: VersusGameChoice) => {
-      newChoiceDic.push(choice.id, choice)
-    })
-    setChoiceDic(newChoiceDic)
-  }, [game])
+      newChoiceDic.push(choice.id, choice);
+    });
+    setChoiceDic(newChoiceDic);
+  }, [game]);
 
   const getUser = async () => {
-    if (session.status !== 'authenticated') {
-      return
+    if (session.status !== "authenticated") {
+      return;
     }
 
-    const [bResult, statusCode, response] = await ApiUtils.request(
-      `/api/users/user_info/${session.data.user._id}`,
-      'GET',
-    )
+    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data.user._id}`, "GET");
 
-    if (bResult) {
-      const newUser = new User()
-      newUser.parseResponse(response)
-      setUser(newUser)
+    if (result) {
+      const newUser = new User();
+      newUser.parseResponse(data);
+      setUser(newUser);
     }
-  }
+  };
 
   const getComments = async (_pageIndex: number) => {
     if (CommonUtils.isStringNullOrEmpty(game.nanoId)) {
-      return
+      return;
     }
 
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, 'GET', {
+    const { result, data } = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, "GET", {
       gameNanoId: game.nanoId,
       pageIndex: _pageIndex,
       pageSize: PAGE_SIZE,
-    })
+    });
 
-    if (!bResult) {
-      return
+    if (!result) {
+      return;
     }
 
-    const pagination: IPaginationResponse = response
+    const pagination: IPaginationResponse = data;
 
-    let _comments: Array<VersusGameComment> = []
+    let _comments: Array<VersusGameComment> = [];
     pagination.items.map((item) => {
-      const newComment = new VersusGameComment()
-      newComment.parseResponse(item)
-      _comments.push(newComment)
-    })
-    setComments(_comments)
+      const newComment = new VersusGameComment();
+      newComment.parseResponse(item);
+      _comments.push(newComment);
+    });
+    setComments(_comments);
 
-    setPageIndex(pagination.pageIndex)
-    setItemCount(pagination.itemCount)
-    setMaxPage(pagination.maxPage)
+    setPageIndex(pagination.pageIndex);
+    setItemCount(pagination.itemCount);
+    setMaxPage(pagination.maxPage);
 
-    setCommentCount(pagination.itemCount)
-  }
+    setCommentCount(pagination.itemCount);
+  };
 
   const handlePageIndex = async (_pageIndex: number) => {
-    await getComments(_pageIndex)
-  }
+    await getComments(_pageIndex);
+  };
 
   const handleWriteComment = async () => {
     if (isWriteLoading) {
-      return
+      return;
     }
 
-    setWriteLoading(true)
+    setWriteLoading(true);
 
     let data = {
       parentId: null,
       gameId: game.id,
       gameChoiceId: answerChoice.id,
       content: content,
+    };
+
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment`, "POST", null, data);
+
+    if (!result) {
+      setWriteLoading(false);
+      alert(responseData["message"] ?? "실패했습니다.");
+      return;
     }
 
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/comment`, 'POST', null, data)
-
-    if (!bResult) {
-      setWriteLoading(false)
-      alert(response['message'] ?? '실패했습니다.')
-      return
-    }
-
-    setContent('')
-    getComments(-1)
-    setWriteLoading(false)
-  }
+    setContent("");
+    getComments(-1);
+    setWriteLoading(false);
+  };
 
   const handleWriteCommentEnter = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleWriteComment()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleWriteComment();
     }
-  }
+  };
 
   const getCurrentComments = useCallback(() => {
-    getComments(pageIndex)
-  }, [pageIndex])
+    getComments(pageIndex);
+  }, [pageIndex]);
 
   return (
     <VS.GameViewCommentLayout $is_show={isShowResult}>
@@ -190,17 +187,17 @@ export default function VersusGameViewComment({
                         {answerChoice.title}
                     </div> */}
           <textarea
-            type={'text'}
+            type={"text"}
             value={content}
             onChange={(e) => {
-              setContent(e.target.value)
+              setContent(e.target.value);
             }}
             onFocus={() => {
-              setInputFocus(true)
+              setInputFocus(true);
             }}
             onBlur={() => {
-              StyleUtils.rollbackScreen()
-              setInputFocus(false)
+              StyleUtils.rollbackScreen();
+              setInputFocus(false);
             }}
             onKeyDown={handleWriteCommentEnter}
             onInput={CommonUtils.setTextareaAutoHeight}
@@ -208,7 +205,7 @@ export default function VersusGameViewComment({
           <VS.GameViewCommentInputButton
             $is_active={!isWriteLoading}
             onClick={() => {
-              handleWriteComment()
+              handleWriteComment();
             }}
           >
             <i className="fa-solid fa-comment text-lg"></i>
@@ -216,104 +213,104 @@ export default function VersusGameViewComment({
         </VS.GameViewCommentInputBox>
       </div>
     </VS.GameViewCommentLayout>
-  )
+  );
 }
 
 interface ICommentBox {
-  comment: VersusGameComment
-  choiceDic: Dictionary<string, VersusGameChoice>
-  user: User
-  getCurrentComments: (_pageIndex: number) => void
+  comment: VersusGameComment;
+  choiceDic: Dictionary<string, VersusGameChoice>;
+  user: User;
+  getCurrentComments: (_pageIndex: number) => void;
 }
 const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBox) => {
-  const [choice, setChoice] = useState<VersusGameChoice>(new VersusGameChoice())
+  const [choice, setChoice] = useState<VersusGameChoice>(new VersusGameChoice());
 
-  const [editState, setEditState] = useState<EditStateTypes>(EditStateTypes.WAIT)
+  const [editState, setEditState] = useState<EditStateTypes>(EditStateTypes.WAIT);
 
-  const [content, setContent] = useState<string>('')
-  const [isInputFocus, setInputFocus] = useState<boolean>(false)
-  const [isWriteLoading, setWriteLoading] = useState<boolean>(false)
+  const [content, setContent] = useState<string>("");
+  const [isInputFocus, setInputFocus] = useState<boolean>(false);
+  const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (choiceDic.contains(comment.gameChoiceId)) {
-      setChoice(choiceDic.getValue(comment.gameChoiceId))
+      setChoice(choiceDic.getValue(comment.gameChoiceId));
     }
 
-    setEditState(EditStateTypes.WAIT)
-  }, [comment, choiceDic])
+    setEditState(EditStateTypes.WAIT);
+  }, [comment, choiceDic]);
 
   const handleEditComment = async () => {
     if (isWriteLoading) {
-      return
+      return;
     }
 
-    setWriteLoading(true)
+    setWriteLoading(true);
 
     let data = {
       content: content,
-    }
+    };
 
-    const [bResult, statusCode, response] = await ApiUtils.request(
+    const { result, data: responseData } = await ApiUtils.request(
       `/api/versus/comment/${comment.id}`,
-      'PUT',
+      "PUT",
       null,
-      data,
-    )
+      data
+    );
 
-    if (!bResult) {
-      setWriteLoading(false)
-      alert(response['message'] ?? '실패했습니다.')
-      return
+    if (!result) {
+      setWriteLoading(false);
+      alert(responseData["message"] ?? "실패했습니다.");
+      return;
     }
 
-    comment.content = content
-    setWriteLoading(false)
-    setEditState(EditStateTypes.WAIT)
-  }
+    comment.content = content;
+    setWriteLoading(false);
+    setEditState(EditStateTypes.WAIT);
+  };
 
   const handleWriteCommentEnter = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleEditComment()
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleEditComment();
     }
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      setEditState(EditStateTypes.WAIT)
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setEditState(EditStateTypes.WAIT);
     }
-  }
+  };
 
   const handleEditButton = () => {
-    setContent(comment.content)
+    setContent(comment.content);
     if (editState === EditStateTypes.EDITED) {
-      setEditState(EditStateTypes.WAIT)
+      setEditState(EditStateTypes.WAIT);
     } else {
-      setEditState(EditStateTypes.EDITED)
+      setEditState(EditStateTypes.EDITED);
     }
-  }
+  };
 
   const handleDeleteComment = async () => {
     if (isWriteLoading) {
-      return
+      return;
     }
 
-    if (!confirm('댓글을 삭제하시겠습니까?')) {
-      return
+    if (!confirm("댓글을 삭제하시겠습니까?")) {
+      return;
     }
 
-    setWriteLoading(true)
+    setWriteLoading(true);
 
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/comment/${comment.id}`, 'DELETE')
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, "DELETE");
 
-    if (!bResult) {
-      setWriteLoading(false)
-      alert(response['message'] ?? '실패했습니다.')
-      return
+    if (!result) {
+      setWriteLoading(false);
+      alert(responseData["message"] ?? "실패했습니다.");
+      return;
     }
 
-    getCurrentComments()
-    setWriteLoading(false)
-    setEditState(EditStateTypes.WAIT)
-  }
+    getCurrentComments();
+    setWriteLoading(false);
+    setEditState(EditStateTypes.WAIT);
+  };
 
   return (
     <VS.GameViewCommentBox>
@@ -324,7 +321,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
           <span
             className="absolute z-10 flex flex-center w-full h-full text-white bg-black/20"
             style={{
-              textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
+              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
             }}
           >
             {choice.title}
@@ -341,7 +338,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
             <VS.GameViewCommentEditButton
               $is_active={editState === EditStateTypes.EDITED}
               onClick={() => {
-                handleEditButton()
+                handleEditButton();
               }}
             >
               <i className="fa-solid fa-pen"></i>
@@ -349,7 +346,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
             {/* 삭제 */}
             <VS.GameViewCommentEditButton
               onClick={() => {
-                handleDeleteComment()
+                handleDeleteComment();
               }}
             >
               <i className="fa-solid fa-trash"></i>
@@ -363,17 +360,17 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       {editState === EditStateTypes.EDITED && (
         <VS.GameViewCommentInputBox>
           <textarea
-            type={'text'}
+            type={"text"}
             value={content}
             onChange={(e) => {
-              setContent(e.target.value)
+              setContent(e.target.value);
             }}
             onFocus={() => {
-              setInputFocus(true)
+              setInputFocus(true);
             }}
             onBlur={() => {
-              StyleUtils.rollbackScreen()
-              setInputFocus(false)
+              StyleUtils.rollbackScreen();
+              setInputFocus(false);
             }}
             onKeyDown={handleWriteCommentEnter}
             onInput={CommonUtils.setTextareaAutoHeight}
@@ -381,7 +378,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
           <VS.GameViewCommentInputButton
             $is_active={!isWriteLoading}
             onClick={() => {
-              handleEditComment()
+              handleEditComment();
             }}
           >
             <i className="fa-solid fa-comment text-lg"></i>
@@ -389,5 +386,5 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
         </VS.GameViewCommentInputBox>
       )}
     </VS.GameViewCommentBox>
-  )
-}
+  );
+};

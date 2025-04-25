@@ -1,69 +1,69 @@
-'use client'
+"use client";
 
-import * as SS from '@/styles/StaffStyles'
-import { TextFormats } from '@/types/CommonTypes'
-import { GameState, PrivacyTypes } from '@/types/VersusTypes'
-import VersusGame from '@/types/versus/VersusGame'
-import VersusGameChoice from '@/types/versus/VersusGameChoice'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import ModalContainer from '../ModalContainer'
-import VersusEditor from '../versus/VersusEditor'
+import * as SS from "@/styles/StaffStyles";
+import { TextFormats } from "@/types/CommonTypes";
+import { GameState, PrivacyTypes } from "@/types/VersusTypes";
+import VersusGame from "@/types/versus/VersusGame";
+import VersusGameChoice from "@/types/versus/VersusGameChoice";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import ModalContainer from "../ModalContainer";
+import VersusEditor from "../versus/VersusEditor";
 
-const PAGE_SIZE = 100
+const PAGE_SIZE = 100;
 
 export default function StaffGameList() {
-  const [games, setGames] = useState<Array<VersusGame>>([])
+  const [games, setGames] = useState<Array<VersusGame>>([]);
 
-  const [pageIndex, setPageIndex] = useState<number>(1)
-  const [itemCount, setItemCount] = useState<number>(0)
-  const [maxPage, setMaxPage] = useState<number>(0)
-  const [search, setSearch] = useState<string>('')
-  const [searchValue, setSearchValue] = useState<string>('')
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [itemCount, setItemCount] = useState<number>(0);
+  const [maxPage, setMaxPage] = useState<number>(0);
+  const [search, setSearch] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // 게임 수정
-  const [isEditorShow, setEditorShow] = useState<boolean>(false)
-  const [editorGameData, setEditorGameData] = useState<object | null>(null)
+  const [isEditorShow, setEditorShow] = useState<boolean>(false);
+  const [editorGameData, setEditorGameData] = useState<object | null>(null);
 
   useEffect(() => {
-    getGameList(1, '')
-  }, [])
+    getGameList(1, "");
+  }, []);
 
-  const getGameList = async (_pageIndex = 1, _search = '') => {
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game`, 'GET', {
+  const getGameList = async (_pageIndex = 1, _search = "") => {
+    const { result, data } = await ApiUtils.request(`/api/versus/game`, "GET", {
       pageIndex: _pageIndex,
       pageSize: PAGE_SIZE,
-    })
+    });
 
-    if (!bResult) {
-      return
+    if (!result) {
+      return;
     }
 
-    const pagination: IPaginationResponse = response
+    const pagination: IPaginationResponse = data;
 
-    let _games: Array<VersusGame> = []
+    let _games: Array<VersusGame> = [];
     pagination.items.map((item) => {
-      const newGame = new VersusGame()
-      newGame.parseResponse(item)
-      _games.push(newGame)
-    })
-    setGames(_games)
+      const newGame = new VersusGame();
+      newGame.parseResponse(item);
+      _games.push(newGame);
+    });
+    setGames(_games);
 
-    setPageIndex(pagination.pageIndex)
-    setItemCount(pagination.itemCount)
-    setMaxPage(pagination.maxPage)
-  }
+    setPageIndex(pagination.pageIndex);
+    setItemCount(pagination.itemCount);
+    setMaxPage(pagination.maxPage);
+  };
 
   const openGameEditor = async (gameId: string) => {
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET')
+    const { result, data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET");
 
-    if (bResult) {
-      setEditorGameData(response)
-      setEditorShow(true)
+    if (result) {
+      setEditorGameData(data);
+      setEditorShow(true);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col w-full divide-y divide-stone-400">
@@ -81,109 +81,109 @@ export default function StaffGameList() {
             isUpdate={true}
             gameData={editorGameData}
             saveOnClose={() => {
-              setEditorShow(false)
+              setEditorShow(false);
             }}
           />
         </div>
       </ModalContainer>
     </div>
-  )
+  );
 }
 
 interface IGame {
-  game: VersusGame
-  openGameEditor: (gameId: string) => void
+  game: VersusGame;
+  openGameEditor: (gameId: string) => void;
 }
 const Game = ({ game, openGameEditor }: IGame) => {
-  const [versusGame, setVersusGame] = useState<VersusGame>(new VersusGame()) // game 데이터 갱신을 위해 다시 useState로 선언
-  const [state, setState] = useState<GameState>(GameState.NORMAL)
-  const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC)
+  const [versusGame, setVersusGame] = useState<VersusGame>(new VersusGame()); // game 데이터 갱신을 위해 다시 useState로 선언
+  const [state, setState] = useState<GameState>(GameState.NORMAL);
+  const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC);
 
   useEffect(() => {
-    setVersusGame(game)
-    setState(game.state)
-    setPrivacyType(game.privacyType)
-  }, [game])
+    setVersusGame(game);
+    setState(game.state);
+    setPrivacyType(game.privacyType);
+  }, [game]);
 
   const handleStateSave = async (_state: GameState) => {
     if (!confirm(`${game.title}의 상태를 변경하시겠습니까?`)) {
-      return
+      return;
     }
 
     const data = {
       state: _state,
       privacyType: privacyType,
-    }
+    };
 
     // 저장 성공 여부
-    let saveResult: boolean = false
+    let saveResult: boolean = false;
 
-    const [bResult, statusCode, response] = await ApiUtils.request(
+    const { result, data: responseData } = await ApiUtils.request(
       `/api/versus/game_state/${game.nanoId}`,
-      'PUT',
+      "PUT",
       null,
-      data,
-    )
+      data
+    );
 
-    if (!bResult) {
-      if (response['message']) {
-        alert(response['message'])
+    if (!result) {
+      if (responseData["message"]) {
+        alert(responseData["message"]);
       } else {
-        alert('저장 실패했습니다.')
+        alert("저장 실패했습니다.");
       }
 
-      return
+      return;
     }
 
-    setState(_state)
-  }
+    setState(_state);
+  };
 
   const handlePrivacySave = async (_privacyType: PrivacyTypes) => {
     if (!confirm(`${game.title}의 상태를 변경하시겠습니까?`)) {
-      return
+      return;
     }
 
     const data = {
       state: state,
       privacyType: _privacyType,
-    }
+    };
 
     // 저장 성공 여부
-    let saveResult: boolean = false
+    let saveResult: boolean = false;
 
-    const [bResult, statusCode, response] = await ApiUtils.request(
+    const { result, data: responseData } = await ApiUtils.request(
       `/api/versus/game_state/${game.nanoId}`,
-      'PUT',
+      "PUT",
       null,
-      data,
-    )
+      data
+    );
 
-    if (!bResult) {
-      if (response['message']) {
-        alert(response['message'])
+    if (!result) {
+      if (responseData["message"]) {
+        alert(responseData["message"]);
       } else {
-        alert('저장 실패했습니다.')
+        alert("저장 실패했습니다.");
       }
 
-      return
+      return;
     }
 
-    setPrivacyType(_privacyType)
-  }
+    setPrivacyType(_privacyType);
+  };
 
   const handleOpenEditor = () => {
-    openGameEditor(game.nanoId)
-  }
+    openGameEditor(game.nanoId);
+  };
 
   const handleRefresh = async () => {
-    const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, 'GET')
+    const { result, data } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "GET");
 
-    if (bResult) {
-      const newGame = new VersusGame()
-      newGame.parseResponse(response)
-      setVersusGame(newGame)
+    if (result) {
+      const newGame = new VersusGame();
+      newGame.parseResponse(data);
+      setVersusGame(newGame);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -194,7 +194,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           {CommonUtils.isStringNullOrEmpty(versusGame.thumbnailImageUrl) ? (
             <span className="text-stone-400">이미지 없음</span>
           ) : (
-            <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={''} />
+            <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={""} />
           )}
         </div>
 
@@ -202,7 +202,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
         <div className="flex flex-col justify-start w-full h-full space-y-1">
           {/* 1단 */}
           <div className="flex w-full space-x-2">
-            <span className={`font-semibold ${state === GameState.BLOCK ? 'text-red-500' : 'text-stone-200'}`}>
+            <span className={`font-semibold ${state === GameState.BLOCK ? "text-red-500" : "text-stone-200"}`}>
               {versusGame.title}
             </span>
             <span className="text-stone-400">
@@ -231,7 +231,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={false}
             onClick={() => {
-              handleRefresh()
+              handleRefresh();
             }}
             className="w-24"
           >
@@ -240,7 +240,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={false}
             onClick={() => {
-              handleOpenEditor()
+              handleOpenEditor();
             }}
             className="w-24"
           >
@@ -255,7 +255,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={privacyType === PrivacyTypes.PUBLIC}
             onClick={() => {
-              handlePrivacySave(PrivacyTypes.PUBLIC)
+              handlePrivacySave(PrivacyTypes.PUBLIC);
             }}
           >
             전체 공개
@@ -263,7 +263,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={privacyType === PrivacyTypes.RESTRICTED}
             onClick={() => {
-              handlePrivacySave(PrivacyTypes.RESTRICTED)
+              handlePrivacySave(PrivacyTypes.RESTRICTED);
             }}
           >
             일부 공개
@@ -271,7 +271,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={privacyType === PrivacyTypes.PRIVATE}
             onClick={() => {
-              handlePrivacySave(PrivacyTypes.PRIVATE)
+              handlePrivacySave(PrivacyTypes.PRIVATE);
             }}
           >
             비공개
@@ -284,7 +284,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={state === GameState.NORMAL}
             onClick={() => {
-              handleStateSave(GameState.NORMAL)
+              handleStateSave(GameState.NORMAL);
             }}
           >
             정상
@@ -292,7 +292,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <SS.GameStateButton
             $is_active={state === GameState.BLOCK}
             onClick={() => {
-              handleStateSave(GameState.BLOCK)
+              handleStateSave(GameState.BLOCK);
             }}
           >
             차단
@@ -315,12 +315,12 @@ const Game = ({ game, openGameEditor }: IGame) => {
               {CommonUtils.isStringNullOrEmpty(choice.imageUrl) ? (
                 <span className="text-stone-400">이미지 없음</span>
               ) : (
-                <Image src={ApiUtils.mediaUrl(choice.imageUrl)} fill alt={''} />
+                <Image src={ApiUtils.mediaUrl(choice.imageUrl)} fill alt={""} />
               )}
             </div>
             {/* 내용 */}
             <div className="flex flex-col w-full h-16">
-              <span className={`${choice.title !== '' ? 'text-stone-300' : 'text-stone-600'}`}>
+              <span className={`${choice.title !== "" ? "text-stone-300" : "text-stone-600"}`}>
                 [{index + 1}] {choice.title}
               </span>
             </div>
@@ -328,5 +328,5 @@ const Game = ({ game, openGameEditor }: IGame) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};

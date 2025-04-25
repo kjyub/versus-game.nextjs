@@ -1,5 +1,5 @@
-import ApiUtils from '@/utils/ApiUtils'
-import { MetadataRoute } from 'next'
+import ApiUtils from "@/utils/ApiUtils";
+import { MetadataRoute } from "next";
 
 // /product/sitemap/1.xml
 // export async function generateSitemaps() {
@@ -8,27 +8,27 @@ import { MetadataRoute } from 'next'
 // }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [bResult, statusCode, response] = await ApiUtils.request(`/api/versus/game/ids`, 'GET')
+  const { data } = await ApiUtils.request(`/api/versus/game/ids`, "GET");
 
-  const gameIds: Array<string> = response as string[]
+  const gameIds: Array<string> = data as string[];
 
   let siteMaps = [
     {
-      url: 'https://chooseming.com',
+      url: "https://chooseming.com",
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: "weekly",
       priority: 1,
     },
-  ]
+  ];
 
   for (const gameId of gameIds) {
     siteMaps.push({
       url: `https://chooseming.com/game/${gameId}`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: "daily",
       priority: 1,
-    })
+    });
   }
 
-  return siteMaps
+  return siteMaps;
 }

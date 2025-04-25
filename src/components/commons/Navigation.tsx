@@ -1,85 +1,82 @@
-'use client'
+"use client";
 
-import { useDetectClose } from '@/hooks/useDetectClose'
-import * as MainStyles from '@/styles/MainStyles'
-import { CookieConsts } from '@/types/ApiTypes'
-import { UserRole } from '@/types/UserTypes'
-import User from '@/types/user/User'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import { useSession } from 'next-auth/react'
-import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
-import LoginModal from '../users/LoginModal'
-import MyInfoModal from '../users/MyInfoModal'
-import MobileNav from './MobileNav'
+import { useDetectClose } from "@/hooks/useDetectClose";
+import * as MainStyles from "@/styles/MainStyles";
+import { CookieConsts } from "@/types/ApiTypes";
+import { UserRole } from "@/types/UserTypes";
+import User from "@/types/user/User";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import LoginModal from "../users/LoginModal";
+import MyInfoModal from "../users/MyInfoModal";
+import MobileNav from "./MobileNav";
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
-  const session = useSession()
+  const session = useSession();
 
-  const [user, setUser] = useState<User>(new User())
+  const [user, setUser] = useState<User>(new User());
 
-  const [userRef, isUserShow, setUserShow] = useDetectClose()
-  const [loginRef, isLoginShow, setLoginShow] = useDetectClose()
-  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose()
+  const [userRef, isUserShow, setUserShow] = useDetectClose();
+  const [loginRef, isLoginShow, setLoginShow] = useDetectClose();
+  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose();
 
   useEffect(() => {
-    if (session.status === 'authenticated') {
-      getUserInfo()
+    if (session.status === "authenticated") {
+      getUserInfo();
     }
-  }, [session])
+  }, [session]);
 
   const getUserInfo = async () => {
     try {
       if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
-        return
+        return;
       }
     } catch {
-      return
+      return;
     }
-    const [bResult, statusCode, response] = await ApiUtils.request(
-      `/api/users/user_info/${session.data?.user._id}`,
-      'GET',
-    )
+    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user._id}`, "GET");
 
-    if (bResult) {
-      const user = new User()
-      user.parseResponse(response)
-      setUser(user)
+    if (result) {
+      const user = new User();
+      user.parseResponse(data);
+      setUser(user);
     } else {
-      alert(response)
+      alert(data);
     }
-  }
+  };
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    userCheck()
-  }
+    userCheck();
+  };
 
   const handleStopPropagation = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation()
-  }
+    e.stopPropagation();
+  };
 
   const handleUserInfo = async () => {
     if (isUserShow) {
-      setUserShow(false)
+      setUserShow(false);
     } else {
-      await getUserInfo()
-      setUserShow(true)
+      await getUserInfo();
+      setUserShow(true);
     }
-  }
+  };
 
   const userCheck = async () => {
-    await ApiUtils.request('/api/users/user_check', 'POST')
-  }
+    await ApiUtils.request("/api/users/user_check", "POST");
+  };
 
   const handleGameAdd = (e) => {
-    if (session.status !== 'authenticated') {
-      e.preventDefault()
-      alert('로그인 후 이용가능합니다.')
-      return
+    if (session.status !== "authenticated") {
+      e.preventDefault();
+      alert("로그인 후 이용가능합니다.");
+      return;
     }
-  }
+  };
 
   return (
     // <></>
@@ -88,9 +85,9 @@ const Navigation = ({}: INavigation) => {
       <MainStyles.NavButtonList className="max-md:hidden md:flex">
         <MainStyles.ItemAddButtonContainer $is_show={true}>
           <Link
-            href={'/game/add'}
+            href={"/game/add"}
             onClick={() => {
-              sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
+              sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
             }}
           >
             <MainStyles.NavButton onClick={handleGameAdd}>
@@ -101,7 +98,7 @@ const Navigation = ({}: INavigation) => {
         </MainStyles.ItemAddButtonContainer>
         {user.userRole === UserRole.STAFF && (
           <MainStyles.ItemAddButtonContainer $is_show={true} className="max-md:left-40 md:left-40">
-            <Link href={'/csstaff'}>
+            <Link href={"/csstaff"}>
               <MainStyles.NavButton>
                 <i className="fa-solid fa-hammer mr-2"></i>
                 관리
@@ -115,7 +112,7 @@ const Navigation = ({}: INavigation) => {
         <MainStyles.ItemAddButtonContainer $is_show={true} ref={mobileNavRef}>
           <MainStyles.NavMobileMenuButton
             onClick={() => {
-              setMobileNavShow(!isMobileNavShow)
+              setMobileNavShow(!isMobileNavShow);
             }}
           >
             <i className="fa-solid fa-bars text-lg mr-2 mt-[2px]"></i>
@@ -130,17 +127,17 @@ const Navigation = ({}: INavigation) => {
 
       {/* 내비게이션 로고 */}
       <Link
-        href={'/'}
+        href={"/"}
         className="title"
         onClick={() => {
-          sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
+          sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
         }}
       >
         <span>VS 게임</span>
       </Link>
 
       {/* 내비게이션 회원 (로그인 상태) */}
-      <MainStyles.LoginButtonContainer ref={userRef} $is_show={session.status === 'authenticated'}>
+      <MainStyles.LoginButtonContainer ref={userRef} $is_show={session.status === "authenticated"}>
         {/* <MainStyles.LoginButton
                     onClick={() => {
                         handleClick()
@@ -150,7 +147,7 @@ const Navigation = ({}: INavigation) => {
                 </MainStyles.LoginButton> */}
         <MainStyles.LoginButton
           onClick={() => {
-            handleUserInfo()
+            handleUserInfo();
           }}
         >
           회원 정보
@@ -161,10 +158,10 @@ const Navigation = ({}: INavigation) => {
       </MainStyles.LoginButtonContainer>
 
       {/* 내비게이션 회원 (로그인 안된 상태) */}
-      <MainStyles.LoginButtonContainer ref={loginRef} $is_show={session.status !== 'authenticated'}>
+      <MainStyles.LoginButtonContainer ref={loginRef} $is_show={session.status !== "authenticated"}>
         <MainStyles.LoginButton
           onClick={() => {
-            setLoginShow(!isLoginShow)
+            setLoginShow(!isLoginShow);
           }}
         >
           로그인
@@ -174,7 +171,7 @@ const Navigation = ({}: INavigation) => {
         </MainStyles.LoginLayout>
       </MainStyles.LoginButtonContainer>
     </MainStyles.NavBox>
-  )
-}
+  );
+};
 
-export default Navigation
+export default Navigation;
