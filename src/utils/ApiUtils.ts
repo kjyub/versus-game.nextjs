@@ -19,11 +19,8 @@ interface RequestResult {
 
 export default class ApiUtils {
   // Request
-  static async request(
-    url: string,
-    method: RequestMethodTypes,
-    { params, data, useCache = false, headers = {} }: RequestOption
-  ): Promise<RequestResult> {
+  static async request(url: string, method: RequestMethodTypes, options: RequestOption = {}): Promise<RequestResult> {
+    const { params = undefined, data = undefined, useCache = false, headers = {} } = options;
     let bResult: boolean = false;
     let statusCode: number = 200;
     let resultData: object = {};
