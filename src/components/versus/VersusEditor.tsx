@@ -163,7 +163,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
       }
 
       const newGame = new VersusGame();
-      newGame.parseResponse(response);
+      newGame.parseResponse(responseData);
 
       if (!newGame.isEmpty()) {
         saveResult = true;

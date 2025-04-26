@@ -1,6 +1,8 @@
 import { RequestInit } from "next/dist/server/web/spec-extension/request";
 import { NextResponse } from "next/server";
 import CommonUtils from "./CommonUtils";
+import { ReadonlyURLSearchParams } from "next/navigation";
+import { pipe, map, fromEntries, when, filter } from "@fxts/core";
 
 type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {});
 
@@ -154,5 +156,26 @@ export default class ApiUtils {
     }
 
     return "";
+  }
+
+  static getParams(searchParams: ReadonlyURLSearchParams, keys?: string[]): Record<string, string> {
+    if (keys) {
+      const getValue = (key: string) => {
+        return searchParams.get(key);
+      };
+      return pipe(
+        keys,
+        map(getValue),
+        filter((value) => value !== null),
+        fromEntries
+      );
+    } else {
+      const keyAll = searchParams.getAll();
+      return pipe(
+        keyAll,
+        filter((value) => value !== null),
+        fromEntries
+      );
+    }
   }
 }

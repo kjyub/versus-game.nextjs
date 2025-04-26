@@ -1,70 +1,60 @@
-'use client'
+"use client";
 
-import * as VS from '@/styles/VersusStyles'
-import { CookieConsts } from '@/types/ApiTypes'
-import { GameState } from '@/types/VersusTypes'
-import User from '@/types/user/User'
-import VersusGame from '@/types/versus/VersusGame'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import StorageUtils from '@/utils/StorageUtils'
-import Image from 'next/image'
+import * as VS from "@/styles/VersusStyles";
+import { CookieConsts } from "@/types/ApiTypes";
+import { GameState } from "@/types/VersusTypes";
+import User from "@/types/user/User";
+import VersusGame from "@/types/versus/VersusGame";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import StorageUtils from "@/utils/StorageUtils";
+import Image from "next/image";
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
-import { useState } from 'react'
+import { useState } from "react";
 
 interface IGameBox {
-  game: VersusGame
-  user: User
-  goLink: (gameId: string) => void
-  memoryRawData: (_game: VersusGame) => void
+  game: VersusGame;
+  user: User;
+  goLink: (gameId: string) => void;
+  memoryRawData: (_game: VersusGame) => void;
 }
 export default function VersusGameSimpleBox({ game, user, goLink, memoryRawData }: IGameBox) {
-  const isMaster = game.userId !== user.id
-  const [isHover, setHover] = useState<boolean>(false)
+  const isMaster = game.userId !== user.id;
+  const [isHover, setHover] = useState<boolean>(false);
 
   const handleGame = () => {
-    StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, game.nanoId)
+    StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, game.nanoId);
 
     if (!CommonUtils.isNullOrUndefined(memoryRawData)) {
-      memoryRawData(game)
+      memoryRawData(game);
     }
-    goLink(`/game/${game.nanoId}`)
-  }
+    goLink(`/game/${game.nanoId}`);
+  };
 
   const handleUpdate = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation()
-    goLink(`/game/update/${game.nanoId}`)
-  }
+    e.stopPropagation();
+    goLink(`/game/update/${game.nanoId}`);
+  };
 
   return (
     <VS.ListGameSimpleBox
       onMouseEnter={() => {
-        setHover(true)
+        setHover(true);
       }}
       onMouseLeave={() => {
-        setHover(false)
+        setHover(false);
       }}
-      className={`${isHover ? 'hover' : ''}`}
+      className={`${isHover ? "hover" : ""}`}
       onClick={() => {
-        handleGame()
+        handleGame();
       }}
     >
-      {!CommonUtils.isStringNullOrEmpty(game.thumbnailImageUrl) && (
-        <VS.ListGameThumbnailBox className={`absolute z-0 top-1/2 -translate-y-1/2`}>
-          <Image
-            src={ApiUtils.mediaUrl(game.thumbnailImageUrl)}
-            className={`${isHover ? 'hover' : ''}`}
-            alt={''}
-            fill
-          />
-        </VS.ListGameThumbnailBox>
-      )}
       <VS.ListGameSimpleContentBox $is_active={!CommonUtils.isStringNullOrEmpty(game.thumbnailImageUrl)}>
         <VS.ListGameContentBox>
-          <span className={`title ${game.isView ? 'viewed' : ''}`}>
+          <span className={`title ${game.isView ? "viewed" : ""}`}>
             {/* 선택했었는지 여부 */}
             {game.isChoice && (
-              <i title={'이미 선택한 게임입니다.'} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
+              <i title={"이미 선택한 게임입니다."} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
             )}
             {/* 제목 */}
             {game.title}
@@ -77,5 +67,5 @@ export default function VersusGameSimpleBox({ game, user, goLink, memoryRawData 
         </VS.ListGameContentBox>
       </VS.ListGameSimpleContentBox>
     </VS.ListGameSimpleBox>
-  )
+  );
 }

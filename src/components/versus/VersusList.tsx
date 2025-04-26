@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import VersusGameBox from "./VersusGameBox";
+import Pagination from "@/types/apis/pagination";
 
 const PAGE_SIZE = 50;
 
@@ -26,7 +27,11 @@ export default function VersusList({ versusGameData }: IVersusList) {
   const [rollbackScrollLocation, setRollbackScrollLocation] = useState<number>(-1); // 목록으로 되돌아 왔을 때 이동할 스크롤 위치
 
   const user = useUser();
-  const [games, setGames] = useState<Array<VersusGame>>([]);
+
+  // 서버렌더링용 초기 데이터 설정
+  const initPagination = new Pagination<VersusGame>();
+  initPagination.parseResponse(versusGameData, VersusGame);
+  const [games, setGames] = useState<Array<VersusGame>>(initPagination.items);
 
   const searchParams = useSearchParams();
   const [pageIndex, setPageIndex] = useState<number>(1);
@@ -60,17 +65,12 @@ export default function VersusList({ versusGameData }: IVersusList) {
   }, [games, rollbackScrollLocation]);
 
   useEffect(() => {
-    // SSR 데이터는 1페이지만 불러온다.
-    if (!Array.isArray(versusGameData.items)) {
-      return;
-    }
-
     if (rollbackRawData()) {
       sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
       return;
     }
 
-    const newGames: Array<VersusGame> = convertGameDataToGame(versusGameData.items);
+    const newGames: Array<VersusGame> = convertGameDataToGame(initPagination.items);
 
     setGames(newGames);
     setPageIndex(1);
@@ -81,8 +81,8 @@ export default function VersusList({ versusGameData }: IVersusList) {
       _lastId = "";
     }
     setLastId(_lastId);
-    setItemCount(versusGameData.itemCount);
-    setMaxPage(versusGameData.maxPage);
+    setItemCount(initPagination.count);
+    setMaxPage(initPagination.maxPage);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
     updateRawData([], _lastId, versusGameData.items);
@@ -99,9 +99,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const gameChoicesCache: Array<string> = StorageUtils.getSessionStorageList(CookieConsts.GAME_CHOICED_SESSION);
     const gameChoicesCacheSet: Set<string> = new Set(gameChoicesCache);
 
-    let newGames: Array<VersusGame> = [];
-
-    gameData.map((data) => {
+    let newGames: Array<VersusGame> = gameData.map((data) => {
       const game = new VersusGame();
       game.parseResponse(data);
 
@@ -112,7 +110,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
         game.isChoice = true;
       }
 
-      newGames.push(game);
+      return game;
     });
 
     return newGames;
@@ -122,30 +120,19 @@ export default function VersusList({ versusGameData }: IVersusList) {
     if (isScrollLoading) {
       return;
     }
+
     // 게임들이 이미 한번 이상 로딩되었는데 lastId가 없으면 에러 혹은 페이지 끝이라고 간주
-    if (pageIndex > 1 && CommonUtils.isStringNullOrEmpty(lastId)) {
+    if (pageIndex > 1 && !lastId) {
       return;
     }
 
     setScrollLoading(true);
 
     let params = {
-      // pageIndex: pageIndex + 1
+      ...ApiUtils.getParams(searchParams, ["search", "myGames"]),
       lastId: lastId,
+      userId: user.id,
     };
-
-    const search = searchParams.get("search");
-    if (!CommonUtils.isStringNullOrEmpty(search)) {
-      params["search"] = search;
-    }
-    const myGames = searchParams.get("myGames");
-    if (!CommonUtils.isStringNullOrEmpty(myGames)) {
-      params["myGames"] = 1;
-    }
-
-    if (!CommonUtils.isStringNullOrEmpty(user.id)) {
-      params["userId"] = user.id;
-    }
 
     const { result, data } = await ApiUtils.request("/api/versus/game", "GET", { params });
 
@@ -156,6 +143,11 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
     const pagination: IPaginationResponse = data;
     const items = pagination.items;
+
+    if (pagination.itemCount === 0) {
+      setScrollLoading(false);
+      return;
+    }
 
     const newGames: Array<VersusGame> = convertGameDataToGame(items);
 
