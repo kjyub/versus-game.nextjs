@@ -30,7 +30,7 @@ export default async function RootLayout({
   // await generateGuestId()
 
   return (
-    <html lang="kr">
+    <html lang="ko">
       <head>
         <FrontHead />
         <AppClientLayout />
@@ -43,14 +43,9 @@ export default async function RootLayout({
       >
         <BgBubbleBox />
         <Providers>
-          <div id="layout" className={`absolute z-0 w-screen min-h-full h-full max-h-full overflow-hidden`}>
+          <div id="page-root" className={`w-full h-full overflow-x-hidden overflow-y-auto`}>
             <Navigation />
-            <div
-              id="page-root"
-              className="flex flex-col w-full h-[calc(100%-3rem)] overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay"
-            >
-              {children}
-            </div>
+            {children}
           </div>
         </Providers>
       </MainStyles.Body>

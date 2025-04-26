@@ -1,7 +1,7 @@
 "use client";
 
 import { useDetectClose } from "@/hooks/useDetectClose";
-import * as MainStyles from "@/styles/MainStyles";
+import * as MS from "@/styles/MainStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { UserRole } from "@/types/UserTypes";
 import User from "@/types/user/User";
@@ -79,98 +79,95 @@ const Navigation = ({}: INavigation) => {
   };
 
   return (
-    // <></>
-    <MainStyles.NavBox>
+    <MS.NavBox>
       {/* 내비게이션 메뉴 (PC) */}
-      <MainStyles.NavButtonList className="max-md:hidden md:flex">
-        <MainStyles.ItemAddButtonContainer $is_show={true}>
+      <MS.NavButtonList className="max-md:hidden md:flex">
+        <MS.NavButtonContainer $is_show={true}>
           <Link
             href={"/game/add"}
             onClick={() => {
               sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
             }}
           >
-            <MainStyles.NavButton onClick={handleGameAdd}>
+            <MS.NavButton onClick={handleGameAdd}>
               <i className="fa-solid fa-gamepad mr-2"></i>
               게임 만들기
-            </MainStyles.NavButton>
+            </MS.NavButton>
           </Link>
-        </MainStyles.ItemAddButtonContainer>
+        </MS.NavButtonContainer>
         {user.userRole === UserRole.STAFF && (
-          <MainStyles.ItemAddButtonContainer $is_show={true} className="max-md:left-40 md:left-40">
+          <MS.NavButtonContainer $is_show={true} className="max-md:left-40 md:left-40">
             <Link href={"/csstaff"}>
-              <MainStyles.NavButton>
+              <MS.NavButton>
                 <i className="fa-solid fa-hammer mr-2"></i>
                 관리
-              </MainStyles.NavButton>
+              </MS.NavButton>
             </Link>
-          </MainStyles.ItemAddButtonContainer>
+          </MS.NavButtonContainer>
         )}
-      </MainStyles.NavButtonList>
+      </MS.NavButtonList>
+
       {/* 내비게이션 메뉴 (모바일) */}
-      <MainStyles.NavButtonList className="max-md:flex md:hidden">
-        <MainStyles.ItemAddButtonContainer $is_show={true} ref={mobileNavRef}>
-          <MainStyles.NavMobileMenuButton
+      {/* <MS.NavButtonList className="max-md:flex md:hidden">
+        <MS.NavButtonContainer $is_show={true} ref={mobileNavRef}>
+          <MS.NavMobileMenuButton
             onClick={() => {
               setMobileNavShow(!isMobileNavShow);
             }}
           >
             <i className="fa-solid fa-bars text-lg mr-2 mt-[2px]"></i>
             메뉴
-          </MainStyles.NavMobileMenuButton>
+          </MS.NavMobileMenuButton>
 
-          <MainStyles.MobileNavLayout $is_show={isMobileNavShow}>
+          <MS.MobileNavLayout $is_show={isMobileNavShow}>
             {isMobileNavShow && <MobileNav isModalShow={isMobileNavShow} setModalShow={setMobileNavShow} user={user} />}
-          </MainStyles.MobileNavLayout>
-        </MainStyles.ItemAddButtonContainer>
-      </MainStyles.NavButtonList>
+          </MS.MobileNavLayout>
+        </MS.NavButtonContainer>
+      </MS.NavButtonList> */}
 
       {/* 내비게이션 로고 */}
-      <Link
-        href={"/"}
-        className="title"
-        onClick={() => {
-          sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
-        }}
-      >
-        <span>VS 게임</span>
-      </Link>
+      <MS.NavTitle>
+        <Link
+          href={"/"}
+          className="title"
+          onClick={() => {
+            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
+          }}
+        >
+          <span>VS 게임</span>
+        </Link>
+      </MS.NavTitle>
 
       {/* 내비게이션 회원 (로그인 상태) */}
-      <MainStyles.LoginButtonContainer ref={userRef} $is_show={session.status === "authenticated"}>
-        {/* <MainStyles.LoginButton
-                    onClick={() => {
-                        handleClick()
-                    }}
-                >
-                    회원 체크
-                </MainStyles.LoginButton> */}
-        <MainStyles.LoginButton
-          onClick={() => {
-            handleUserInfo();
-          }}
-        >
-          회원 정보
-        </MainStyles.LoginButton>
-        <MainStyles.LoginLayout $is_show={isUserShow}>
-          {isUserShow && <MyInfoModal isModalShow={isUserShow} user={user} />}
-        </MainStyles.LoginLayout>
-      </MainStyles.LoginButtonContainer>
+      <div className="ml-auto">
+        <MS.LoginButtonContainer ref={userRef} $is_show={session.status === "authenticated"}>
+          <MS.LoginButton
+            onClick={() => {
+              handleUserInfo();
+            }}
+          >
+            회원 정보
+          </MS.LoginButton>
+          <MS.LoginLayout $is_show={isUserShow}>
+            {isUserShow && <MyInfoModal isModalShow={isUserShow} user={user} />}
+          </MS.LoginLayout>
+        </MS.LoginButtonContainer>
 
-      {/* 내비게이션 회원 (로그인 안된 상태) */}
-      <MainStyles.LoginButtonContainer ref={loginRef} $is_show={session.status !== "authenticated"}>
-        <MainStyles.LoginButton
-          onClick={() => {
-            setLoginShow(!isLoginShow);
-          }}
-        >
-          로그인
-        </MainStyles.LoginButton>
-        <MainStyles.LoginLayout $is_show={isLoginShow}>
-          {isLoginShow && <LoginModal isModalShow={isLoginShow} setModalShow={setLoginShow} />}
-        </MainStyles.LoginLayout>
-      </MainStyles.LoginButtonContainer>
-    </MainStyles.NavBox>
+        {/* 내비게이션 회원 (로그인 안된 상태) */}
+        <MS.LoginButtonContainer ref={loginRef} $is_show={session.status !== "authenticated"}>
+          <MS.LoginButton
+            onClick={() => {
+              setLoginShow(!isLoginShow);
+            }}
+          >
+            로그인
+          </MS.LoginButton>
+          <MS.LoginLayout $is_show={isLoginShow}>
+            {isLoginShow && <LoginModal isModalShow={isLoginShow} setModalShow={setLoginShow} />}
+          </MS.LoginLayout>
+        </MS.LoginButtonContainer>
+      </div>
+    </MS.NavBox>
   );
 };
 

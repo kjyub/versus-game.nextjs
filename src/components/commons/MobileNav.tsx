@@ -1,33 +1,33 @@
-import * as MS from '@/styles/MainStyles'
-import { CookieConsts } from '@/types/ApiTypes'
-import { UserRole } from '@/types/UserTypes'
-import User from '@/types/user/User'
-import StyleUtils from '@/utils/StyleUtils'
-import Link from 'next/link'
-import { Dispatch, SetStateAction } from 'react'
+import * as MS from "@/styles/MainStyles";
+import { CookieConsts } from "@/types/ApiTypes";
+import { UserRole } from "@/types/UserTypes";
+import User from "@/types/user/User";
+import StyleUtils from "@/utils/StyleUtils";
+import Link from "next/link";
+import { Dispatch, SetStateAction } from "react";
 
 export interface IMobileNav {
-  isModalShow: boolean
-  setModalShow: Dispatch<SetStateAction<boolean>>
-  user: User
+  isModalShow: boolean;
+  setModalShow: Dispatch<SetStateAction<boolean>>;
+  user: User;
 }
 const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
   const handleMobileNav = () => {
-    setModalShow(false)
-    StyleUtils.rollbackScreen()
-  }
+    setModalShow(false);
+    StyleUtils.rollbackScreen();
+  };
 
   return (
-    <MS.MobileNavContainer $is_staff={user.userRole === UserRole.STAFF} style={{ transition: '1s filter linear' }}>
+    <MS.MobileNavContainer $is_staff={user.userRole === UserRole.STAFF} style={{ transition: "1s filter linear" }}>
       <MS.MobileNavList
         onClick={() => {
-          handleMobileNav()
+          handleMobileNav();
         }}
       >
         <Link
-          href={'/'}
+          href={"/"}
           onClick={() => {
-            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
+            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
           }}
         >
           <MS.MobileNavButton>
@@ -36,9 +36,9 @@ const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
           </MS.MobileNavButton>
         </Link>
         <Link
-          href={'/game/add'}
+          href={"/game/add"}
           onClick={() => {
-            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION)
+            sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
           }}
         >
           <MS.MobileNavButton>
@@ -47,7 +47,7 @@ const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
           </MS.MobileNavButton>
         </Link>
         {user.userRole === UserRole.STAFF && (
-          <Link href={'/csstaff'}>
+          <Link href={"/csstaff"}>
             <MS.MobileNavButton>
               <i className="fa-solid fa-hammer"></i>
               관리
@@ -56,6 +56,6 @@ const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
         )}
       </MS.MobileNavList>
     </MS.MobileNavContainer>
-  )
-}
-export default MobileNav
+  );
+};
+export default MobileNav;
