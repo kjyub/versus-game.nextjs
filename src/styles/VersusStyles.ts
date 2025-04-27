@@ -200,7 +200,7 @@ export const ListLayout = tw.div`
     flex flex-col items-center w-full max-w-200 max-md:p-4 md:p-4 space-y-4
 `;
 export const ListScrollTopButton = tw.button`
-    absolute max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
+    fixed max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
     flex flex-center w-10 h-10
     border border-blue-500/50
     rounded-full bg-blue-400/60 backdrop-blur-sm
@@ -212,7 +212,7 @@ export const ListGrid = tw.div`
 `;
 
 export const ListGameBox = tw.div`
-    flex flex-col w-full max-sm:p-3 sm:p-3 gap-2
+    flex flex-col w-full max-sm:p-3 sm:p-3 gap-2 [&>a]:flex [&>a]:flex-col [&>a]:gap-2
     rounded-xl bg-black/30 hover:bg-black/40 backdrop-blur-sm
     duration-300
 `;
@@ -266,7 +266,6 @@ export const ListGameSimpleContentBox = tw.div`
     absolute z-10 
     flex flex-col w-full h-full mt-0 max-sm:px-2 sm:px-3 max-sm:py-1 sm:py-2
     backdrop-blur-sm
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-rose-800/50")}
 `;
 
 export const ListGamePrivacy = tw.div`

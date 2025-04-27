@@ -36,17 +36,14 @@ export default async function RootLayout({
         <AppClientLayout />
       </head>
       <MainStyles.Body
-        className={`${inter.className} background`}
         style={{
           backgroundColor: "repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)",
         }}
       >
         <BgBubbleBox />
         <Providers>
-          <div id="page-root" className={`w-full h-full overflow-x-hidden overflow-y-auto`}>
-            <Navigation />
-            {children}
-          </div>
+          <Navigation />
+          {children}
         </Providers>
       </MainStyles.Body>
     </html>

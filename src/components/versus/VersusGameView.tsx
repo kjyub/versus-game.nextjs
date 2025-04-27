@@ -3,7 +3,6 @@ import * as VersusStyles from "@/styles/VersusStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { TextFormats } from "@/types/CommonTypes";
 import { Dictionary } from "@/types/common/Dictionary";
-import User from "@/types/user/User";
 import VersusGame from "@/types/versus/VersusGame";
 import VersusGameChoice from "@/types/versus/VersusGameChoice";
 import ApiUtils from "@/utils/ApiUtils";
@@ -37,8 +36,6 @@ interface IVersusGameView {
 export default function VersusGameView({ gameData = null, userChoiceData = null }: IVersusGameView) {
   const router = useRouter();
   const session = useSession();
-
-  const [user, setUser] = useState<User>(new User());
 
   const [game, setGame] = useState<VersusGame>(new VersusGame());
   const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES);
@@ -91,8 +88,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       return;
     }
 
-    getUserData();
-
     setMyAnswerLoading(true);
 
     const _game = new VersusGame();
@@ -136,25 +131,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     }
 
     setMyAnswerLoading(false);
-  };
-
-  const getUserData = async () => {
-    if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
-      return;
-    }
-
-    const { result, data: responseData } = await ApiUtils.request(
-      `/api/users/user_info/${session.data?.user._id}`,
-      "GET"
-    );
-
-    if (result) {
-      const user = new User();
-      user.parseResponse(responseData);
-      setUser(user);
-    } else {
-      alert(responseData["message"]);
-    }
   };
 
   const getAnswerResults = async () => {
@@ -293,7 +269,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
       <VersusGameViewRelated
         game={game}
-        user={user}
         isShowResult={game.relatedGames.length > 0 && isShowResult}
         commentHelpBox={
           <div

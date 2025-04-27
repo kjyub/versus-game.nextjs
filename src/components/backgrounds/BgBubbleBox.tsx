@@ -1,15 +1,15 @@
-import './BgBubbleBox.css'
+import "./BgBubbleBox.css";
 
 const BgMoveLines = () => {
   return (
     <div
       viewBox="0 0 1820 1080"
       style={{
-        position: 'absolute',
-        height: '100vh',
-        aspectRatio: '1820/1080',
-        zIndex: '-1',
-        enableBackground: 'new 0 0 1820 1080',
+        position: "fixed",
+        height: "100vh",
+        aspectRatio: "1820/1080",
+        zIndex: "-1",
+        enableBackground: "new 0 0 1820 1080",
       }}
       className="bg-bubble-box area"
     >
@@ -38,6 +38,6 @@ const BgMoveLines = () => {
         <li></li>
       </ul>
     </div>
-  )
-}
-export default BgMoveLines
+  );
+};
+export default BgMoveLines;

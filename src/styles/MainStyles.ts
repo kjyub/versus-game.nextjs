@@ -2,9 +2,8 @@ import { StyleProps } from "@/types/StyleTypes";
 import tw from "tailwind-styled-components";
 
 export const Body = tw.body`
-    flex flex-col w-screen h-screen max-h-screen
-    overflow-hidden
-    bg-blue-500
+    flex flex-col w-screen min-h-screen max-h-screen
+    overflow-x-hidden overflow-y-auto
 `;
 
 export const NavBox = tw.div`

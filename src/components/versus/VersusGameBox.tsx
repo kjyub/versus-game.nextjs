@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/useUser";
 import * as VS from "@/styles/VersusStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { UserRole } from "@/types/UserTypes";
@@ -10,57 +11,47 @@ import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
 import StorageUtils from "@/utils/StorageUtils";
 import Image from "next/image";
+import Link from "next/link";
 // import VersusMainSearch from "@/components/versus/VersusMainSearch"
 import { useState, useEffect, useRef } from "react";
 
 interface IGameBox {
   game: VersusGame;
-  user: User;
-  goLink: (gameId: string) => void;
-  memoryRawData: (_game: VersusGame) => void;
+  storeListState?: (_game: VersusGame) => void;
 }
-export default function VersusGameBox({ game, user, goLink, memoryRawData }: IGameBox) {
+export default function VersusGameBox({ game, storeListState }: IGameBox) {
+  const user = useUser();
   const isMaster = game.userId === user.id;
   const hasImage = false;
 
   const handleGame = () => {
-    StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, game.nanoId);
-
-    if (!CommonUtils.isNullOrUndefined(memoryRawData)) {
-      memoryRawData(game);
+    if (storeListState) {
+      storeListState(game);
     }
-    goLink(`/game/${game.nanoId}`);
-  };
-
-  const handleUpdate = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-    goLink(`/game/update/${game.nanoId}`);
   };
 
   return (
-    <VS.ListGameBox
-      onClick={() => {
-        handleGame();
-      }}
-    >
-      <VS.ListGameContentBox>
-        {/* title */}
-        <h3 className={`title ${game.isView ? "viewed" : ""}`}>
-          {/* 선택했었는지 여부 */}
-          {game.isChoice && (
-            <i title={"이미 선택한 게임입니다."} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
-          )}
-          {/* 제목 */}
-          {game.title}
-          {/* 상태 */}
-          {game.state === GameState.BLOCK && (
-            <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>
-          )}
-        </h3>
-        {/* content */}
-        <pre className="content">{game.content}</pre>
-      </VS.ListGameContentBox>
-      <Choices choices={game.choices} />
+    <VS.ListGameBox>
+      <Link href={`/game/${game.nanoId}`} onClick={handleGame}>
+        <VS.ListGameContentBox>
+          {/* title */}
+          <h3 className={`title ${game.isView ? "viewed" : ""}`}>
+            {/* 선택했었는지 여부 */}
+            {game.isChoice && (
+              <i title={"이미 선택한 게임입니다."} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
+            )}
+            {/* 제목 */}
+            {game.title}
+            {/* 상태 */}
+            {game.state === GameState.BLOCK && (
+              <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>
+            )}
+          </h3>
+          {/* content */}
+          <pre className="content">{game.content}</pre>
+        </VS.ListGameContentBox>
+        <Choices choices={game.choices} />
+      </Link>
       {(user.userRole === UserRole.STAFF || isMaster) && (
         <VS.ListGameControlBox>
           {/* 게임 정보 */}
@@ -74,9 +65,9 @@ export default function VersusGameBox({ game, user, goLink, memoryRawData }: IGa
           </div>
           {/* 게임 정보 (글쓴이) */}
           {isMaster && (
-            <div className="box">
-              <VS.ListGameControlButton onClick={handleUpdate}>수정</VS.ListGameControlButton>
-            </div>
+            <Link href={`/game/update/${game.nanoId}`} className="box">
+              <VS.ListGameControlButton>수정</VS.ListGameControlButton>
+            </Link>
           )}
         </VS.ListGameControlBox>
       )}
