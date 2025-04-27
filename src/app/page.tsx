@@ -31,7 +31,7 @@ const getGameList = async (search: string | undefined, myGames: boolean, choiced
 export default async function Home(props) {
   const searchParams = await props.searchParams;
   const session = await auth();
-  const userId: string = AuthUtils.getUserOrGuestIdBySSR(session);
+  const userId: string = await AuthUtils.getUserOrGuestIdBySSR(session);
 
   const search: string = searchParams.search ? searchParams.search : "";
   const myGames: boolean = searchParams.myGames ? true : false;

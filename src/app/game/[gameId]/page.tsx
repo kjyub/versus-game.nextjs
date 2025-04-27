@@ -94,7 +94,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 export default async function GamePage(props: { gameId: string }) {
   const params = await props.params;
   const session = await auth();
-  const userId: string = AuthUtils.getUserOrGuestIdBySSR(session);
+  const userId: string = await AuthUtils.getUserOrGuestIdBySSR(session);
 
   const { gameId } = params;
 
