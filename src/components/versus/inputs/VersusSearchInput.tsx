@@ -1,55 +1,57 @@
-'use client'
+"use client";
 
-import * as VersusStyles from '@/styles/VersusStyles'
-import CommonUtils from '@/utils/CommonUtils'
-import StyleUtils from '@/utils/StyleUtils'
-import { Dispatch, SetStateAction } from 'react'
+import * as VersusStyles from "@/styles/VersusStyles";
+import CommonUtils from "@/utils/CommonUtils";
+import StyleUtils from "@/utils/StyleUtils";
+import { Dispatch, SetStateAction } from "react";
 
 export interface IVersusSearchInput {
-  value: string
-  setValue: Dispatch<SetStateAction<string>>
-  onEnter: () => void
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>;
+  onEnter: () => void;
 }
 const VersusSearchInput = ({ value, setValue, onEnter }: IVersusSearchInput) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (onEnter && e.key === 'Enter') {
-      e.preventDefault()
-      onEnter()
+    if (onEnter && e.key === "Enter") {
+      e.preventDefault();
+      onEnter();
     }
-  }
+  };
 
   const handleClear = () => {
-    setValue('')
-  }
+    setValue("");
+  };
 
   return (
-    // <></>
     <VersusStyles.SearchInputBox>
       <input
         type="text"
         value={value}
         onChange={(e) => {
-          setValue(e.target.value)
+          setValue(e.target.value);
         }}
         onBlur={() => {
-          StyleUtils.rollbackScreen()
+          StyleUtils.rollbackScreen();
         }}
         onKeyDown={handleKeyDown}
+        placeholder="주제를 찾거나 추가해보세요"
       />
       <i
-        className={`clear fa-solid fa-circle-xmark ${!CommonUtils.isStringNullOrEmpty(value) ? 'opacity-100' : 'opacity-0'}`}
+        className={`clear fa-solid fa-circle-xmark ${
+          !CommonUtils.isStringNullOrEmpty(value) ? "opacity-100" : "opacity-0"
+        }`}
         onClick={() => {
-          handleClear()
+          handleClear();
         }}
       />
       <i
         className="search fa-solid fa-magnifying-glass"
         onClick={() => {
-          onEnter()
+          onEnter();
         }}
       ></i>
     </VersusStyles.SearchInputBox>
-  )
-}
+  );
+};
 
-export default VersusSearchInput
+export default VersusSearchInput;

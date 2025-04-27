@@ -12,7 +12,7 @@ export const ModalLayout = tw.div`
 
 export const MainTitleLayout = tw.div`
     flex flex-col flex-center w-full
-    ${({ $is_active }: StyleProps) => ($is_active ? "h-128" : "h-64")}
+    ${({ $is_active }: StyleProps) => ($is_active ? "h-96" : "h-64")}
     duration-500
 `;
 export const MainSearchLayout = tw.div`
@@ -33,7 +33,7 @@ export const MainSearchFilterMenuButton = tw.button`
 `;
 
 export const SearchInputBox = tw.div`
-    flex items-center px-5 py-2
+    flex items-center px-6 py-4
     rounded-full bg-black/50 backdrop-blur-sm
     text-white/90
 
