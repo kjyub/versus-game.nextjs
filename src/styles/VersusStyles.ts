@@ -11,8 +11,7 @@ export const ModalLayout = tw.div`
 `;
 
 export const MainTitleLayout = tw.div`
-    flex flex-col flex-center w-full
-    ${({ $is_active }: StyleProps) => ($is_active ? "h-96" : "h-64")}
+    flex flex-col flex-center w-full max-md:h-48 md:h-84
     duration-500
 `;
 export const MainSearchLayout = tw.div`

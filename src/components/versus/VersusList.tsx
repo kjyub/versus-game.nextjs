@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import VersusGameBox from "./VersusGameBox";
 import Pagination from "@/types/apis/pagination";
+import VersusGameBoxCloud from "./VersusGameBoxCloud";
 
 const PAGE_SIZE = 50;
 
@@ -238,7 +239,9 @@ export default function VersusList({ versusGameData }: IVersusList) {
     <VS.ListLayout>
       <VS.ListGrid>
         {games.map((game: VersusGame, index: number) => (
-          <VersusGameBox key={index} game={game} user={user} storeListState={storeListState} />
+          <VersusGameBoxCloud key={index} index={index}>
+            <VersusGameBox game={game} user={user} storeListState={storeListState} />
+          </VersusGameBoxCloud>
         ))}
       </VS.ListGrid>
       <VS.ListGameLoadingBox $is_active={isScrollLoading} ref={scrollRef}></VS.ListGameLoadingBox>

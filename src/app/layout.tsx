@@ -40,7 +40,8 @@ export default async function RootLayout({
           backgroundColor: "repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)",
         }}
       >
-        <BgBubbleBox />
+        {/* <BgBubbleBox /> */}
+        <div className="fixed w-full h-full background-color"></div>
         <Providers>
           <Navigation />
           {children}

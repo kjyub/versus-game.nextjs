@@ -127,60 +127,34 @@
 } */
 }
 
-.striped-background {
-  background: radial-gradient(circle, transparent 20%, #a43f3f 20%, #a43f3f 80%, transparent 80%, transparent),
-    radial-gradient(circle, transparent 20%, #a43f3f 20%, #a43f3f 80%, transparent 80%, transparent) 50px 50px,
-    linear-gradient(#d57f7f 1px, transparent 1px) 0 -1px, linear-gradient(90deg, #d57f7f 1px, transparent 1px) -1px 0;
-  background-color: #a43f3f;
-  background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
-  animation: animateStripes 10s linear infinite; /* 애니메이션 */
-}
+@layer components {
+  .background-color {
+    background: #f92392;
+    background: -webkit-linear-gradient(135deg, #ff4e50, #f92392);
+  }
 
-@keyframes animateStripes {
-  0% {
-    background-position: 0 0;
+  .login-page-transition {
+    transition: top 0.75s cubic-bezier(0.25, 1, 0.4, 1);
   }
-  100% {
-    background-position: 100px 100px; /* 줄무늬가 100px씩 움직임 */
-  }
-}
 
-.background {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #ff4e50, #f92392);
-  animation: gradientShift 5s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
+  .list-game-card-cloud.active {
+    animation: floatAround 15s ease-in-out infinite;
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-.background:before {
-  content: "";
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(#ff6b6b 1px, transparent 1px);
-  background-size: 20px 20px;
-  animation: moveDots 10s linear infinite;
-}
-
-.login-page-transition {
-  transition: top 0.75s cubic-bezier(0.25, 1, 0.4, 1);
-}
-
-@keyframes moveDots {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100px 100px;
+  @keyframes floatAround {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(5px, -10px);
+    }
+    50% {
+      transform: translate(0px, -20px);
+    }
+    75% {
+      transform: translate(-5px, -10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
   }
 }

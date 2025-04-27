@@ -6,12 +6,6 @@ import { IPaginationResponse } from "@/types/common/Responses";
 import ApiUtils from "@/utils/ApiUtils";
 import AuthUtils from "@/utils/AuthUtils";
 import CommonUtils from "@/utils/CommonUtils";
-import dynamic from "next/dynamic";
-
-// const VersusMainTitle = dynamic(() => import('@/components/versus/VersusMainTitle'), { ssr: false })
-// const VersusList = dynamic(() => import('@/components/versus/VersusList'), {
-//   ssr: false,
-// })
 
 const getGameList = async (search: string | undefined, myGames: boolean, choiced: boolean, userId: string) => {
   let params = {};
@@ -30,10 +24,6 @@ const getGameList = async (search: string | undefined, myGames: boolean, choiced
   }
 
   const { data } = await ApiUtils.request("/api/versus/game", "GET", { params });
-
-  // if (!Array.isArray(response)) {
-  //     return []
-  // }
 
   return data;
 };

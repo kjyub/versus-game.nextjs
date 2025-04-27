@@ -20,7 +20,7 @@ export const UiProvider = ({ children }: { children: React.ReactNode }) => {
     if (!isBrowser) return;
 
     const handleScroll = () => {
-      setIsScrollTop(window.scrollY === 0);
+      setIsScrollTop(window.scrollY <= 0);
     };
 
     window.addEventListener("scroll", handleScroll);

@@ -1,19 +1,18 @@
 export default class StyleUtils {
   static rollbackScreen() {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-    });
-    document.body.style.transform = "";
-    document.body.style.transformOrigin = "";
-
-    const layout = document.getElementById("layout");
-    if (layout) {
-      layout.scrollTo({
-        top: 0,
-        left: 0,
-      });
-    }
+    // window.scrollTo({
+    //   top: 0,
+    //   left: 0,
+    // });
+    // document.body.style.transform = "";
+    // document.body.style.transformOrigin = "";
+    // const layout = document.getElementById("layout");
+    // if (layout) {
+    //   layout.scrollTo({
+    //     top: 0,
+    //     left: 0,
+    //   });
+    // }
   }
 
   static isVisibleVirtualKeyboard() {
@@ -28,21 +27,18 @@ export default class StyleUtils {
   }
 
   static initScrollEvent() {
-    const initScroll = () => {
-      if (!this.isVisibleVirtualKeyboard()) {
-        this.rollbackScreen();
-      }
-    };
-
-    const event = (e) => {
-      initScroll();
-    };
-
-    window.addEventListener("scroll", event);
-
-    const layout = document.getElementById("layout");
-    if (layout) {
-      layout.addEventListener("scroll", event);
-    }
+    // const initScroll = () => {
+    //   if (!this.isVisibleVirtualKeyboard()) {
+    //     this.rollbackScreen();
+    //   }
+    // };
+    // const event = (e) => {
+    //   initScroll();
+    // };
+    // window.addEventListener("scroll", event);
+    // const layout = document.getElementById("layout");
+    // if (layout) {
+    //   layout.addEventListener("scroll", event);
+    // }
   }
 }
