@@ -3,7 +3,6 @@ import tw from "tailwind-styled-components";
 
 export const Body = tw.body`
     flex flex-col w-screen min-h-screen max-h-screen
-    overflow-x-hidden overflow-y-auto
 `;
 
 export const NavBox = tw.div`

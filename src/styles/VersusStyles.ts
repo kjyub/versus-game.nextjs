@@ -11,11 +11,12 @@ export const ModalLayout = tw.div`
 `;
 
 export const MainTitleLayout = tw.div`
-    flex flex-col flex-center w-full max-md:h-48 md:h-84
+    sticky webkit-sticky max-md:top-14 md:top-16 z-10
+    flex flex-col flex-center w-full max-md:my-20 md:my-64
     duration-500
 `;
 export const MainSearchLayout = tw.div`
-    flex flex-col max-sm:w-screen sm:w-128 max-md:px-2 md:px-4 space-y-2
+    flex flex-col max-sm:w-[80vw] sm:w-128 max-md:px-2 md:px-4 space-y-2
 `;
 export const MainSearchFilterMenuBox = tw.div`
     flex justify-between items-center w-full

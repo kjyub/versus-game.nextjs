@@ -57,10 +57,11 @@
 
     font-family: "Pretendard", sans-serif !important;
     line-height: normal;
+    background: #f92392;
+    background: -webkit-linear-gradient(135deg, #ff4e50, #f92392);
+    background-attachment: fixed !important;
   }
 
-  .scroll-transparent {
-  }
   .scroll-transparent::-webkit-scrollbar {
     width: 5px;
     height: 5px;
@@ -122,17 +123,12 @@
     -ms-user-select: none;
     user-select: none;
   }
-  /* @supports (-webkit-touch-callout: none) {
-    height: -webkit-fill-available;
-} */
+  .webkit-sticky {
+    position: -webkit-sticky;
+  }
 }
 
 @layer components {
-  .background-color {
-    background: #f92392;
-    background: -webkit-linear-gradient(135deg, #ff4e50, #f92392);
-  }
-
   .login-page-transition {
     transition: top 0.75s cubic-bezier(0.25, 1, 0.4, 1);
   }

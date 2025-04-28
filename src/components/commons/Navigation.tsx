@@ -81,7 +81,7 @@ const Navigation = ({}: INavigation) => {
   return (
     <>
       {/* 마진용 */}
-      <div className="w-full h-16"></div>
+      <div className="shrink-0 w-full max-md:h-12 md:h-14"></div>
       <MS.NavBox>
         {/* 내비게이션 메뉴 (PC) */}
         <MS.NavButtonList className="max-md:hidden md:flex">
