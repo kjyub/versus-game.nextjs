@@ -6,7 +6,7 @@ export const Body = tw.body`
 `;
 
 export const NavBox = tw.div`
-    fixed top-0 left-0 right-0 z-10
+    fixed top-0 left-0 right-0 z-50
     flex items-center w-full max-md:h-12 md:h-14 max-md:px-2 md:px-4
     backdrop-blur-3xl
     [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-900

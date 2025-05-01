@@ -153,4 +153,12 @@
       transform: translate(0, 0);
     }
   }
+
+  .title-search-menu {
+    opacity: 0;
+    @apply absolute top-0 max-sm:w-[80vw] sm:w-128 h-29 rounded-2xl bg-black/30 backdrop-blur-lg duration-300;
+  }
+  .title-search-menu.show {
+    opacity: 1;
+  }
 }

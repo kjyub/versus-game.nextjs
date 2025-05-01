@@ -11,16 +11,19 @@ export const ModalLayout = tw.div`
 `;
 
 export const MainTitleLayout = tw.div`
-    sticky webkit-sticky max-md:top-14 md:top-16 z-10
+    sticky max-md:top-14 md:top-16 z-10
     flex flex-col flex-center w-full max-md:my-20 md:my-64
     duration-500
 `;
 export const MainSearchLayout = tw.div`
-    flex flex-col max-sm:w-[80vw] sm:w-128 max-md:px-2 md:px-4 space-y-2
+    relative z-10
+    flex flex-col max-sm:w-[80vw] sm:w-128 max-md:p-2 md:p-4 space-y-2
 `;
 export const MainSearchFilterMenuBox = tw.div`
     flex justify-between items-center w-full
     [&>div.section]:flex [&>div.section]:items-center [&>div.section]:space-x-1
+    ${({ $is_show }: StyleProps) => ($is_show ? "opacity-100" : "opacity-0")}
+    duration-200
 `;
 export const MainSearchFilterMenuButton = tw.button`
     flex flex-center px-2 py-0.5

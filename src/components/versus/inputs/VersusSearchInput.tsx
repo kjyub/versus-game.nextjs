@@ -9,8 +9,9 @@ export interface IVersusSearchInput {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
   onEnter: () => void;
+  onClick: () => void;
 }
-const VersusSearchInput = ({ value, setValue, onEnter }: IVersusSearchInput) => {
+const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchInput) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
     if (onEnter && e.key === "Enter") {
       e.preventDefault();
@@ -33,6 +34,7 @@ const VersusSearchInput = ({ value, setValue, onEnter }: IVersusSearchInput) => 
         onBlur={() => {
           StyleUtils.rollbackScreen();
         }}
+        onClick={onClick}
         onKeyDown={handleKeyDown}
         placeholder="주제를 찾거나 추가해보세요"
       />

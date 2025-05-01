@@ -7,15 +7,22 @@ import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import VersusSearchInput from "./inputs/VersusSearchInput";
+import { useUi } from "@/hooks/useUi";
 
-interface IVersusMainSearch {}
-const VersusMainSearch = ({}: IVersusMainSearch) => {
+interface IVersusMainSearch {
+  searchValue: string;
+  setSearchValue: Dispatch<SetStateAction<string>>;
+  openMenu: () => void;
+  isMenuShow: boolean;
+}
+const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }: IVersusMainSearch) => {
   const session = useSession();
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [searchValue, setSearchValue] = useState<string>("");
+  const { isScrollTop } = useUi();
+
   const [isMyGame, setMyGame] = useState<boolean>(false);
   const [isChoiceGame, setChoiceGame] = useState<boolean>(false);
 
@@ -106,10 +113,19 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
 
     router.push(`/${queryUrl}`);
   };
+  console.log(isScrollTop, isMenuShow);
 
   return (
     <VS.MainSearchLayout>
-      <VS.MainSearchFilterMenuBox className="!hidden">
+      <VersusSearchInput
+        value={searchValue}
+        setValue={setSearchValue}
+        onClick={openMenu}
+        onEnter={() => {
+          handleSearch();
+        }}
+      />
+      <VS.MainSearchFilterMenuBox $is_show={isScrollTop || isMenuShow}>
         {/* 정렬 (사용 안할 수도 있음) */}
         <div className="section"></div>
         <div className="section">
@@ -135,13 +151,6 @@ const VersusMainSearch = ({}: IVersusMainSearch) => {
           )}
         </div>
       </VS.MainSearchFilterMenuBox>
-      <VersusSearchInput
-        value={searchValue}
-        setValue={setSearchValue}
-        onEnter={() => {
-          handleSearch();
-        }}
-      />
     </VS.MainSearchLayout>
   );
 };
