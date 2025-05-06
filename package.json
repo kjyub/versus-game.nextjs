@@ -38,7 +38,6 @@
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "@types/react-modal": "3.16.3",
-    "next-sitemap": "4.2.3",
     "postcss": "^8",
     "react-modal": "3.16.1",
     "tailwind-styled-components": "2.2.0",
