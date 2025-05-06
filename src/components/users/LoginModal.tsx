@@ -64,12 +64,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
       });
 
       const errorMessage = response?.error;
-
-      // if (response?.status === "200") {
-      //     alert("로그인 성공")
-      //     return
-      // }
-      if (errorMessage === null) {
+      if (!errorMessage) {
         return;
       } else if (errorMessage === "CredentialsSignin") {
         alert("로그인 성공");
@@ -89,9 +84,9 @@ const LoginPage = ({ page, setPage }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-                ${page === LoginModalPage.LOGIN ? "top-0" : "-top-full"}
-                bg-linear-to-t from-transparent to-stone-300/70 from-10%
-            `}
+        ${page === LoginModalPage.LOGIN ? "top-0" : "-top-full"}
+        bg-linear-to-t from-transparent to-stone-300/70 from-10%
+      `}
     >
       <UserStyles.LoginTitleBox>
         <div className="aspect-square h-28 mb-4 rounded-xl bg-linear-to-tr from-indigo-600 to-sky-300"></div>

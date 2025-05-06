@@ -1,20 +1,24 @@
-import { auth } from '@/auth'
-import MUser from '@/models/user/MUser'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import DBUtils from '@/utils/DBUtils'
-import bcryptjs from 'bcryptjs'
-import { nanoid } from 'nanoid'
-import { NextApiRequest } from 'next'
+import { auth } from "@/auth";
+import MUser from "@/models/user/MUser";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import DBUtils from "@/utils/DBUtils";
+import bcryptjs from "bcryptjs";
+import { nanoid } from "nanoid";
+import { NextApiRequest } from "next";
 
 export async function GET(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params
-  const { id } = params
+  const params = await props.params;
+  const { id } = params;
 
-  await DBUtils.connect()
-  const user = await MUser.findOne({ _id: id })
+  if (!id) {
+    return ApiUtils.badRequest("회원을 찾을 수 없습니다.");
+  }
+
+  await DBUtils.connect();
+  const user = await MUser.findOne({ _id: id });
   if (!user) {
-    return ApiUtils.badRequest('회원을 찾을 수 없습니다.')
+    return ApiUtils.badRequest("회원을 찾을 수 없습니다.");
   }
 
   // await Promise.all((await MUser.find()).map(async(mUser) => {
@@ -22,106 +26,106 @@ export async function GET(req: NextApiRequest, props: { id: string }) {
   //     await mUser.save()
   // }))
 
-  return ApiUtils.response(user)
+  return ApiUtils.response(user);
 }
 
 export async function PUT(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params
-  const { id } = params
-  let data = await req.json()
+  const params = await props.params;
+  const { id } = params;
+  let data = await req.json();
 
-  await DBUtils.connect()
+  await DBUtils.connect();
 
-  const session = await auth()
+  const session = await auth();
   // 유저 확인
   if (!session.user) {
-    return ApiUtils.notAuth()
+    return ApiUtils.notAuth();
   }
 
-  const user = await MUser.findOne({ _id: id })
+  const user = await MUser.findOne({ _id: id });
   if (CommonUtils.isNullOrUndefined(user)) {
-    return ApiUtils.notFound('회원을 찾을 수 없습니다.')
+    return ApiUtils.notFound("회원을 찾을 수 없습니다.");
   }
 
   // 본인 데이터인지 확인
   if (session.user._id !== String(user._id)) {
-    return ApiUtils.notAuth('권한이 없습니다.')
+    return ApiUtils.notAuth("권한이 없습니다.");
   }
 
-  const passwordCurrent = data['passwordCurrent'] ?? ''
-  const passwordNew = data['passwordNew'] ?? ''
-  const passwordNewHashed = await bcryptjs.hash(passwordNew, 5)
+  const passwordCurrent = data["passwordCurrent"] ?? "";
+  const passwordNew = data["passwordNew"] ?? "";
+  const passwordNewHashed = await bcryptjs.hash(passwordNew, 5);
 
   // 비밀번호 변경 요청이 있는 경우
   if (!CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
-    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, user.password)
+    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, user.password);
 
     // 현재 비밀번호가 다른 경우
     if (!isPasswordCorrect) {
-      return ApiUtils.badRequest('현재 비밀번호가 틀립니다.')
+      return ApiUtils.badRequest("현재 비밀번호가 틀립니다.");
     }
     if (CommonUtils.isStringNullOrEmpty(passwordNew)) {
-      return ApiUtils.badRequest('새 비밀번호를 찾을 수 없습니다.')
+      return ApiUtils.badRequest("새 비밀번호를 찾을 수 없습니다.");
     }
 
-    data['password'] = passwordNewHashed
+    data["password"] = passwordNewHashed;
   }
 
-  await MUser.findByIdAndUpdate(id, data).exec()
+  await MUser.findByIdAndUpdate(id, data).exec();
 
-  const updatedUser = await MUser.findOne({ _id: id })
+  const updatedUser = await MUser.findOne({ _id: id });
 
   if (!updatedUser) {
-    return ApiUtils.badRequest('회원을 찾을 수 없습니다.')
+    return ApiUtils.badRequest("회원을 찾을 수 없습니다.");
   }
 
-  return ApiUtils.response(updatedUser)
+  return ApiUtils.response(updatedUser);
 }
 
 export async function DELETE(req: NextApiRequest, props: { id: string }) {
-  const params = await props.params
-  const { id } = params
-  let data = await req.json()
+  const params = await props.params;
+  const { id } = params;
+  let data = await req.json();
 
-  await DBUtils.connect()
+  await DBUtils.connect();
 
-  const session = await auth()
+  const session = await auth();
   // 유저 확인
   if (!session.user) {
-    return ApiUtils.notAuth()
+    return ApiUtils.notAuth();
   }
 
-  const mUser = await MUser.findOne({ _id: id })
+  const mUser = await MUser.findOne({ _id: id });
   if (CommonUtils.isNullOrUndefined(mUser)) {
-    return ApiUtils.notFound('회원을 찾을 수 없습니다.')
+    return ApiUtils.notFound("회원을 찾을 수 없습니다.");
   }
 
   // 본인 데이터인지 확인
   if (session.user._id !== String(mUser._id)) {
-    return ApiUtils.notAuth('권한이 없습니다.')
+    return ApiUtils.notAuth("권한이 없습니다.");
   }
 
-  const passwordCurrent = data['passwordCurrent'] ?? ''
+  const passwordCurrent = data["passwordCurrent"] ?? "";
 
   // 비밀번호 변경 요청이 있는 경우
   if (!CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
-    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, mUser.password)
+    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, mUser.password);
 
     // 현재 비밀번호가 다른 경우
     if (!isPasswordCorrect) {
-      return ApiUtils.badRequest('현재 비밀번호가 틀립니다.')
+      return ApiUtils.badRequest("현재 비밀번호가 틀립니다.");
     }
   }
 
-  mUser.email = mUser.email + `$${nanoid(6)}`
-  mUser.isDeleted = true
+  mUser.email = mUser.email + `$${nanoid(6)}`;
+  mUser.isDeleted = true;
 
   try {
-    const resultUser = await mUser.save()
+    const resultUser = await mUser.save();
 
-    return ApiUtils.response(resultUser)
+    return ApiUtils.response(resultUser);
   } catch (err: any) {
-    console.log('에러', err)
-    return ApiUtils.serverError(err)
+    console.log("에러", err);
+    return ApiUtils.serverError(err);
   }
 }

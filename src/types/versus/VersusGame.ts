@@ -80,11 +80,13 @@ export default class VersusGame extends AbsApiObject {
     if (json.choiceCountType) this._choiceCountType = json.choiceCountType;
     if (json.choices && Array.isArray(json.choices)) {
       let newChoices: Array<VersusGameChoice> = [];
-      json.choices.map((choiceData: any) => {
-        const _choice = new VersusGameChoice();
-        _choice.parseResponse(choiceData);
-        newChoices.push(_choice);
-      });
+      json.choices
+        .filter((choiceData: any) => choiceData.title)
+        .map((choiceData: any) => {
+          const _choice = new VersusGameChoice();
+          _choice.parseResponse(choiceData);
+          newChoices.push(_choice);
+        });
       this._choices = newChoices;
     }
 

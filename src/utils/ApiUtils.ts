@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import CommonUtils from "./CommonUtils";
 import { ReadonlyURLSearchParams } from "next/navigation";
 import { pipe, map, fromEntries, when, filter } from "@fxts/core";
+import path from "path";
 
 type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {});
 
@@ -27,17 +28,12 @@ export default class ApiUtils {
     let statusCode: number = 200;
     let resultData: object = {};
 
-    let requestUrl = url;
+    let requestUrl = new URL(url, process.env.NEXT_PUBLIC_API_URL);
     let requestData = null;
-
-    let apiUrl: string = process.env.NEXT_PUBLIC_API_URL;
-    if (CommonUtils.isStringNullOrEmpty(apiUrl)) {
-      apiUrl = "";
-    }
 
     if (params) {
       const queryString = new URLSearchParams(params).toString();
-      requestUrl = `${url}?${queryString}`;
+      requestUrl = `${requestUrl}?${queryString}`;
     }
     if (data) {
       requestData = JSON.stringify(data);
@@ -56,31 +52,12 @@ export default class ApiUtils {
       requestInit["cache"] = "no-store";
     }
 
-    await fetch(apiUrl + requestUrl, requestInit)
-      .then(async (response) => {
-        // 결과
-        statusCode = response.status;
-        if (statusCode >= 200 && statusCode < 300) {
-          bResult = true;
-        }
-        resultData = await response.json();
-      })
-      .catch((error) => {
-        console.log(error, apiUrl + requestUrl);
-
-        resultData = "Api Error";
-      });
-
-    if (process.env.NEXT_PUBLIC_IS_DEBUG == "1" && resultData === "Api Error") {
-      await fetch("http://192.168.0.69:3000" + requestUrl, requestInit).then(async (response) => {
-        // 결과
-        statusCode = response.status;
-        if (statusCode >= 200 && statusCode < 300) {
-          bResult = true;
-        }
-        resultData = await response.json();
-      });
+    const response = await fetch(requestUrl, requestInit);
+    if (response.status >= 200 && response.status < 300) {
+      bResult = true;
     }
+
+    resultData = await response.json();
 
     return { result: bResult, statusCode: statusCode, data: resultData };
   }

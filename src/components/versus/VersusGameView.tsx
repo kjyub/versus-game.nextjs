@@ -1,5 +1,5 @@
 "use client";
-import * as VersusStyles from "@/styles/VersusStyles";
+import * as S from "@/styles/VersusStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { TextFormats } from "@/types/CommonTypes";
 import { Dictionary } from "@/types/common/Dictionary";
@@ -16,19 +16,6 @@ import VersusGameViewComment from "./VersusGameViewComment";
 import VersusGameViewRelated from "./VersusGameViewRelated";
 import VersusChoiceView from "./inputs/VersusChoiceView";
 
-const INIT_CHOICES = [
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-  new VersusGameChoice(),
-];
-
 interface IVersusGameView {
   gameData: object | null;
   userChoiceData: object | null;
@@ -37,8 +24,9 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   const router = useRouter();
   const session = useSession();
 
-  const [game, setGame] = useState<VersusGame>(new VersusGame());
-  const [choices, setChoices] = useState<Array<VersusGameChoice>>(INIT_CHOICES);
+  const game = new VersusGame();
+  game.parseResponse(gameData);
+  const [choices, setChoices] = useState<Array<VersusGameChoice>>(game.choices);
   const [totalVotes, setTotalVotes] = useState<number>(0);
 
   // 선택할 예정인 선택지
@@ -67,8 +55,8 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   }, []);
 
   useEffect(() => {
-    loadGameData(gameData);
-  }, [gameData, session.status, session]);
+    updateUserChoice();
+  }, [userChoiceData, session.status, session]);
 
   useEffect(() => {
     if (isShowResult) {
@@ -76,31 +64,14 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     }
   }, [isShowResult]);
 
-  // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
-  const loadGameData = async (data: object) => {
+  // 유저가 선택한 데이터 세팅
+  const updateUserChoice = async () => {
     // 세션 불러오는 중에는 넘어가기
     if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
       return;
     }
 
-    if (CommonUtils.isNullOrUndefined(data) || data === {}) {
-      alert("게임을 찾을 수 없습니다");
-      return;
-    }
-
     setMyAnswerLoading(true);
-
-    const _game = new VersusGame();
-    _game.parseResponse(data);
-    console.log("game", _game);
-
-    if (CommonUtils.isStringNullOrEmpty(_game.id)) {
-      alert("데이터가 잘못되었습니다");
-      return;
-    }
-
-    setGame(_game);
-    setChoices(_game.choices);
 
     // 유저가 선택한 선택지가 있는지 불러온다.
     let isChoice: boolean = false;
@@ -108,23 +79,22 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       const answerId = userChoiceData.gameChoiceId;
       let answer = new VersusGameChoice();
 
-      for (let i = 0; i < _game.choices.length; i++) {
-        const _choice: VersusGameChoice = _game.choices[i];
+      for (let i = 0; i < game.choices.length; i++) {
+        const _choice: VersusGameChoice = game.choices[i];
 
         // 선택한 선택지가 있으면 게임 결과 표시
         if (_choice.id === answerId) {
-          answer = _choice;
           isChoice = true;
-          setShowResult(true);
+          setSelectedChoice(_choice);
+          setAnswerChoice(_choice);
           break;
         }
       }
-
-      setSelectedChoice(answer);
-      setAnswerChoice(answer);
     }
 
-    if (!isChoice) {
+    if (isChoice) {
+      setShowResult(true);
+    } else {
       setShowResult(false);
       setSelectedChoice(new VersusGameChoice());
       setAnswerChoice(new VersusGameChoice());
@@ -233,10 +203,10 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   };
 
   return (
-    <VersusStyles.GameViewLayout>
+    <S.GameViewLayout>
       <VersusGameHead game={game} />
 
-      <VersusStyles.GameViewChoiceLayout>
+      <S.GameViewChoiceLayout>
         <VersusChoiceView
           game={game}
           choices={choices}
@@ -244,9 +214,9 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
           selectedChoice={selectedChoice}
           isShowResult={isShowResult}
         />
-      </VersusStyles.GameViewChoiceLayout>
+      </S.GameViewChoiceLayout>
 
-      <VersusStyles.GameViewSelectLayout>
+      <S.GameViewSelectLayout>
         <button
           className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
           onClick={() => {
@@ -265,7 +235,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
         >
           선택하고 결과 보기
         </button>
-      </VersusStyles.GameViewSelectLayout>
+      </S.GameViewSelectLayout>
 
       <VersusGameViewRelated
         game={game}
@@ -292,6 +262,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
           setCommentCount={setCommentCount}
         />
       </div>
-    </VersusStyles.GameViewLayout>
+    </S.GameViewLayout>
   );
 }

@@ -102,9 +102,5 @@ export default async function GamePage(props: { gameId: string }) {
   const userChoiceData = await getUserChoice(gameId, userId);
   await countGameView(gameId, userId);
 
-  return (
-    <>
-      <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />
-    </>
-  );
+  return <VersusGameView gameData={gameData} userChoiceData={userChoiceData} />;
 }

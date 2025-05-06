@@ -277,14 +277,14 @@ export const ListGamePrivacy = tw.div`
 `;
 
 export const GameViewLayout = tw.div`
-    flex flex-col items-center w-full max-w-[60rem] p-2 pb-16 mx-auto space-y-4
+    flex flex-col items-center w-full max-w-[800px] p-2 pb-16 mx-auto space-y-4
 `;
 export const GameViewSectionLayoutSize = tw.div`
-    w-full p-4
+    w-full max-md:p-4 md:p-6
 `;
 export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     flex flex-col space-y-2
-    rounded-md bg-black/30 backdrop-blur-sm
+    rounded-xl bg-black/30 backdrop-blur-sm
     duration-300
 
     [&>.title]:text-center [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-100
@@ -327,8 +327,8 @@ export const GameViewChoiceResultBox = tw.div`
 `;
 
 export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
-    flex flex-row items-center h-12 space-x-2 py-0
-    [&>button]:h-full [&>button]:rounded-full
+    flex flex-row items-center space-x-2 py-0
+    [&>button]:h-12 [&>button]:rounded-full
     [&>button]:font-medium [&>button]:text-white
     [&>button]:backdrop-blur-sm [&>button]:duration-300
     [&>button]:disabled:grayscale [&>button]:disabled:text-stone-300
@@ -337,20 +337,20 @@ export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
 export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
     ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
     flex-col space-y-4
-    rounded-md bg-black/40 backdrop-blur-sm
+    rounded-xl bg-black/30 backdrop-blur-sm
     duration-500
-    [&>.title]:font-semibold [&>.title]:text-stone-100
+    [&>.title]:text-lg [&>.title]:font-semibold [&>.title]:text-stone-100 [&>.title]:leading-[100%]
 `;
 export const GameViewCommentList = tw.div`
     flex flex-col w-full space-y-2
 `;
 export const GameViewCommentBox = tw.div`
     flex flex-col w-full p-3
-    rounded-md bg-black/20
+    rounded-lg bg-black/20
 `;
 export const GameViewCommentInputBox = tw.div`
     flex items-start w-full px-2 py-2 space-x-1
-    rounded-md bg-black/40
+    rounded-lg bg-black/40
     border border-stone-500
     ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}
     duration-200
