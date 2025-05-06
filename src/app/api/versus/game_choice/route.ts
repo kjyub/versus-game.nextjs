@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   await DBUtils.connect();
   const filterGameNanoId = req.nextUrl.searchParams.get("gameNanoId");
   // 게임 확인
-  if (CommonUtils.isStringNullOrEmpty(filterGameNanoId)) {
+  if (!filterGameNanoId) {
     return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
   }
 
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     nanoId: filterGameNanoId,
     isDeleted: false,
   });
-  if (CommonUtils.isNullOrUndefined(mGame)) {
+  if (!mGame) {
     return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
   }
 
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
 
   // 게임 확인
   const mGame = await MVersusGame.findOne({ _id: gameId, isDeleted: false });
-  if (CommonUtils.isNullOrUndefined(mGame)) {
+  if (!mGame) {
     return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
   }
 
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
     userId: userId,
   });
 
-  if (CommonUtils.isNullOrUndefined(mAnswer)) {
+  if (!mAnswer) {
     // 선택한 적이 없는 경우
     mAnswer = new MVersusGameAnswer({
       gameId: gameId,

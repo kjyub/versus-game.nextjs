@@ -187,7 +187,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
       <div className="flex items-center w-full h-28 p-2 space-x-2">
         {/* 썸네일 */}
         <div className="relative flex flex-center h-full aspect-4/3 bg-stone-700">
-          {CommonUtils.isStringNullOrEmpty(versusGame.thumbnailImageUrl) ? (
+          {!versusGame.thumbnailImageUrl ? (
             <span className="text-stone-400">이미지 없음</span>
           ) : (
             <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={""} />
@@ -308,7 +308,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <div key={index} className="flex flex-col items-center w-full">
             {/* 이미지 */}
             <div className="relative flex flex-center w-full max-w-[12rem] aspect-4/3 bg-stone-800">
-              {CommonUtils.isStringNullOrEmpty(choice.imageUrl) ? (
+              {!choice.imageUrl ? (
                 <span className="text-stone-400">이미지 없음</span>
               ) : (
                 <Image src={ApiUtils.mediaUrl(choice.imageUrl)} fill alt={""} />

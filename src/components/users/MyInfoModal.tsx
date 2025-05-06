@@ -17,6 +17,7 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
   const [passwordCurrent, setPasswordCurrent] = useState<string>("");
   const [password1, setPassword1] = useState<string>("");
   const [password2, setPassword2] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isModalShow) {
@@ -25,14 +26,14 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
   }, [isModalShow, user]);
 
   useEffect(() => {
-    if (CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
+    if (!passwordCurrent) {
       setPassword1("");
       setPassword2("");
     }
   }, [passwordCurrent]);
 
   const getUserInfo = () => {
-    if (CommonUtils.isStringNullOrEmpty(user.id)) {
+    if (!user.id) {
       return;
     }
 
@@ -41,17 +42,22 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
   };
 
   const handleUserUpdate = async () => {
-    if (CommonUtils.isStringNullOrEmpty(user.id)) {
+    if (!user.id) {
       return;
     }
 
-    if (CommonUtils.isStringNullOrEmpty(name)) {
+    if (!name) {
       alert("이름은 빈값을 넣을 수 없습니다.");
       return;
     }
 
-    if (!CommonUtils.isStringNullOrEmpty(passwordCurrent) && !CommonUtils.isValidPassword(password1)) {
-      alert("유효하지 않은 새 비밀번호입니다.");
+    if (!passwordCurrent) {
+      setError("현재 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    if (passwordCurrent && !CommonUtils.isValidPassword(password1)) {
+      alert("비밀번호는 6자 이상의 영문자와 숫자를 포함해야 합니다.");
       return;
     }
     if (password1 !== password2) {
@@ -88,8 +94,13 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       return;
     }
 
-    if (CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
-      alert("현재 비밀번호를 입력해주세요.");
+    if (!passwordCurrent) {
+      setError("현재 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    if (!user.id) {
+      setError("사용자 정보를 찾을 수 없습니다.");
       return;
     }
 

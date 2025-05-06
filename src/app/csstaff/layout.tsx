@@ -32,12 +32,12 @@ export default function StaffLayout({ children }) {
       setUser(newUser);
     }
 
-    if (CommonUtils.isStringNullOrEmpty(newUser.id) || newUser.userRole !== UserRole.STAFF) {
+    if (!newUser.id || newUser.userRole !== UserRole.STAFF) {
       router.push("/");
     }
   };
 
-  if (CommonUtils.isStringNullOrEmpty(user.id)) {
+  if (!user.id) {
     return;
   }
 

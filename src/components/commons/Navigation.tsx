@@ -32,7 +32,7 @@ const Navigation = ({}: INavigation) => {
 
   const getUserInfo = async () => {
     try {
-      if (CommonUtils.isStringNullOrEmpty(session.data?.user._id)) {
+      if (!session.data?.user._id) {
         return;
       }
     } catch {

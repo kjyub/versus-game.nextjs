@@ -4,12 +4,6 @@ import moment, { Moment } from "moment";
 import "moment/locale/ko";
 
 export default class CommonUtils {
-  static isNullOrUndefined(data: any): boolean {
-    return data === null || data === undefined;
-  }
-  static isStringNullOrEmpty(data: any): boolean {
-    return data === "" || this.isNullOrUndefined(data);
-  }
   static round(value: number, round: number = 0): number {
     // return Math.round(value * Math.pow(10, round)) / Math.pow(10, round)
     return Number(value.toPrecision(round));
@@ -68,7 +62,7 @@ export default class CommonUtils {
       result = number + "원";
     }
 
-    if (CommonUtils.isNullOrUndefined(result)) {
+    if (!result) {
       result = "";
     }
 

@@ -69,7 +69,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
   const loadGameData = (data: object) => {
     // 세션 불러오는 중에는 넘어가기
-    if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
+    if (!session || session.status === "loading") {
       return;
     }
     // 로그인 안했으면 나가기
@@ -78,15 +78,14 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
       return;
     }
 
-    if (!isUpdate || CommonUtils.isNullOrUndefined(data)) {
+    if (!isUpdate || !data) {
       return;
     }
 
     const _game = new VersusGame();
     _game.parseResponse(data);
 
-    if (CommonUtils.isStringNullOrEmpty(_game.id)) {
-      alert("데이터가 잘못되었습니다");
+    if (!_game.id) {
       return;
     }
 
@@ -113,7 +112,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   const gameValidate = () => {
     let errorMessages: Array<string> = [];
     // 1. 제목 확인 (필수)
-    if (CommonUtils.isStringNullOrEmpty(game.title)) {
+    if (!game.title) {
       errorMessages.push("제목을 입력해 주세요.");
     }
 
@@ -149,7 +148,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     // 저장 성공 여부
     let saveResult: boolean = false;
 
-    if (CommonUtils.isStringNullOrEmpty(game.id)) {
+    if (!game.id) {
       const { result, data: responseData } = await ApiUtils.request("/api/versus/game", "POST", { data });
 
       if (!result) {
@@ -246,7 +245,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
       </VS.EditorDataLayout>
 
       <VS.EditorControlLayout>
-        {!CommonUtils.isStringNullOrEmpty(game.id) ? (
+        {!game.id ? (
           <VS.EditorControlButton
             onClick={() => {
               handleDelete();

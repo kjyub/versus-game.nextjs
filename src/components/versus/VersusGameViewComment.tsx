@@ -56,7 +56,7 @@ export default function VersusGameViewComment({
 
   const getComments = useCallback(
     async (_pageIndex: number) => {
-      if (CommonUtils.isStringNullOrEmpty(game.nanoId)) {
+      if (!game.nanoId) {
         return;
       }
 

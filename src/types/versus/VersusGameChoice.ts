@@ -35,7 +35,7 @@ export default class VersusGameChoice extends AbsApiObject {
       content: this._content,
       voteCount: this._voteCount,
     };
-    if (!CommonUtils.isStringNullOrEmpty(this._id)) {
+    if (this._id) {
       data["_id"] = this._id;
     }
 

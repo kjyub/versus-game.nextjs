@@ -128,7 +128,7 @@ export default class ApiUtils {
   }
 
   static mediaUrl(_url) {
-    if (!CommonUtils.isStringNullOrEmpty(_url)) {
+    if (_url) {
       return "https://kr.cafe24obs.com/" + _url;
     }
 

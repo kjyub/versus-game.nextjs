@@ -29,7 +29,7 @@ export default function VersusGameViewRelated({ game, isShowResult, commentHelpB
       <div className="flex justify-between items-center w-full">
         <span className="font-bold text-xl text-stone-800">연관 게임</span>
 
-        {!CommonUtils.isNullOrUndefined(commentHelpBox) && commentHelpBox}
+        {commentHelpBox && commentHelpBox}
       </div>
       <VS.GameViewRelatedList>
         {relatedGames.map((relatedGame: VersusGame, index: number) => (

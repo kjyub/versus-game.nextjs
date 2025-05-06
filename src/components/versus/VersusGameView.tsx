@@ -67,7 +67,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   // 유저가 선택한 데이터 세팅
   const updateUserChoice = async () => {
     // 세션 불러오는 중에는 넘어가기
-    if (CommonUtils.isNullOrUndefined(session) || session.status === "loading") {
+    if (!session || session.status === "loading") {
       return;
     }
 
@@ -157,7 +157,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   };
 
   const handleAnswer = async () => {
-    if (CommonUtils.isStringNullOrEmpty(selectedChoice.id)) {
+    if (!selectedChoice.id) {
       alert("선택지를 선택해주세요.");
       return;
     }
@@ -195,7 +195,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   };
 
   const handleCommentMove = () => {
-    if (CommonUtils.isNullOrUndefined(commentBoxRef.current)) {
+    if (!commentBoxRef.current) {
       return;
     }
 

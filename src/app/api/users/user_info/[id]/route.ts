@@ -6,6 +6,7 @@ import DBUtils from "@/utils/DBUtils";
 import bcryptjs from "bcryptjs";
 import { nanoid } from "nanoid";
 import { NextApiRequest } from "next";
+import { NextResponse } from "next/server";
 
 export async function GET(req: NextApiRequest, props: { id: string }) {
   const params = await props.params;
@@ -43,8 +44,8 @@ export async function PUT(req: NextApiRequest, props: { id: string }) {
   }
 
   const user = await MUser.findOne({ _id: id });
-  if (CommonUtils.isNullOrUndefined(user)) {
-    return ApiUtils.notFound("회원을 찾을 수 없습니다.");
+  if (!user) {
+    return NextResponse.json({ result: false, message: "사용자를 찾을 수 없습니다." }, { status: 404 });
   }
 
   // 본인 데이터인지 확인
@@ -57,19 +58,18 @@ export async function PUT(req: NextApiRequest, props: { id: string }) {
   const passwordNewHashed = await bcryptjs.hash(passwordNew, 5);
 
   // 비밀번호 변경 요청이 있는 경우
-  if (!CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
-    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, user.password);
-
-    // 현재 비밀번호가 다른 경우
-    if (!isPasswordCorrect) {
-      return ApiUtils.badRequest("현재 비밀번호가 틀립니다.");
+  if (passwordCurrent) {
+    const isPasswordValid = await bcryptjs.compare(passwordCurrent, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ result: false, message: "현재 비밀번호가 일치하지 않습니다." }, { status: 400 });
     }
-    if (CommonUtils.isStringNullOrEmpty(passwordNew)) {
-      return ApiUtils.badRequest("새 비밀번호를 찾을 수 없습니다.");
-    }
-
-    data["password"] = passwordNewHashed;
   }
+
+  if (!passwordNew) {
+    return NextResponse.json({ result: false, message: "새 비밀번호를 입력해주세요." }, { status: 400 });
+  }
+
+  data["password"] = passwordNewHashed;
 
   await MUser.findByIdAndUpdate(id, data).exec();
 
@@ -96,8 +96,8 @@ export async function DELETE(req: NextApiRequest, props: { id: string }) {
   }
 
   const mUser = await MUser.findOne({ _id: id });
-  if (CommonUtils.isNullOrUndefined(mUser)) {
-    return ApiUtils.notFound("회원을 찾을 수 없습니다.");
+  if (!mUser) {
+    return NextResponse.json({ result: false, message: "사용자를 찾을 수 없습니다." }, { status: 404 });
   }
 
   // 본인 데이터인지 확인
@@ -108,12 +108,10 @@ export async function DELETE(req: NextApiRequest, props: { id: string }) {
   const passwordCurrent = data["passwordCurrent"] ?? "";
 
   // 비밀번호 변경 요청이 있는 경우
-  if (!CommonUtils.isStringNullOrEmpty(passwordCurrent)) {
-    const isPasswordCorrect = await bcryptjs.compare(passwordCurrent, mUser.password);
-
-    // 현재 비밀번호가 다른 경우
-    if (!isPasswordCorrect) {
-      return ApiUtils.badRequest("현재 비밀번호가 틀립니다.");
+  if (passwordCurrent) {
+    const isPasswordValid = await bcryptjs.compare(passwordCurrent, mUser.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ result: false, message: "현재 비밀번호가 일치하지 않습니다." }, { status: 400 });
     }
   }
 

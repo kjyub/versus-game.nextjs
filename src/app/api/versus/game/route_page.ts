@@ -1,90 +1,90 @@
-import { auth } from '@/auth'
-import MFile from '@/models/file/MFile'
-import MUser from '@/models/user/MUser'
-import MVersusGame from '@/models/versus/MVersusGame'
-import MVersusGameAnswer from '@/models/versus/MVersusGameAnswer'
-import MVersusGameView from '@/models/versus/MVersusGameView'
-import { UserRole } from '@/types/UserTypes'
-import { GameState, PrivacyTypes } from '@/types/VersusTypes'
-import ApiUtils from '@/utils/ApiUtils'
-import CommonUtils from '@/utils/CommonUtils'
-import DBUtils from '@/utils/DBUtils'
-import mongoose from 'mongoose'
-import { nanoid } from 'nanoid'
-import { NextRequest } from 'next/server'
+import { auth } from "@/auth";
+import MFile from "@/models/file/MFile";
+import MUser from "@/models/user/MUser";
+import MVersusGame from "@/models/versus/MVersusGame";
+import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer";
+import MVersusGameView from "@/models/versus/MVersusGameView";
+import { UserRole } from "@/types/UserTypes";
+import { GameState, PrivacyTypes } from "@/types/VersusTypes";
+import ApiUtils from "@/utils/ApiUtils";
+import CommonUtils from "@/utils/CommonUtils";
+import DBUtils from "@/utils/DBUtils";
+import mongoose from "mongoose";
+import { nanoid } from "nanoid";
+import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
   let filter = {
     isDeleted: false,
-  }
-  let addFields = []
-  let lookUps = []
+  };
+  let addFields = [];
+  let lookUps = [];
 
-  await DBUtils.connect()
+  await DBUtils.connect();
 
   // 관리자 확인
-  let isStaff = false
-  const session = await auth()
+  let isStaff = false;
+  const session = await auth();
   if (session) {
-    const mUser = await MUser.findOne({ _id: session.user._id })
+    const mUser = await MUser.findOne({ _id: session.user._id });
     if (mUser && mUser.userRole === UserRole.STAFF) {
-      isStaff = true
+      isStaff = true;
     }
   }
 
-  const searchValue = req.nextUrl.searchParams.get('search')
+  const searchValue = req.nextUrl.searchParams.get("search");
   if (searchValue !== null) {
     // filter["title"] = new RegExp(searchValue, "i")
-    filter['$or'] = [
-      { title: { $regex: searchValue, $options: 'i' } },
-      { content: { $regex: searchValue, $options: 'i' } },
-      { 'choices.title': { $regex: searchValue, $options: 'i' } },
-    ]
+    filter["$or"] = [
+      { title: { $regex: searchValue, $options: "i" } },
+      { content: { $regex: searchValue, $options: "i" } },
+      { "choices.title": { $regex: searchValue, $options: "i" } },
+    ];
   }
 
   // 내 게임 필터링
-  const myGames = req.nextUrl.searchParams.get('myGames')
-  const userId = req.nextUrl.searchParams.get('userId')
-  const userObjectId = new mongoose.Types.ObjectId(userId)
+  const myGames = req.nextUrl.searchParams.get("myGames");
+  const userId = req.nextUrl.searchParams.get("userId");
+  const userObjectId = new mongoose.Types.ObjectId(userId);
 
   // 내 게임이 활성화되고 userId가 있으면 내 게임만 검색한다.
-  if (myGames !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
-    filter['userId'] = new mongoose.Types.ObjectId(userId)
+  if (myGames !== null && userId) {
+    filter["userId"] = new mongoose.Types.ObjectId(userId);
   } else {
     // 공개 옵션 필터가 없는 경우 public으로만 검색한다.
-    filter['privacyType'] = PrivacyTypes.PUBLIC
+    filter["privacyType"] = PrivacyTypes.PUBLIC;
 
     // 스태프의 경우 전부 조회
     if (!isStaff) {
-      filter['state'] = GameState.NORMAL
+      filter["state"] = GameState.NORMAL;
     }
   }
 
   // 참여한 게임 필터링
-  const choiced = req.nextUrl.searchParams.get('choiced')
-  if (choiced !== null && !CommonUtils.isStringNullOrEmpty(userId)) {
+  const choiced = req.nextUrl.searchParams.get("choiced");
+  if (choiced !== null && userId) {
     addFields.push({
       $addFields: {
-        _idString: { $toString: '$_id' },
+        _idString: { $toString: "$_id" },
       },
-    })
+    });
     lookUps.push({
       $lookup: {
-        from: 'versus_game_answers',
-        localField: '_idString',
-        foreignField: 'gameId',
-        as: 'answers',
+        from: "versus_game_answers",
+        localField: "_idString",
+        foreignField: "gameId",
+        as: "answers",
       },
-    })
-    filter['answers.userId'] = userId
+    });
+    filter["answers.userId"] = userId;
   }
 
   // 페이지네이션
-  let pageIndex = Number(req.nextUrl.searchParams.get('pageIndex') ?? 1)
-  const pageSize = Number(req.nextUrl.searchParams.get('pageSize') ?? 50)
+  let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? 1);
+  const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50);
   // const itemCount = await MVersusGame.countDocuments(filter)
-  const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length
-  const maxPage = Math.ceil(itemCount / pageSize)
+  const itemCount = (await MVersusGame.aggregate([{ $match: filter }])).length;
+  const maxPage = Math.ceil(itemCount / pageSize);
 
   if (itemCount.length === 0) {
     const result: IPaginationResponse = {
@@ -92,9 +92,9 @@ export async function GET(req: NextRequest) {
       pageIndex: 1,
       maxPage: 0,
       items: [],
-    }
+    };
 
-    return ApiUtils.response(result)
+    return ApiUtils.response(result);
   }
 
   let items = await MVersusGame.aggregate([
@@ -105,26 +105,26 @@ export async function GET(req: NextRequest) {
     { $skip: (pageIndex - 1) * pageSize },
     { $limit: pageSize },
     // { $addFields: { userObjectId: { $toObjectId: "$userId"} }},
-    { $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } },
-    { $unwind: '$user' },
-  ])
+    { $lookup: { from: "users", localField: "userId", foreignField: "_id", as: "user" } },
+    { $unwind: "$user" },
+  ]);
 
   // 이미 읽은 게시글인지 확인
-  if (!CommonUtils.isStringNullOrEmpty(userId)) {
-    const gameIds = items.map((item) => item._id)
-    const views = await MVersusGameView.find({ gameId: { $in: gameIds }, userId: userId })
-    const viewIdSet = new Set(views.map((view) => view.gameId))
+  if (userId) {
+    const gameIds = items.map((item) => item._id);
+    const views = await MVersusGameView.find({ gameId: { $in: gameIds }, userId: userId });
+    const viewIdSet = new Set(views.map((view) => view.gameId));
 
-    const choiceds = await MVersusGameAnswer.find({ gameId: { $in: gameIds }, userId: userId })
-    const choiceIdSet = new Set(choiceds.map((choiced) => choiced.gameId))
+    const choiceds = await MVersusGameAnswer.find({ gameId: { $in: gameIds }, userId: userId });
+    const choiceIdSet = new Set(choiceds.map((choiced) => choiced.gameId));
 
     if (views.length > 0) {
       items = items.map((item) => {
-        item.isView = viewIdSet.has(String(item._id))
-        item.isChoice = choiceIdSet.has(String(item._id))
+        item.isView = viewIdSet.has(String(item._id));
+        item.isChoice = choiceIdSet.has(String(item._id));
 
-        return item
-      })
+        return item;
+      });
     }
   }
 
@@ -139,30 +139,30 @@ export async function GET(req: NextRequest) {
     pageIndex: pageIndex,
     maxPage: maxPage,
     items: items,
-  }
+  };
 
-  return ApiUtils.response(result)
+  return ApiUtils.response(result);
 }
 
 export async function POST(req: NextRequest) {
   const { title, content, thumbnailImageId, thumbnailImageType, privacyType, choices, choiceCountType } =
-    await req.json()
+    await req.json();
 
-  await DBUtils.connect()
+  await DBUtils.connect();
 
-  const session = await auth()
+  const session = await auth();
 
   // 유저 확인
   if (!session.user) {
-    return ApiUtils.notAuth()
+    return ApiUtils.notAuth();
   }
 
   // 썸네일
-  let thumbnailImageUrl = ''
+  let thumbnailImageUrl = "";
   try {
-    const mFile = await MFile.findOne({ _id: thumbnailImageId })
+    const mFile = await MFile.findOne({ _id: thumbnailImageId });
     if (mFile) {
-      thumbnailImageUrl = mFile.url
+      thumbnailImageUrl = mFile.url;
     }
   } catch {
     //
@@ -170,10 +170,10 @@ export async function POST(req: NextRequest) {
 
   // 선택지
   if (!Array.isArray(choices) || choices.length === 0) {
-    return ApiUtils.badRequest('선택지 정보가 없습니다.')
+    return ApiUtils.badRequest("선택지 정보가 없습니다.");
   }
 
-  const nanoId = nanoid(11)
+  const nanoId = nanoid(11);
   const mGame = new MVersusGame({
     nanoId: nanoId,
     title: title,
@@ -185,14 +185,14 @@ export async function POST(req: NextRequest) {
     privacyType: privacyType,
     choices: choices,
     choiceCountType: choiceCountType,
-  })
+  });
 
   try {
-    const resultGame = await mGame.save()
+    const resultGame = await mGame.save();
 
-    return ApiUtils.response(resultGame)
+    return ApiUtils.response(resultGame);
   } catch (err: any) {
-    console.log('에러', err)
-    return ApiUtils.serverError(err)
+    console.log("에러", err);
+    return ApiUtils.serverError(err);
   }
 }

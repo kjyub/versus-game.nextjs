@@ -22,7 +22,7 @@ export abstract class AbsApiObject {
   }
 
   isEmpty(): boolean {
-    return CommonUtils.isStringNullOrEmpty(this._id);
+    return !this._id;
   }
   parseResponse(json: object) {}
   parseRequest(): object {}

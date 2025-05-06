@@ -117,7 +117,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
         />
       </div>
       <div className="flex flex-col items-center w-full mt-4 mb-2 space-y-2">
-        {!CommonUtils.isStringNullOrEmpty(errorMessage) && <span className="text-red-500">{errorMessage}</span>}
+        {errorMessage && <span className="text-red-500">{errorMessage}</span>}
         <UserStyles.LoginButton
           onClick={() => {
             login();
@@ -217,7 +217,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   }, [password1, password2]);
 
   const checkEmailDuplicate = async () => {
-    if (CommonUtils.isStringNullOrEmpty(email)) {
+    if (!email) {
       setEmailMessage("");
       return;
     }
@@ -310,11 +310,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
           value={email}
           setValue={setEmail}
           disabled={isLoading}
-          labelMessage={
-            !CommonUtils.isStringNullOrEmpty(emailMessage) && (
-              <span className="text-xs text-rose-600">{emailMessage}</span>
-            )
-          }
+          labelMessage={emailMessage && <span className="text-xs text-rose-600">{emailMessage}</span>}
         />
         <UserInputText
           label={"비밀번호"}
@@ -333,7 +329,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
           disabled={isLoading}
           labelMessage={!isPasswordSame && <span className="text-xs text-rose-600">비밀번호가 일치하지 않습니다.</span>}
         />
-        {!CommonUtils.isStringNullOrEmpty(errorMessage) && <span className="text-red-500">{errorMessage}</span>}
+        {errorMessage && <span className="text-red-500">{errorMessage}</span>}
       </div>
       <div className="flex justify-center items-center w-full mt-4 space-y-2">
         <UserStyles.LoginButton

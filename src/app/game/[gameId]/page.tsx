@@ -9,7 +9,7 @@ import { Metadata, ResolvingMetadata } from "next";
 const getGame = async (gameId: string, userId: string) => {
   let params = {};
 
-  if (!CommonUtils.isStringNullOrEmpty(userId)) {
+  if (userId) {
     params["userId"] = userId;
   }
 
@@ -53,25 +53,20 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 
   const title = titleRaw + suffix;
   let description = "";
-  if (CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+  if (!descriptionRaw) {
     description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요.`;
   } else {
     description = `${SiteConsts.SITE_TITLE} | ${title}의 의견을 골라주세요. ${descriptionRaw}`;
   }
 
   let keywords = [titleRaw];
-  if (!CommonUtils.isStringNullOrEmpty(descriptionRaw)) {
+  if (descriptionRaw) {
     keywords.push(descriptionRaw);
   }
   keywords = [...keywords, ...SiteConsts.SITE_KEYWORDS.split(", ")];
 
   try {
-    keywords = [
-      ...keywords,
-      ...gameData.choices
-        .filter((choice) => !CommonUtils.isStringNullOrEmpty(choice.title))
-        .map((choice) => choice.title),
-    ];
+    keywords = [...keywords, ...gameData.choices.filter((choice) => choice.title).map((choice) => choice.title)];
   } catch {
     //
   }

@@ -39,9 +39,7 @@ const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchI
         placeholder="주제를 찾거나 추가해보세요"
       />
       <i
-        className={`clear fa-solid fa-circle-xmark ${
-          !CommonUtils.isStringNullOrEmpty(value) ? "opacity-100" : "opacity-0"
-        }`}
+        className={`clear fa-solid fa-circle-xmark ${value ? "opacity-100" : "opacity-0"}`}
         onClick={() => {
           handleClear();
         }}

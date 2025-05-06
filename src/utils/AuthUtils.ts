@@ -7,12 +7,12 @@ import CommonUtils from "./CommonUtils";
 
 export default class AuthUtils {
   static parseJwt(token: string): object {
-    if (CommonUtils.isStringNullOrEmpty(token)) {
+    if (!token) {
       return {};
     }
 
     const base64Url = token.split(".")[1];
-    if (CommonUtils.isStringNullOrEmpty(base64Url)) {
+    if (!base64Url) {
       return {};
     }
 
@@ -29,7 +29,7 @@ export default class AuthUtils {
     return JSON.parse(jsonPayload);
   }
   static getTokenExpires(token: string): Date | null {
-    if (CommonUtils.isStringNullOrEmpty(token)) {
+    if (!token) {
       return null;
     }
 
@@ -42,7 +42,7 @@ export default class AuthUtils {
     }
   }
   static isExpiredToken(token: string): boolean {
-    if (CommonUtils.isStringNullOrEmpty(token)) {
+    if (!token) {
       return true;
     }
 
@@ -56,7 +56,7 @@ export default class AuthUtils {
     return expireDate.getTime() <= now.getTime();
   }
   static isSessionAuth(session: Session) {
-    if (CommonUtils.isNullOrUndefined(session) || CommonUtils.isNullOrUndefined(session.user)) {
+    if (!session || !session.user) {
       return false;
     }
 

@@ -2,7 +2,6 @@
 
 import * as VS from "@/styles/VersusStyles";
 import { CookieConsts } from "@/types/ApiTypes";
-import CommonUtils from "@/utils/CommonUtils";
 import { useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,8 +28,8 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
   useEffect(() => {
     const search = searchParams.get("search");
 
-    if (!CommonUtils.isStringNullOrEmpty(search)) {
-      setSearchValue(search);
+    if (search) {
+      router.push(`/?search=${search}`);
     }
 
     const myGames = searchParams.get("myGames");
@@ -52,7 +51,7 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
     });
 
     // 검색어가 없으면 query에서 search 제거
-    if (!CommonUtils.isStringNullOrEmpty(searchValue)) {
+    if (searchValue) {
       query["search"] = searchValue;
     } else {
       delete query.search;

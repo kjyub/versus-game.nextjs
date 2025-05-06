@@ -10,7 +10,7 @@ import CommonUtils from "@/utils/CommonUtils";
 const getGameList = async (search: string | undefined, myGames: boolean, choiced: boolean, userId: string) => {
   let params = {};
 
-  if (!CommonUtils.isStringNullOrEmpty(search)) {
+  if (search) {
     params["search"] = search;
   }
   if (myGames) {
@@ -19,7 +19,7 @@ const getGameList = async (search: string | undefined, myGames: boolean, choiced
   if (choiced) {
     params["choiced"] = 1;
   }
-  if (!CommonUtils.isStringNullOrEmpty(userId)) {
+  if (userId) {
     params["userId"] = userId;
   }
 

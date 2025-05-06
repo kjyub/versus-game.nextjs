@@ -205,7 +205,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
   const rollbackListState = (): boolean => {
     const jsonData = sessionStorage.getItem(CookieConsts.GAME_LIST_DATA_SESSION);
 
-    if (CommonUtils.isStringNullOrEmpty(jsonData)) {
+    if (!jsonData) {
       return false;
     }
 
