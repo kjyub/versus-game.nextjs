@@ -10,16 +10,19 @@ const PAGE_SIZE = 5;
 
 interface IVersusGameHead {
   game: VersusGame;
+  isEmbed?: boolean;
 }
-export default function VersusGameHead({ game }: IVersusGameHead) {
+export default function VersusGameHead({ game, isEmbed = false }: IVersusGameHead) {
   return (
     <VS.GameViewHeadLayout>
       <h3 className="title">{game.title}</h3>
       <p className="content">{game.content}</p>
 
-      <div className="flex justify-end items-center w-full">
-        <ShareBox game={game} />
-      </div>
+      {!isEmbed && (
+        <div className="flex justify-end items-center w-full">
+          <ShareBox game={game} />
+        </div>
+      )}
     </VS.GameViewHeadLayout>
   );
 }
@@ -42,7 +45,11 @@ const ShareBox = ({ game }: IVersusGameHead) => {
   };
 
   return (
-    <VS.ShareBox onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+    <VS.ShareBox
+      className={`${isOpen ? "w-[230px] bg-black/20" : ""}`}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <div className="relative overflow-hidden">
         {isOpen && (
           <div className="flex items-center space-x-2">
@@ -76,7 +83,7 @@ const ShareBox = ({ game }: IVersusGameHead) => {
 
       <ModalContainer isOpen={isEmbedModalOpen} setIsOpen={setEmbedModalOpen}>
         <VersusEmbedModal
-          game={game}
+          gameNanoId={game.nanoId}
           close={() => {
             setEmbedModalOpen(false);
           }}
