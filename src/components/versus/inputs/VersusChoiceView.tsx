@@ -69,41 +69,46 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
   };
 
   const handleSelectChoice = () => {
+    console.log("handleSelectChoice", choice);
     selectChoice(choice);
   };
 
   return (
     <VS.ChoiceBox>
-      <VS.GameViewChoiceThumbnailBox $status={selectStatus}>
-        <VS.ChoiceImageContentBox
-          className="content"
-          $status={selectStatus}
-          onClick={() => {
-            handleSelectChoice();
+      <VS.GameViewChoiceContentBox
+        className="content"
+        $status={selectStatus}
+        onClick={() => {
+          handleSelectChoice();
+        }}
+      >
+        <span
+          className="title"
+          style={{
+            textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
           }}
         >
-          <span
-            className="title"
-            style={{
-              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
-            }}
-          >
-            {choice.title}
-          </span>
-        </VS.ChoiceImageContentBox>
+          {choice.title}
+        </span>
+      </VS.GameViewChoiceContentBox>
 
-        {/* 결과 */}
-        <VS.GameViewChoiceResultBox $is_show={isShowResult}>
-          {/* 데스크탑 */}
-          <div>{CommonUtils.textFormat(choice.voteCount, TextFormats.NUMBER)}명</div>
-          <div className="flex items-center max-sm:space-x-1 sm:space-x-2 max-sm:px-0!">
-            <div className="max-sm:w-10 sm:w-24">
-              <VersusChoiceProgressBar percent={choice.voteRate} />
-            </div>
-            <span className="text-right font-normal">{CommonUtils.round(choice.voteRate, 3)}%</span>
+      {/* 결과 */}
+      <VS.GameViewChoiceResultBox $is_show={isShowResult}>
+        {/* 데스크탑 */}
+        <div>{CommonUtils.textFormat(choice.voteCount, TextFormats.NUMBER)}명</div>
+        <div className="flex items-center max-sm:space-x-1 sm:space-x-2 max-sm:px-0!">
+          <div className="max-sm:w-10 sm:w-24">
+            <VersusChoiceProgressBar percent={choice.voteRate} />
           </div>
-        </VS.GameViewChoiceResultBox>
-      </VS.GameViewChoiceThumbnailBox>
+          <span className="text-right font-normal">{CommonUtils.round(choice.voteRate, 3)}%</span>
+        </div>
+      </VS.GameViewChoiceResultBox>
+
+      {/* 현재는 이미지를 포함하지 않음 */}
+      {/* <VS.GameViewChoiceThumbnailBox $status={selectStatus}>
+        <VS.ChoiceImageContentBox
+        ></VS.ChoiceImageContentBox>
+      </VS.GameViewChoiceThumbnailBox> */}
     </VS.ChoiceBox>
   );
 };

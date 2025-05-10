@@ -164,13 +164,15 @@ export const ChoiceLayoutSettingGrid = tw.div`
 `;
 
 export const ChoiceBox = tw.div`
-    flex flex-col w-full h-24
-    rounded-md 
+    relative
+    flex flex-col items-center w-full
+    rounded-xl
+    overflow-hidden
 `;
 export const ChoiceThumbnailBox = tw.div`
     relative
-    flex flex-col flex-center w-full h-full
-    rounded-md bg-black/30
+    flex flex-col flex-center w-full
+    rounded-xl bg-black/30
     text-stone-300
     overflow-hidden [&>img]:object-cover
 `;
@@ -267,7 +269,7 @@ export const ListGameSimpleBox = tw(ListGameBox)`
 `;
 export const ListGameSimpleContentBox = tw.div`
     absolute z-10 
-    flex flex-col w-full h-full mt-0 max-sm:px-2 sm:px-3 max-sm:py-1 sm:py-2
+    flex flex-col w-full h-full mt-0 max-sm:px-3 sm:px-3 max-sm:py-2 sm:py-2
     backdrop-blur-sm
 `;
 
@@ -277,7 +279,7 @@ export const ListGamePrivacy = tw.div`
 `;
 
 export const GameViewLayout = tw.div`
-    flex flex-col items-center w-full max-w-[800px] p-2 pb-16 mx-auto space-y-4
+    flex flex-col items-center w-full max-w-[800px] p-3 pb-16 mx-auto space-y-4
 `;
 export const GameViewSectionLayoutSize = tw.div`
     w-full max-md:p-4 md:p-6
@@ -297,27 +299,28 @@ export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
     overflow-visible
 `;
 // max-h-[calc(100vh-192px)]
-export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)`
-    ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
-    ${(props: any) =>
-      props.$status === ChoiceSelectStatus.SELECTED
-        ? "ring-[3px] ring-indigo-500 [&>img]:scale-110"
-        : "hover:[&>img]:scale-110"}
-    ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "[&>.content]:bg-black/30" : "")}
-    duration-300 [&>img]:duration-300
+export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)` 
+  [&>img]:duration-300
+`;
+export const GameViewChoiceContentBox = tw.div`
+  flex flex-col w-full pb-10
+  ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
+  ${(props: any) => (props.$status === ChoiceSelectStatus.SELECTED ? "border-indigo-500" : "border-transparent")}
+  ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "bg-black/60" : "bg-black/30")}
+  rounded-xl border-3 duration-300
+  max-sm:[&>.title]:py-2 sm:[&>.title]:py-4
+  [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
+  max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-xl 
 `;
 export const ChoiceImageContentBox = tw.div`
     absolute z-10
-    flex flex-col w-full h-full max-sm:px-4 max-sm:py-2 sm:px-4 sm:py-2
+    flex flex-col w-full pb-20 max-sm:px-4 max-sm:py-2 sm:px-4 sm:py-2
     duration-300
     hover:drop-shadow-sm
-
-    [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
-    max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-xl 
 `;
 export const GameViewChoiceResultBox = tw.div`
     absolute z-10
-    ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-2 sm:bottom-4" : "-bottom-8")}
+    ${(props: StyleProps) => (props.$is_show ? "max-sm:bottom-4 sm:bottom-4" : "-bottom-8")}
     flex items-center px-1 py-1
     sm:divide-x divide-stone-300
     rounded-full bg-white/80 backdrop-blur-sm
@@ -342,21 +345,19 @@ export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
     [&>.title]:text-lg [&>.title]:font-semibold [&>.title]:text-stone-100 [&>.title]:leading-[100%]
 `;
 export const GameViewCommentList = tw.div`
-    flex flex-col w-full space-y-2
+    flex flex-col w-full
 `;
 export const GameViewCommentBox = tw.div`
-    flex flex-col w-full p-3
-    rounded-lg bg-black/20
+    flex flex-col w-full py-2 gap-1
 `;
 export const GameViewCommentInputBox = tw.div`
-    flex items-start w-full px-2 py-2 space-x-1
+    flex flex-col items-start w-full px-2 py-2 gap-1
     rounded-lg bg-black/40
-    border border-stone-500
     ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}
     duration-200
     
-    [&>textarea]:flex-1 [&>textarea]:p-1 [&>textarea]:resize-none
-    [&>textarea]:bg-transparent [&>textarea]:text-stone-300
+    [&_textarea]:w-full [&_textarea]:p-1 [&_textarea]:resize-none
+    [&_textarea]:bg-transparent [&_textarea]:text-stone-300
 `;
 export const GameViewCommentInputButton = tw.button`
     px-3 py-1 rounded-md 
@@ -368,7 +369,7 @@ export const GameViewCommentEditButton = tw.button`
     px-2 py-1
     rounded-md text-sm
     ${(props: StyleProps) =>
-      props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-400"}
+      props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-300"}
     duration-200
 `;
 
@@ -385,7 +386,7 @@ export const CommentPaginationButton = tw.button`
 
 export const GameViewRelatedLayout = tw(GameViewSectionLayoutSize)`
     ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
-    flex-col p-0 space-y-4
+    flex-col max-md:p-0 md:p-0 space-y-4
 `;
 export const GameViewRelatedList = tw.div`
     max-sm:grid max-sm:grid-cols-2 max-sm:gap-2

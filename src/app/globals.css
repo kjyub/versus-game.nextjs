@@ -4,6 +4,8 @@
 @theme {
   --breakpoint-zero: 0px;
   --breakpoint-3xl: 1800px;
+
+  --font-pretendard: "Pretendard", sans-serif;
 }
 
 @layer base {
@@ -47,6 +49,11 @@
   }
   button {
     cursor: pointer;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+    @apply font-pretendard;
   }
 }
 

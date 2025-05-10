@@ -6,7 +6,7 @@ import VersusGameComment from "@/types/versus/VersusGameComment";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
 import StyleUtils from "@/utils/StyleUtils";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ICommentBox {
   comment: VersusGameComment;
@@ -22,6 +22,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
   const [content, setContent] = useState<string>("");
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     if (choiceDic.contains(comment.gameChoiceId)) {
@@ -30,6 +31,12 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
 
     setEditState(EditStateTypes.WAIT);
   }, [comment, choiceDic]);
+
+  useEffect(() => {
+    if (editState === EditStateTypes.EDITED && textareaRef.current) {
+      CommonUtils.setTextareaAutoHeight({ target: textareaRef.current });
+    }
+  }, [editState]);
 
   const handleEditComment = async () => {
     if (isWriteLoading) {
@@ -101,9 +108,9 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
 
   return (
     <VS.GameViewCommentBox>
-      <div className="flex items-center w-full mb-3">
+      <div className="flex items-center w-full">
         {/* 선택지 */}
-        <div className="relative flex flex-center px-4 h-7 rounded-lg overflow-hidden">
+        <div className="relative flex flex-center px-4 h-7 rounded-lg text-sm overflow-hidden">
           {choice.title}
           <span
             className="absolute z-10 flex flex-center w-full h-full text-white bg-black/20"
@@ -115,9 +122,9 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
           </span>
         </div>
         {/* 유저 */}
-        <span className="ml-2 text-stone-300 text-sm">{comment.user.name}</span>
+        <span className="ml-2 text-stone-200 text-sm">{comment.user.name}</span>
         {/* 생성일 */}
-        <span className="ml-auto text-stone-400 text-sm">{comment.created}</span>
+        <span className="ml-auto text-stone-200 text-sm">{comment.created}</span>
         {/* 작성자 메뉴 */}
         {user.id === comment.userId && (
           <div className="flex items-center ml-2 space-x-1">
@@ -143,10 +150,11 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       </div>
 
       {/* 내용 */}
-      {editState === EditStateTypes.WAIT && <p className="w-full px-0 text-stone-200">{comment.content}</p>}
+      {editState === EditStateTypes.WAIT && <pre className="w-full px-0 text-stone-200">{comment.content}</pre>}
       {editState === EditStateTypes.EDITED && (
-        <VS.GameViewCommentInputBox>
+        <VS.GameViewCommentInputBox className="flex-row">
           <textarea
+            ref={textareaRef}
             type={"text"}
             style={{ height: "50px" }}
             value={content}

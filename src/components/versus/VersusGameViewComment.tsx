@@ -129,7 +129,7 @@ export default function VersusGameViewComment({
       </div>
 
       <div className="flex flex-col space-y-2">
-        <span className="px-1 font-normal text-stone-300">내 의견 남기기</span>
+        {/* <span className="px-1 font-normal text-stone-300">내 의견 남기기</span> */}
         <CommentInputBox game={game} answerChoice={answerChoice} getComments={getComments} />
       </div>
     </VS.GameViewCommentLayout>
@@ -182,34 +182,69 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
 
   return (
     <VS.GameViewCommentInputBox $is_focus={isInputFocus}>
-      <div className="px-3 py-1 font-medium rounded-md bg-linear-to-tr from-indigo-700 to-indigo-500 text-white">
-        {answerChoice.title}
+      <div className="flex items-start w-full gap-1">
+        {/* 선택지 */}
+        <div className="relative flex flex-center px-4 h-7 rounded-lg text-sm overflow-hidden">
+          <span className="text-transparent">{answerChoice.title}</span>
+          <span
+            className="absolute z-10 flex flex-center w-full h-full text-white bg-white/20"
+            style={{
+              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
+            }}
+          >
+            {answerChoice.title}
+          </span>
+        </div>
+        <div className="max-sm:hidden flex-1">
+          <textarea
+            type={"text"}
+            style={{ height: "50px" }}
+            value={content}
+            onChange={(e) => {
+              setContent(e.target.value);
+            }}
+            onFocus={() => {
+              setInputFocus(true);
+            }}
+            onBlur={() => {
+              StyleUtils.rollbackScreen();
+              setInputFocus(false);
+            }}
+            onKeyDown={handleWriteCommentEnter}
+            onInput={CommonUtils.setTextareaAutoHeight}
+            placeholder="댓글을 입력해주세요."
+          />
+        </div>
+        <VS.GameViewCommentInputButton
+          className="ml-auto"
+          $is_active={!isWriteLoading}
+          onClick={() => {
+            handleWriteComment();
+          }}
+        >
+          <i className="fa-solid fa-comment text-lg"></i>
+        </VS.GameViewCommentInputButton>
       </div>
-      <textarea
-        type={"text"}
-        style={{ height: "50px" }}
-        value={content}
-        onChange={(e) => {
-          setContent(e.target.value);
-        }}
-        onFocus={() => {
-          setInputFocus(true);
-        }}
-        onBlur={() => {
-          StyleUtils.rollbackScreen();
-          setInputFocus(false);
-        }}
-        onKeyDown={handleWriteCommentEnter}
-        onInput={CommonUtils.setTextareaAutoHeight}
-      />
-      <VS.GameViewCommentInputButton
-        $is_active={!isWriteLoading}
-        onClick={() => {
-          handleWriteComment();
-        }}
-      >
-        <i className="fa-solid fa-comment text-lg"></i>
-      </VS.GameViewCommentInputButton>
+      <div className="max-sm:block sm:hidden w-full">
+        <textarea
+          type={"text"}
+          style={{ height: "50px" }}
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+          onFocus={() => {
+            setInputFocus(true);
+          }}
+          onBlur={() => {
+            StyleUtils.rollbackScreen();
+            setInputFocus(false);
+          }}
+          onKeyDown={handleWriteCommentEnter}
+          onInput={CommonUtils.setTextareaAutoHeight}
+          placeholder="댓글을 입력해주세요."
+        />
+      </div>
     </VS.GameViewCommentInputBox>
   );
 };
