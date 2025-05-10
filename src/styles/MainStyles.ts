@@ -2,7 +2,7 @@ import { StyleProps } from "@/types/StyleTypes";
 import tw from "tailwind-styled-components";
 
 export const Body = tw.body`
-    flex flex-col w-screen min-h-screen max-h-screen
+    flex flex-col w-full min-h-screen max-h-screen
 `;
 
 export const NavBox = tw.div`
@@ -53,7 +53,7 @@ export const LoginButton = tw.button`
 `;
 
 export const PageLayout = tw.div`
-    flex flex-col items-center w-screen
+    flex flex-col items-center w-full
 `;
 
 export const LoginLayout = tw.div`
