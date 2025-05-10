@@ -23,15 +23,26 @@ interface RequestResult {
 export default class ApiUtils {
   // Request
   static async request(url: string, method: RequestMethodTypes, options: RequestOption = {}): Promise<RequestResult> {
+    if (!url) {
+      return { result: false, statusCode: 400, data: {} };
+    }
+
     const { params = undefined, data = undefined, useCache = false, headers = {} } = options;
     let bResult: boolean = false;
     let statusCode: number = 200;
     let resultData: object = {};
 
-    let requestUrl = new URL(url, process.env.NEXT_PUBLIC_API_URL);
+    let requestUrl = url;
     let requestData = null;
 
-    if (params) {
+    if (typeof window === "undefined") {
+      // SSR
+      requestUrl = new URL(url, process.env.NEXT_PUBLIC_API_URL);
+    } else {
+      // CSR
+    }
+
+    if (params && Object.keys(params).length > 0) {
       const queryString = new URLSearchParams(params).toString();
       requestUrl = `${requestUrl}?${queryString}`;
     }
@@ -50,6 +61,8 @@ export default class ApiUtils {
     };
     if (!useCache) {
       requestInit["cache"] = "no-store";
+    } else {
+      requestInit["cache"] = "force-cache";
     }
 
     const response = await fetch(requestUrl, requestInit);
