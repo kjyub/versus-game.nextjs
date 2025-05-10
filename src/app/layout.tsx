@@ -60,7 +60,7 @@ const FrontHead = () => {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f92392",
+  themeColor: "#69364a",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
