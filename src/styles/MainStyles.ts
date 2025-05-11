@@ -2,7 +2,7 @@ import { StyleProps } from "@/types/StyleTypes";
 import tw from "tailwind-styled-components";
 
 export const Body = tw.body`
-    flex flex-col w-full min-h-screen max-h-screen
+    flex flex-col w-full min-h-screen
 `;
 
 export const NavBox = tw.div`

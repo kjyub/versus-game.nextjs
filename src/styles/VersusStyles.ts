@@ -207,9 +207,9 @@ export const ListLayout = tw.div`
 export const ListScrollTopButton = tw.button`
     fixed max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
     flex flex-center w-10 h-10
-    border border-blue-500/50
-    rounded-full bg-blue-400/60 backdrop-blur-sm
-    text-white
+    border border-black/50
+    rounded-full bg-black/60 backdrop-blur-sm
+    text-white/70
 `;
 export const ListGrid = tw.div`
     grid max-sm:grid-cols-1 sm:grid-cols-2
