@@ -142,7 +142,7 @@ const Navigation = ({}: INavigation) => {
         </MS.NavTitle>
 
         {/* 내비게이션 회원 (로그인 상태) */}
-        <div className="ml-auto">
+        <div className="ml-auto z-10">
           <MS.LoginButtonContainer ref={userRef} $is_show={session.status === "authenticated"}>
             <MS.LoginButton
               onClick={() => {
