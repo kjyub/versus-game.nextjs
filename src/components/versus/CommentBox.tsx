@@ -113,7 +113,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
         <div className="relative flex flex-center px-4 h-7 rounded-lg text-sm overflow-hidden">
           {choice.title}
           <span
-            className="absolute z-10 flex flex-center w-full h-full text-white bg-black/20"
+            className="absolute z-10 flex flex-center w-full h-full text-white layer-bg"
             style={{
               textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
             }}

@@ -40,7 +40,7 @@ const ModalContainer = ({
         setIsOpen(false);
       }}
       style={{ overlay: { backgroundColor: "transparent", zIndex: 500 } }}
-      className={`flex flex-center w-screen h-screen bg-black/20 outline-hidden ${isBlur && "backdrop-blur-xs"}`}
+      className={`flex flex-center w-screen h-screen layer-bg outline-hidden ${isBlur && "backdrop-blur-xs"}`}
     >
       <Background onClick={handleClick}>
         {/* {children && children} */}

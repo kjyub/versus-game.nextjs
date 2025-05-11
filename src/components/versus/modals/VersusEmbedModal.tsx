@@ -58,7 +58,7 @@ const SourceCode = ({ source }: { source: string }) => {
         <VS.ShareEmbedModalMessage $is_show={showMessage}>{message}</VS.ShareEmbedModalMessage>
       </div>
       <textarea
-        className="w-full max-sm:h-32 sm:h-16 p-2 border border-stone-800/40 resize-none rounded-md bg-black/20 text-stone-400"
+        className="w-full max-sm:h-32 sm:h-16 p-2 border border-stone-800/40 resize-none rounded-md layer-bg text-stone-400"
         value={source}
         readOnly
       />

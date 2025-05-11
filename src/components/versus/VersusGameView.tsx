@@ -250,7 +250,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
             onClick={() => {
               handleCommentMove();
             }}
-            className="sm:hidden max-sm:flex items-center px-4 py-2 rounded-full bg-black/40 text-stone-300 text-sm"
+            className="sm:hidden max-sm:flex items-center px-4 py-2 rounded-full layer-bg-2 text-stone-300 text-sm"
           >
             <i className="fa-solid fa-comment mr-1"></i>
             의견

@@ -31,13 +31,13 @@ export const MainSearchFilterMenuButton = tw.button`
     ${(props: StyleProps) =>
       props.$is_active
         ? "bg-stone-100/70 md:hover:bg-stone-100/90 text-stone-600"
-        : "text-stone-300 bg-black/40 hover:bg-black/50"}
+        : "text-stone-300 layer-bg-2 layer-hover"}
     duration-200
 `;
 
 export const SearchInputBox = tw.div`
     flex items-center px-6 py-4
-    rounded-full bg-black/50 backdrop-blur-sm
+    rounded-full layer-bg-3 backdrop-blur-sm
     text-white/90
 
     [&>input]:w-full [&>input]:bg-transparent
@@ -59,7 +59,7 @@ export const EditorDataLayout = tw.div`
 `;
 export const EditBox = tw.div`
     flex flex-col md:min-h-[32rem] md:max-h-[calc(100vh-192px)] max-sm:p-3 sm:p-4
-    rounded-lg bg-black/20 backdrop-blur-xs
+    rounded-lg layer-bg-1/2 backdrop-blur-xs
     overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay
     [&>.title]:mb-2
     [&>.title]:font-medium [&>.title]:text-lg [&>.title]:text-stone-50
@@ -79,13 +79,13 @@ export const EditorControlLayout = tw.div`
 export const EditorControlButton = tw.button`
     flex flex-center px-7 h-14
     rounded-full backdrop-blur-sm
-    bg-black/40 hover:bg-black/60
+    layer-bg-2 layer-hover
     text-lg text-stone-100
     duration-200
 `;
 export const EditorPrivacySetButton = tw(EditorControlButton)`
     !justify-start w-36 space-x-3
-    bg-black/30 hover:bg-black/40 
+    layer-bg layer-hover
     [&>div>.title]:font-light [&>div>.title]:text-xs [&>div>.title]:text-stone-300
     [&>div>.value]:font-medium [&>div>.value]:text-sm [&>div>.value]:text-stone-100
 `;
@@ -130,7 +130,7 @@ export const ThumbnailImageEditPreviewImageBox = tw.div`
     relative
     flex flex-center w-full max-w-[384px] max-h-[288px]
     aspect-4/3
-    rounded-md bg-black/30
+    rounded-md layer-bg
     overflow-hidden [&>img]:object-cover
 `;
 export const ThumbnailImageEditUploadBox = tw.div`
@@ -139,7 +139,7 @@ export const ThumbnailImageEditUploadBox = tw.div`
 export const ThumbnailImageEditUploadDragBox = tw.div`
     flex flex-center w-full h-32 p-1
     rounded-md
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/20 animate-pulse" : "bg-transparent")}
+    ${(props: StyleProps) => (props.$is_active ? "layer-bg-1/2 animate-pulse" : "bg-transparent")}
     border-2 border-dashed border-stone-300
     text-stone-200 text-center
     max-md:text-xs md:text-sm
@@ -172,14 +172,14 @@ export const ChoiceBox = tw.div`
 export const ChoiceThumbnailBox = tw.div`
     relative
     flex flex-col flex-center w-full
-    rounded-xl bg-black/30
+    rounded-xl layer-bg
     text-stone-300
     overflow-hidden [&>img]:object-cover
 `;
 export const ChoiceImageEditBox = tw.div`
     absolute z-10
     flex flex-col w-full h-full max-sm:px-4 max-sm:py-4 sm:px-12 sm:py-8
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/70" : "")}
+    ${(props: StyleProps) => (props.$is_active ? "layer-bg-4" : "")}
 `;
 export const ChoiceInfoBox = tw.div`
     flex flex-col w-full space-y-2
@@ -187,7 +187,7 @@ export const ChoiceInfoBox = tw.div`
 `;
 export const ChoiceTitleBox = tw.div`
     flex items-center w-full px-3 py-2
-    rounded-md bg-black/20
+    rounded-md layer-bg-1/2
     text-sm text-stone-300
     ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : "")}
     duration-200
@@ -196,7 +196,7 @@ export const ChoiceTitleBox = tw.div`
 `;
 export const ChoiceAddBox = tw.button`
   w-full h-10
-  rounded-md bg-black/30 hover:bg-black/40
+  rounded-md layer-bg layer-hover
   text-stone-300 text-sm
   duration-200
 `;
@@ -208,7 +208,7 @@ export const ListScrollTopButton = tw.button`
     fixed max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8
     flex flex-center w-10 h-10
     border border-black/50
-    rounded-full bg-black/60 backdrop-blur-sm
+    rounded-full layer-bg-4 backdrop-blur-sm
     text-white/70
 `;
 export const ListGrid = tw.div`
@@ -218,7 +218,7 @@ export const ListGrid = tw.div`
 
 export const ListGameBox = tw.div`
     flex flex-col w-full max-sm:p-3 sm:p-3 gap-2 [&>a]:flex [&>a]:flex-col [&>a]:gap-2
-    rounded-xl bg-black/30 hover:bg-black/40 backdrop-blur-sm
+    rounded-xl layer-bg layer-hover backdrop-blur-sm
     duration-300
 `;
 export const ListGameLoadingBox = tw(ListGameBox)`
@@ -286,7 +286,7 @@ export const GameViewSectionLayoutSize = tw.div`
 `;
 export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     flex flex-col space-y-2
-    rounded-xl bg-black/30 backdrop-blur-sm
+    rounded-xl layer-bg backdrop-blur-sm
     duration-300
 
     [&>.title]:text-center [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-100
@@ -306,7 +306,7 @@ export const GameViewChoiceContentBox = tw.div`
   flex flex-col w-full pb-10
   ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? "" : "")}
   ${(props: any) => (props.$status === ChoiceSelectStatus.SELECTED ? "border-indigo-500" : "border-transparent")}
-  ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "bg-black/60" : "bg-black/30")}
+  ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? "layer-bg-4" : "layer-bg")}
   rounded-xl border-3 duration-300
   max-sm:[&>.title]:py-2 sm:[&>.title]:py-4
   [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
@@ -340,7 +340,7 @@ export const GameViewSelectLayout = tw(GameViewSectionLayoutSize)`
 export const GameViewCommentLayout = tw(GameViewSectionLayoutSize)`
     ${(props: StyleProps) => (props.$is_show ? "flex opacity-100" : "hidden opacity-0")}
     flex-col space-y-4
-    rounded-xl bg-black/30 backdrop-blur-sm
+    rounded-xl layer-bg backdrop-blur-sm
     duration-500
     [&>.title]:text-lg [&>.title]:font-semibold [&>.title]:text-stone-100 [&>.title]:leading-[100%]
 `;
@@ -352,7 +352,7 @@ export const GameViewCommentBox = tw.div`
 `;
 export const GameViewCommentInputBox = tw.div`
     flex flex-col items-start w-full px-2 py-2 gap-1
-    rounded-lg bg-black/40
+    rounded-lg layer-bg-2
     ${(props: StyleProps) => (props.$is_focus ? "border-stone-200/70" : "")}
     duration-200
     
@@ -369,7 +369,9 @@ export const GameViewCommentEditButton = tw.button`
     px-2 py-1
     rounded-md text-sm
     ${(props: StyleProps) =>
-      props.$is_active ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500" : "hover:bg-black/20 text-stone-300"}
+      props.$is_active
+        ? "bg-stone-100/80 hover:bg-stone-100 text-rose-500"
+        : "layer-bg-transparent layer-hover text-stone-300"}
     duration-200
 `;
 
@@ -381,7 +383,7 @@ export const CommentPaginationButton = tw.button`
     rounded-full
     text-stone-300
     duration-200
-    ${(props: StyleProps) => (props.$is_active ? "bg-black/30" : "bg-transparent hover:bg-black/20")}
+    ${(props: StyleProps) => (props.$is_active ? "layer-bg" : "layer-bg-transparent layer-hover")}
 `;
 
 export const GameViewRelatedLayout = tw(GameViewSectionLayoutSize)`
@@ -416,7 +418,7 @@ export const PrivacyModalItem = tw.div`
 export const ShareBox = tw.div`
     relative
     flex justify-between items-center w-10 hover:w-[230px] h-10 px-3 py-1 space-x-1
-    rounded-full hover:bg-black/20
+    rounded-full layer-bg-transparent layer-hover
     duration-300 cursor-pointer
 
     [&>.icon]:absolute [&>.icon]:top-2.5 [&>.icon]:right-3 [&>.icon]:z-10
@@ -424,7 +426,7 @@ export const ShareBox = tw.div`
 `;
 export const ShareButton = tw.button`
     flex items-center px-2 py-1 space-x-1
-    rounded-full hover:bg-black/10
+    rounded-full layer-bg-transparent layer-hover
     text-sm *:text-stone-200
     text-nowrap
     transition-colors
@@ -441,7 +443,7 @@ export const ShareMessage = tw.div`
 `;
 
 export const ShareEmbedModalLayout = tw(ModalLayout)`
-    bg-black/40
+    layer-bg
     [&>.title]:text-stone-200
 `;
 export const ShareEmbedModalMessage = tw.div`

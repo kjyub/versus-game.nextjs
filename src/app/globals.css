@@ -133,6 +133,43 @@
   .webkit-sticky {
     position: -webkit-sticky;
   }
+
+  .layer-bg-transparent {
+    @apply bg-transparent;
+  }
+  .layer-bg-transparent.layer-hover {
+    @apply hover:bg-black/20;
+  }
+  .layer-bg-1\/2 {
+    @apply bg-black/20;
+  }
+  .layer-bg-1\/2.layer-hover {
+    @apply hover:bg-black/30;
+  }
+  .layer-bg {
+    @apply bg-black/30;
+  }
+  .layer-bg.layer-hover {
+    @apply hover:bg-black/40;
+  }
+  .layer-bg-2 {
+    @apply bg-black/40;
+  }
+  .layer-bg-2.layer-hover {
+    @apply hover:bg-black/50;
+  }
+  .layer-bg-3 {
+    @apply bg-black/50;
+  }
+  .layer-bg-3.layer-hover {
+    @apply hover:bg-black/60;
+  }
+  .layer-bg-4 {
+    @apply bg-black/60;
+  }
+  .layer-bg-4.layer-hover {
+    @apply hover:bg-black/70;
+  }
 }
 
 @layer components {

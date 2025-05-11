@@ -46,7 +46,7 @@ const ShareBox = ({ game }: IVersusGameHead) => {
 
   return (
     <VS.ShareBox
-      className={`${isOpen ? "w-[230px] bg-black/20" : ""}`}
+      className={`${isOpen ? "w-[230px] layer-bg-1/2" : ""}`}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
