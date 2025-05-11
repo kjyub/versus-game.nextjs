@@ -85,7 +85,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
     <UserStyles.LoginPageContainer
       className={`
         ${page === LoginModalPage.LOGIN ? "top-0" : "-top-full"}
-        bg-linear-to-t from-transparent to-stone-300/70 from-10%
+        bg-linear-to-t from-stone-300 to-stone-200 from-10%
       `}
     >
       <UserStyles.LoginTitleBox>

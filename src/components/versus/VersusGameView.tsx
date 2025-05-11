@@ -221,7 +221,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
         />
       </S.GameViewChoiceLayout>
 
-      <S.GameViewSelectLayout>
+      <S.GameViewSelectLayout className={`${isMyAnswerLoading ? "animate-pulse" : ""}`}>
         <button
           className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
           onClick={() => {

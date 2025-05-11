@@ -4,7 +4,7 @@ import tw from "tailwind-styled-components";
 export const LoginContainer = tw.div`
     relative
     flex flex-col max-sm:w-64 sm:w-72 h-128
-    rounded-lg bg-white/50 backdrop-blur-sm
+    rounded-lg bg-stone-300 backdrop-blur-sm
     drop-shadow-xl
     overflow-hidden
 `;
@@ -55,7 +55,7 @@ export const AgreeTitleBox = tw.div`
 `;
 export const AgreeContent = tw.div`
     flex w-full max-h-full px-3 py-2
-    rounded-md bg-stone-100/30
+    rounded-md bg-stone-100/80
     font-light text-sm text-stone-600
     overflow-y-auto scroll-transparent scroll-overlay
     [&>pre]:w-full
