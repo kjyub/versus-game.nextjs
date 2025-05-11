@@ -112,7 +112,6 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
 
     router.push(`/${queryUrl}`);
   };
-  console.log(isScrollTop, isMenuShow);
 
   return (
     <VS.MainSearchLayout>

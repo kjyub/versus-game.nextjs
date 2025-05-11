@@ -58,6 +58,7 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
 
   const updateSelectStatus = () => {
     if (!selectedChoice.id) {
+      setSelectStatus(ChoiceSelectStatus.WAIT);
       return;
     }
 
@@ -69,7 +70,6 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
   };
 
   const handleSelectChoice = () => {
-    console.log("handleSelectChoice", choice);
     selectChoice(choice);
   };
 

@@ -31,6 +31,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
   // 선택할 예정인 선택지
   const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(new VersusGameChoice());
+
   // 선택 확정한 선택지
   const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(new VersusGameChoice());
 
@@ -161,6 +162,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       alert("선택지를 선택해주세요.");
       return;
     }
+    setMyAnswerLoading(true);
 
     const data = {
       gameId: game.id,
@@ -168,6 +170,9 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     };
 
     const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "POST", { data });
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    setMyAnswerLoading(false);
 
     if (result) {
       setAnswerChoice(selectedChoice);
