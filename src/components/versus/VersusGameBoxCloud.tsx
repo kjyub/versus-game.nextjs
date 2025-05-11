@@ -41,7 +41,7 @@ const getBlur = (index: number) => {
 };
 
 export default function VersusGameBoxCloud({ index, children }: { index: number; children: React.ReactNode }) {
-  const { isScrollTop } = useUi();
+  const { isCloudActive: isCloudActiveUi } = useUi();
   const [isMobile] = useMediaQuery(["(max-width: 768px)"]);
 
   const [isCloudActive, setIsCloudActive] = useState<boolean>(false);
@@ -54,7 +54,7 @@ export default function VersusGameBoxCloud({ index, children }: { index: number;
       return;
     }
 
-    if (isScrollTop) {
+    if (isCloudActiveUi) {
       setStyleValues({
         direction: getDirection(index),
         distance: getDistance(CLOUD_COUNT - index),
@@ -72,7 +72,7 @@ export default function VersusGameBoxCloud({ index, children }: { index: number;
         clearTimeout(cloudActiveTimerRef.current);
       }
     }
-  }, [index, isScrollTop]);
+  }, [index, isCloudActiveUi]);
 
   if (index > CLOUD_COUNT || isMobile) {
     return children;
