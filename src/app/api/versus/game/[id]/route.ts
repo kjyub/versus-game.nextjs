@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, props: { id: string }) {
   const mGame = mGames.length > 0 ? mGames[0] : null;
 
   if (!mGame) {
-    return NextResponse.json({ result: false, message: "게임을 찾을 수 없습니다." }, { status: 404 });
+    return ApiUtils.notFound();
   }
 
   // 연관 게임

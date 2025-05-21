@@ -1,16 +1,25 @@
-export default () => {
-  // 사용자의 페이지 이탈을 막음.
-  const listener = (event: any) => {
-    event.preventDefault()
-    event.returnValue = ''
-  }
-  // 페이지 이탈 방지 활성화
-  const enablePrevent = () => {
-    window.addEventListener('beforeunload', listener)
-  }
-  // 이탈 방지 불활성화
-  const disablePrevent = () => {
-    window.removeEventListener('beforeunload', listener)
-  }
-  return { enablePrevent, disablePrevent }
-}
+import { useEffect } from "react";
+
+export const usePreventLeave = () => {
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // 뒤로가기 방지
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
+
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+};

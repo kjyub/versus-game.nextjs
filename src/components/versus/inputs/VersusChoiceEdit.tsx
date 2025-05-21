@@ -14,10 +14,8 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
 interface IVersusChoiceEdit {
   game: VersusGame;
-  choiceCount: number;
-  setChoiceCount: Dispatch<SetStateAction<number>>;
 }
-export default function VersusChoiceEdit({ game, choiceCount, setChoiceCount }: IVersusChoiceEdit) {
+export default function VersusChoiceEdit({ game }: IVersusChoiceEdit) {
   const [choices, setChoices] = useState<Array<VersusGameChoice>>([]);
 
   useEffect(() => {
@@ -26,23 +24,20 @@ export default function VersusChoiceEdit({ game, choiceCount, setChoiceCount }: 
 
   const updateOldChoices = () => {
     if (!game.id || game.choices.length === 0) {
-      setChoices(new Array<VersusGameChoice>(choiceCount).fill(new VersusGameChoice()));
+      setChoices(new Array<VersusGameChoice>(MAX_CHOICE).fill(new VersusGameChoice()));
       return;
     }
 
-    setChoices(game.choices);
-  };
-
-  const appendChoice = () => {
-    if (choiceCount >= MAX_CHOICE) {
-      alert("선택지는 최대 10개까지만 추가할 수 있습니다.");
-      return;
+    const diff = MAX_CHOICE - game.choices.length;
+    let newChoices = game.choices;
+    if (diff > 0) {
+      for (let i = 0; i < diff; i++) {
+        newChoices.push(new VersusGameChoice());
+      }
     }
 
-    const newChoice = new VersusGameChoice();
-    setChoices([...choices, newChoice]);
-    game.updateChoice(choices.length, newChoice);
-    setChoiceCount(choices.length + 1);
+    game.choices = newChoices;
+    setChoices(newChoices);
   };
 
   const updateChoice = (index: number, choice: VersusGameChoice) => {
@@ -55,7 +50,6 @@ export default function VersusChoiceEdit({ game, choiceCount, setChoiceCount }: 
         {choices.map((choice, index) => (
           <ChoiceEdit key={index} index={index} choice={choice} updateChoice={updateChoice} />
         ))}
-        <VS.ChoiceAddBox onClick={appendChoice}>선택지 추가하기</VS.ChoiceAddBox>
       </VS.ChoiceLayoutSettingContainer>
     </div>
   );
@@ -69,7 +63,16 @@ interface IChoiceEdit {
 const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
   const [title, setTitle] = useState<string>(choice.title || "");
   const [isFocus, setFocus] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setTitle(choice.title || "");
+  }, [choice]);
+
+  useEffect(() => {
+    setIsActive(!!title);
+  }, [title]);
 
   if (!choice) {
     return;
@@ -82,34 +85,31 @@ const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
   };
 
   return (
-    <VS.ChoiceBox>
-      <VS.ChoiceTitleBox
-        $is_focus={isFocus}
-        onClick={() => {
-          if (inputRef.current) {
-            inputRef.current.focus();
-          }
+    <VS.ChoiceTitleBox
+      $is_focus={isFocus}
+      $is_active={isActive}
+      onClick={() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+        }
+      }}
+    >
+      <input
+        ref={inputRef}
+        className="input"
+        type={"text"}
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder={`${index + 1}. 제목을 입력하세요`}
+        onFocus={() => {
+          setFocus(true);
         }}
-      >
-        <input
-          ref={inputRef}
-          className="input"
-          type={"text"}
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-          }}
-          placeholder={`${index + 1}. 제목을 입력하세요`}
-          onFocus={() => {
-            setFocus(true);
-          }}
-          onBlur={() => {
-            setFocus(false);
-            handleUpdateTitle();
-            StyleUtils.rollbackScreen();
-          }}
-        />
-      </VS.ChoiceTitleBox>
-    </VS.ChoiceBox>
+        onBlur={() => {
+          setFocus(false);
+          handleUpdateTitle();
+          StyleUtils.rollbackScreen();
+        }}
+      />
+    </VS.ChoiceTitleBox>
   );
 };

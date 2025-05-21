@@ -1,4 +1,5 @@
 "use client";
+
 import * as S from "@/styles/VersusStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { TextFormats } from "@/types/CommonTypes";
@@ -15,6 +16,7 @@ import VersusGameHead from "./VersusGameHead";
 import VersusGameViewComment from "./VersusGameViewComment";
 import VersusGameViewRelated from "./VersusGameViewRelated";
 import VersusChoiceView from "./inputs/VersusChoiceView";
+import { usePreventLeave } from "@/hooks/usePreventLeave";
 
 interface IVersusGameView {
   gameData: object | null;
@@ -41,19 +43,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
   const commentBoxRef = useRef(null);
   const [commentCount, setCommentCount] = useState<number>(0);
-
-  useEffect(() => {
-    // const handleBeforeUnload = (event) => {
-    //     event.preventDefault()
-    //     event.returnValue = "" // 이 줄은 일부 브라우저에서 필수입니다.
-    // }
-    // window.addEventListener("beforeunload", handleBeforeUnload)
-    // window.addEventListener("popstate", handleBeforeUnload)
-    // return () => {
-    //     window.removeEventListener("beforeunload", handleBeforeUnload)
-    //     window.removeEventListener("popstate", handleBeforeUnload)
-    // }
-  }, []);
 
   useEffect(() => {
     updateUserChoice();
@@ -158,10 +147,13 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   };
 
   const handleAnswer = async () => {
+    if (isMyAnswerLoading) return;
+
     if (!selectedChoice.id) {
       alert("선택지를 선택해주세요.");
       return;
     }
+
     setMyAnswerLoading(true);
 
     const data = {
@@ -170,8 +162,6 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     };
 
     const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "POST", { data });
-
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     setMyAnswerLoading(false);
 
     if (result) {

@@ -24,9 +24,7 @@ import VersusChoiceEdit from "./inputs/VersusChoiceEdit";
 import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs";
 import VersusThumbnailImageEdit from "./inputs/VersusThumbnailImageEdit";
 import VersusPrivacyModal from "./modals/VersusPrivacyModal";
-// import VersusMainSearch from "@/components/versus/VersusMainSearch"
-
-const VersusMainSearch = dynamic(() => import("@/components/versus/VersusMainSearch"), { ssr: false });
+import { usePreventLeave } from "@/hooks/usePreventLeave";
 
 interface IVersusEditor {
   isUpdate: boolean;
@@ -42,9 +40,10 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC);
-  const [choiceCount, setChoiceCount] = useState<number>(DEFAULT_CHOICE_COUNT);
 
   const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false);
+
+  usePreventLeave();
 
   useEffect(() => {
     StyleUtils.rollbackScreen();
@@ -99,7 +98,6 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     setGame(_game);
     setTitle(_game.title);
     setContent(_game.content);
-    setChoiceCount(_game.choiceCount);
     setPrivacyType(_game.privacyType);
 
     // 게임이 차단된 경우
@@ -137,12 +135,14 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
       return;
     }
 
+    const choices = game.choices.filter((_c) => _c.title);
+
     const data = {
       title: game.title,
       content: game.content,
       privacyType: game.privacyType,
-      choices: game.choices.filter((_c) => _c.title).map((_c) => _c.parseRequest()),
-      choiceCount: choiceCount,
+      choices: choices.map((_c) => _c.parseRequest()),
+      choiceCount: choices.length,
     };
 
     // 저장 성공 여부
@@ -240,12 +240,12 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
         </VS.EditInfoBox>
         <VS.EditChoiceBox>
           <span className="title">선택지</span>
-          <VersusChoiceEdit game={game} choiceCount={choiceCount} setChoiceCount={setChoiceCount} />
+          <VersusChoiceEdit game={game} />
         </VS.EditChoiceBox>
       </VS.EditorDataLayout>
 
       <VS.EditorControlLayout>
-        {!game.id ? (
+        {game.id ? (
           <VS.EditorControlButton
             onClick={() => {
               handleDelete();

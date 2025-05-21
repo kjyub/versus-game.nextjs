@@ -7,47 +7,20 @@ import { UserRole } from "@/types/UserTypes";
 import User from "@/types/user/User";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import LoginModal from "../users/LoginModal";
 import MyInfoModal from "../users/MyInfoModal";
 import MobileNav from "./MobileNav";
+import { useUser } from "@/hooks/useUser";
 
 export interface INavigation {}
 const Navigation = ({}: INavigation) => {
-  const session = useSession();
-
-  const [user, setUser] = useState<User>(new User());
+  const user = useUser();
 
   const [userRef, isUserShow, setUserShow] = useDetectClose();
   const [loginRef, isLoginShow, setLoginShow] = useDetectClose();
   const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose();
-
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      getUserInfo();
-    }
-  }, [session]);
-
-  const getUserInfo = async () => {
-    try {
-      if (!session.data?.user._id) {
-        return;
-      }
-    } catch {
-      return;
-    }
-    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user._id}`, "GET");
-
-    if (result) {
-      const user = new User();
-      user.parseResponse(data);
-      setUser(user);
-    } else {
-      alert(data);
-    }
-  };
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     userCheck();
@@ -71,7 +44,7 @@ const Navigation = ({}: INavigation) => {
   };
 
   const handleGameAdd = (e) => {
-    if (session.status !== "authenticated") {
+    if (!user.isAuth) {
       e.preventDefault();
       alert("로그인 후 이용가능합니다.");
       return;
@@ -143,7 +116,7 @@ const Navigation = ({}: INavigation) => {
 
         {/* 내비게이션 회원 (로그인 상태) */}
         <div className="ml-auto z-10">
-          <MS.LoginButtonContainer ref={userRef} $is_show={session.status === "authenticated"}>
+          <MS.LoginButtonContainer ref={userRef} $is_show={user.isAuth}>
             <MS.LoginButton
               onClick={() => {
                 handleUserInfo();
@@ -157,7 +130,7 @@ const Navigation = ({}: INavigation) => {
           </MS.LoginButtonContainer>
 
           {/* 내비게이션 회원 (로그인 안된 상태) */}
-          <MS.LoginButtonContainer ref={loginRef} $is_show={session.status !== "authenticated"}>
+          <MS.LoginButtonContainer ref={loginRef} $is_show={!user.isAuth}>
             <MS.LoginButton
               onClick={() => {
                 setLoginShow(!isLoginShow);

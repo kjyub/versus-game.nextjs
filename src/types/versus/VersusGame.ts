@@ -211,6 +211,9 @@ export default class VersusGame extends AbsApiObject {
   set isChoice(v: boolean) {
     this._isChoice = v;
   }
+  set choices(v: Array<VersusGameChoice>) {
+    this._choices = v;
+  }
 
   set choiceCountType(v: number) {
     this._choiceCountType = v;
@@ -221,16 +224,6 @@ export default class VersusGame extends AbsApiObject {
 
   updateChoice(index: number, _choice: VersusGameChoice) {
     if (index < 0) return;
-
-    if (this._choices.length >= index) {
-      this._choices[index] = _choice;
-      return;
-    }
-
-    // 배열이 필요한 길이보다 짧은 경우, 새로운 VersusGameChoice 객체로 채웁니다
-    const diff = index - this._choices.length;
-    const newChoices = new Array<VersusGameChoice>(diff).fill(new VersusGameChoice());
-    this._choices.push(...newChoices);
 
     this._choices[index] = _choice;
   }

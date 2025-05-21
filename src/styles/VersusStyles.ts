@@ -53,14 +53,12 @@ export const EditorLayout = tw.div`
     flex flex-col max-md:p-2 md:p-4 mb-0 space-y-4
 `;
 export const EditorDataLayout = tw.div`
-    flex w-full
-    max-lg:flex-col max-lg:space-y-4
-    lg:flex-row lg:space-x-4
+    flex w-full lg:h-[35rem]
+    max-lg:flex-col lg:flex-row gap-4
 `;
 export const EditBox = tw.div`
-    flex flex-col md:min-h-[32rem] md:max-h-[calc(100vh-192px)] max-sm:p-3 sm:p-4
-    rounded-lg layer-bg-1/2 backdrop-blur-xs
-    overflow-x-hidden overflow-y-auto scroll-transparent scroll-overlay
+    flex flex-col lg:h-full max-sm:p-3 sm:p-4
+    rounded-xl layer-bg backdrop-blur-xs
     [&>.title]:mb-2
     [&>.title]:font-medium [&>.title]:text-lg [&>.title]:text-stone-50
 `;
@@ -94,7 +92,7 @@ export const InputContainer = tw.div`
     flex flex-col max-w-full
 `;
 export const InputTitle = tw.span`
-    font-light text-base text-stone-100
+    font-normal text-base text-stone-100
 `;
 export const InputBox = tw.div`
     flex items-center w-full px-2 py-2
@@ -153,7 +151,7 @@ export const ThumbnailImageEditUploadButton = tw.label`
 `;
 
 export const ChoiceLayoutSettingContainer = tw.div`
-    flex flex-col w-full max-md:min-h-[16rem] md:min-h-[32rem] gap-2
+    flex flex-col w-full gap-2
     rounded-md 
 `;
 export const ChoiceLayoutSettingGrid = tw.div`
@@ -185,12 +183,14 @@ export const ChoiceInfoBox = tw.div`
     flex flex-col w-full space-y-2
     text-stone-300
 `;
-export const ChoiceTitleBox = tw.div`
-    flex items-center w-full px-3 py-2
-    rounded-md layer-bg-1/2
+export const ChoiceTitleBox = tw(ChoiceBox)`
+    px-3 py-2
+    layer-bg-1/2
     text-sm text-stone-300
-    ${(props: StyleProps) => (props.$is_focus ? "ring-1 ring-slate-200/70 bg-stone-800/20" : "")}
-    duration-200
+    border border-transparent
+    ${(props: StyleProps) => (props.$is_focus ? "border-slate-200/70" : "")}
+    ${(props: StyleProps) => (props.$is_active ? "!bg-blue-500/20" : "")}
+    transition-colors will-change-transform
     [&>input]:w-full
     [&>input]:bg-transparent [&>input]:text-stone-300
 `;

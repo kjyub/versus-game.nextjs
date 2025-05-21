@@ -50,4 +50,8 @@ export default class User extends AbsApiObject {
   get userRole(): UserRole {
     return this._userRole;
   }
+
+  get isAuth(): boolean {
+    return this._userRole !== UserRole.GUEST;
+  }
 }
