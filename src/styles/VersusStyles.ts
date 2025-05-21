@@ -50,14 +50,14 @@ export const PageLayout = tw(MainStyles.PageLayout)`
 `;
 
 export const EditorLayout = tw.div`
-    flex flex-col max-md:p-2 md:p-4 mb-0 space-y-4
+    flex flex-col max-sm:w-full max-md:p-2 md:p-4 mb-0 space-y-4
 `;
 export const EditorDataLayout = tw.div`
-    flex w-full lg:h-[35rem]
-    max-lg:flex-col lg:flex-row gap-4
+    flex w-full md:h-[35rem]
+    max-md:flex-col md:flex-row gap-4
 `;
 export const EditBox = tw.div`
-    flex flex-col lg:h-full max-sm:p-3 sm:p-4
+    flex flex-col max-sm:w-full sm:w-84 lg:w-96 md:h-full max-sm:p-3 sm:p-4
     rounded-xl layer-bg backdrop-blur-xs
     [&>.title]:mb-2
     [&>.title]:font-medium [&>.title]:text-lg [&>.title]:text-stone-50
@@ -399,7 +399,8 @@ export const GameViewRelatedList = tw.div`
     sm:[&>div]:min-w-[12rem]
 `;
 
-export const PrivacyModalLayout = tw(ModalLayout)`    max-sm:w-[90vw] sm:w-96
+export const PrivacyModalLayout = tw(ModalLayout)`
+  max-sm:w-[90vw] sm:w-96
 `;
 export const PrivacyModalItem = tw.div`
     flex items-center w-full p-3 space-y-0

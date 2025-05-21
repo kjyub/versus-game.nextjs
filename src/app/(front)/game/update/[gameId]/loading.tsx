@@ -4,11 +4,11 @@ export default function Loading() {
   return (
     <VS.EditorLayout>
       <VS.EditorDataLayout className="animate-pulse">
-        <VS.EditInfoBox>
+        <VS.EditInfoBox className="max-sm:w-full max-lg:h-[348px]">
           <span className="title">기본 정보</span>
         </VS.EditInfoBox>
-        <VS.EditChoiceBox>
-          <span className="title w-96">선택지</span>
+        <VS.EditChoiceBox className="max-sm:w-full max-lg:h-[520px]">
+          <span className="title">선택지</span>
         </VS.EditChoiceBox>
       </VS.EditorDataLayout>
     </VS.EditorLayout>

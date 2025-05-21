@@ -45,7 +45,7 @@ export default function VersusChoiceEdit({ game }: IVersusChoiceEdit) {
   };
 
   return (
-    <div className="flex flex-col max-sm:w-full w-96 space-y-2 mt-2">
+    <div className="flex flex-col w-full space-y-2 mt-2">
       <VS.ChoiceLayoutSettingContainer>
         {choices.map((choice, index) => (
           <ChoiceEdit key={index} index={index} choice={choice} updateChoice={updateChoice} />
