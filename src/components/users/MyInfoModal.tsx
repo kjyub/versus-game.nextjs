@@ -51,10 +51,10 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       return;
     }
 
-    if (!passwordCurrent) {
-      setError("현재 비밀번호를 입력해주세요.");
-      return;
-    }
+    // if (!passwordCurrent) {
+    //   setError("현재 비밀번호를 입력해주세요.");
+    //   return;
+    // }
 
     if (passwordCurrent && !CommonUtils.isValidPassword(password1)) {
       alert("비밀번호는 6자 이상의 영문자와 숫자를 포함해야 합니다.");
@@ -70,6 +70,8 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       passwordCurrent: passwordCurrent,
       passwordNew: password1,
     };
+
+    console.log("handleUserUpdate", data);
 
     const { result, data: responseData } = await ApiUtils.request(`/api/users/user_info/${user.id}`, "PUT", {
       data,

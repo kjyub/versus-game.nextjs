@@ -13,7 +13,7 @@ export const NavBox = tw.div`
 `;
 
 export const NavTitle = tw.div`
-    absolute inset-0
+    absolute inset-0 z-0
     flex justify-center items-center w-full h-full
     text-xl font-semibold text-stone-900
 `;

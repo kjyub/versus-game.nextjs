@@ -63,10 +63,10 @@ export async function PUT(req: NextApiRequest, props: { id: string }) {
     if (!isPasswordValid) {
       return NextResponse.json({ result: false, message: "현재 비밀번호가 일치하지 않습니다." }, { status: 400 });
     }
-  }
 
-  if (!passwordNew) {
-    return NextResponse.json({ result: false, message: "새 비밀번호를 입력해주세요." }, { status: 400 });
+    if (!passwordNew) {
+      return NextResponse.json({ result: false, message: "새 비밀번호를 입력해주세요." }, { status: 400 });
+    }
   }
 
   data["password"] = passwordNewHashed;

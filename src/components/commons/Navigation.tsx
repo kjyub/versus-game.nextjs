@@ -34,7 +34,6 @@ const Navigation = ({}: INavigation) => {
     if (isUserShow) {
       setUserShow(false);
     } else {
-      await getUserInfo();
       setUserShow(true);
     }
   };
@@ -43,7 +42,7 @@ const Navigation = ({}: INavigation) => {
     await ApiUtils.request("/api/users/user_check", "POST");
   };
 
-  const handleGameAdd = (e) => {
+  const handleGameAdd = (e: React.MouseEvent<HTMLElement>) => {
     if (!user.isAuth) {
       e.preventDefault();
       alert("로그인 후 이용가능합니다.");
