@@ -1,8 +1,6 @@
 "use client";
 
 import * as VersusStyles from "@/styles/VersusStyles";
-import CommonUtils from "@/utils/CommonUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import { Dispatch, SetStateAction } from "react";
 
 export interface IVersusSearchInput {
@@ -30,9 +28,6 @@ const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchI
         value={value}
         onChange={(e) => {
           setValue(e.target.value);
-        }}
-        onBlur={() => {
-          StyleUtils.rollbackScreen();
         }}
         onClick={onClick}
         onKeyDown={handleKeyDown}

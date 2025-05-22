@@ -1,8 +1,6 @@
 "use client";
 
 import * as VersusStyles from "@/styles/VersusStyles";
-import CommonUtils from "@/utils/CommonUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from "react";
 
 export interface IVersusInputText {
@@ -49,13 +47,8 @@ export const VersusInputText = ({
             setValue(e.target.value);
           }}
           placeholder={placeholder}
-          onFocus={() => {
-            setFocus(true);
-          }}
-          onBlur={() => {
-            StyleUtils.rollbackScreen();
-            setFocus(false);
-          }}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
           disabled={disabled}
           onKeyDown={handleKeyDown}
         />
@@ -100,13 +93,8 @@ export const VersusInputTextArea = ({
             setValue(e.target.value);
           }}
           placeholder={placeholder}
-          onFocus={() => {
-            setFocus(true);
-          }}
-          onBlur={() => {
-            StyleUtils.rollbackScreen();
-            setFocus(false);
-          }}
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
           disabled={disabled}
         />
       </VersusStyles.InputBox>

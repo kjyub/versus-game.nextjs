@@ -8,7 +8,6 @@ import VersusGame from "@/types/versus/VersusGame";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
 import StorageUtils from "@/utils/StorageUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
@@ -41,10 +40,6 @@ export default function VersusList({ versusGameData }: IVersusList) {
   const [maxPage, setMaxPage] = useState<number>(0);
   const [scrollRef, scrollInView] = useInView();
   const [isScrollLoading, setScrollLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    StyleUtils.rollbackScreen();
-  }, []);
 
   useEffect(() => {
     // 맨 위의 아이템이 보이면 업데이트

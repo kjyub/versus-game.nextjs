@@ -10,7 +10,6 @@ import VersusGameChoice from "@/types/versus/VersusGameChoice";
 import VersusGameComment from "@/types/versus/VersusGameComment";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import VersusCommentPagination from "./VersusCommentPagination";
 import { useUser } from "@/hooks/useUser";
 import { useCallback, useEffect, useState } from "react";
@@ -203,13 +202,8 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
             onChange={(e) => {
               setContent(e.target.value);
             }}
-            onFocus={() => {
-              setInputFocus(true);
-            }}
-            onBlur={() => {
-              StyleUtils.rollbackScreen();
-              setInputFocus(false);
-            }}
+            onFocus={() => setInputFocus(true)}
+            onBlur={() => setInputFocus(false)}
             onKeyDown={handleWriteCommentEnter}
             onInput={CommonUtils.setTextareaAutoHeight}
             placeholder="댓글을 입력해주세요."
@@ -233,13 +227,8 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
           onChange={(e) => {
             setContent(e.target.value);
           }}
-          onFocus={() => {
-            setInputFocus(true);
-          }}
-          onBlur={() => {
-            StyleUtils.rollbackScreen();
-            setInputFocus(false);
-          }}
+          onFocus={() => setInputFocus(true)}
+          onBlur={() => setInputFocus(false)}
           onKeyDown={handleWriteCommentEnter}
           onInput={CommonUtils.setTextareaAutoHeight}
           placeholder="댓글을 입력해주세요."

@@ -8,7 +8,6 @@ import VersusGame from "@/types/versus/VersusGame";
 import VersusGameChoice from "@/types/versus/VersusGameChoice";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -101,13 +100,10 @@ const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder={`${index + 1}. 제목을 입력하세요`}
-        onFocus={() => {
-          setFocus(true);
-        }}
+        onFocus={() => setFocus(true)}
         onBlur={() => {
           setFocus(false);
           handleUpdateTitle();
-          StyleUtils.rollbackScreen();
         }}
       />
     </VS.ChoiceTitleBox>

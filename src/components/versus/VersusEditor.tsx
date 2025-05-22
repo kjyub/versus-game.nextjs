@@ -14,7 +14,6 @@ import VersusGame from "@/types/versus/VersusGame";
 import VersusGameChoice from "@/types/versus/VersusGameChoice";
 import ApiUtils from "@/utils/ApiUtils";
 import CommonUtils from "@/utils/CommonUtils";
-import StyleUtils from "@/utils/StyleUtils";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
@@ -44,10 +43,6 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false);
 
   usePreventLeave();
-
-  useEffect(() => {
-    StyleUtils.rollbackScreen();
-  }, []);
 
   useEffect(() => {
     loadGameData(gameData);
@@ -184,10 +179,8 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
 
     if (saveResult) {
       if (saveOnClose === null) {
-        StyleUtils.rollbackScreen();
         router.push("/");
         router.refresh();
-        StyleUtils.rollbackScreen();
       } else {
         saveOnClose();
       }

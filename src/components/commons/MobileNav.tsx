@@ -2,7 +2,6 @@ import * as MS from "@/styles/MainStyles";
 import { CookieConsts } from "@/types/ApiTypes";
 import { UserRole } from "@/types/UserTypes";
 import User from "@/types/user/User";
-import StyleUtils from "@/utils/StyleUtils";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
@@ -12,18 +11,9 @@ export interface IMobileNav {
   user: User;
 }
 const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
-  const handleMobileNav = () => {
-    setModalShow(false);
-    StyleUtils.rollbackScreen();
-  };
-
   return (
     <MS.MobileNavContainer $is_staff={user.userRole === UserRole.STAFF} style={{ transition: "1s filter linear" }}>
-      <MS.MobileNavList
-        onClick={() => {
-          handleMobileNav();
-        }}
-      >
+      <MS.MobileNavList onClick={() => setModalShow(false)}>
         <Link
           href={"/"}
           onClick={() => {
