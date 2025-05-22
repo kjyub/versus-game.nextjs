@@ -196,6 +196,25 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
   );
 };
 
+const isDuplicatedEmail = async (email: string): Promise<string> => {
+  if (!email) {
+    return "";
+  }
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    return "이메일을 올바르게 입력해주세요.";
+  }
+
+  const { result, data: isDuplicated } = await ApiUtils.request("/api/users/email_check", "POST", {
+    data: {
+      email: email,
+    },
+  });
+
+  return isDuplicated ? "이미 존재하는 이메일입니다." : "";
+};
+
 const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -209,32 +228,12 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
-    checkEmailDuplicate();
-  }, [email]);
-
-  useEffect(() => {
     setPasswordSame(password1 === password2);
   }, [password1, password2]);
 
   const checkEmailDuplicate = async () => {
-    if (!email) {
-      setEmailMessage("");
-      return;
-    }
-
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setEmailMessage("이메일을 올바르게 입력해주세요.");
-      return;
-    }
-
-    const { result, data } = await ApiUtils.request("/api/users/email_check", "POST", {
-      data: {
-        email: email,
-      },
-    });
-
-    setEmailMessage(result ? "이미 존재하는 이메일입니다." : "");
+    const message = await isDuplicatedEmail(email);
+    setEmailMessage(message);
   };
 
   const handleRegist = async () => {
@@ -250,6 +249,12 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
     }
     if (validateMessages.length > 0) {
       alert(validateMessages.join("\n"));
+      return;
+    }
+
+    const emailMessage = await isDuplicatedEmail(email);
+    if (emailMessage) {
+      setEmailMessage(emailMessage);
       return;
     }
 
@@ -286,8 +291,8 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-                ${page === LoginModalPage.REGIST ? "top-0" : "top-full"}
-            `}
+        ${page === LoginModalPage.REGIST ? "top-0" : "top-full"}
+      `}
     >
       <UserStyles.LoginPageHead>
         <UserStyles.LoginPageHeadPageButton
@@ -311,6 +316,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
           setValue={setEmail}
           disabled={isLoading}
           labelMessage={emailMessage && <span className="text-xs text-rose-600">{emailMessage}</span>}
+          onBlur={() => checkEmailDuplicate()}
         />
         <UserInputText
           label={"비밀번호"}

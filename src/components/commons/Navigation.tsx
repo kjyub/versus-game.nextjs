@@ -124,7 +124,7 @@ const Navigation = ({}: INavigation) => {
               회원 정보
             </MS.LoginButton>
             <MS.LoginLayout $is_show={isUserShow}>
-              {isUserShow && <MyInfoModal isModalShow={isUserShow} user={user} />}
+              <MyInfoModal isModalShow={isUserShow} user={user} />
             </MS.LoginLayout>
           </MS.LoginButtonContainer>
 
@@ -138,7 +138,7 @@ const Navigation = ({}: INavigation) => {
               로그인
             </MS.LoginButton>
             <MS.LoginLayout $is_show={isLoginShow}>
-              {isLoginShow && <LoginModal isModalShow={isLoginShow} setModalShow={setLoginShow} />}
+              <LoginModal isModalShow={isLoginShow} setModalShow={setLoginShow} />
             </MS.LoginLayout>
           </MS.LoginButtonContainer>
         </div>

@@ -60,7 +60,7 @@ export const LoginLayout = tw.div`
     ${(props: StyleProps) =>
       props.$is_show ? "max-md:top-13 md:top-14 opacity-100" : "top-8 opacity-0 pointer-events-none"}
     flex flex-center
-    md:duration-200
+    duration-200
 `;
 
 export const MobileNavLayout = tw.div`  

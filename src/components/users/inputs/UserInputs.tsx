@@ -4,7 +4,7 @@ import * as UserStyles from "@/styles/UserStyles";
 import CommonUtils from "@/utils/CommonUtils";
 import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from "react";
 
-export interface IUserInputText {
+export interface IUserInputText extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
   label: string;
@@ -25,6 +25,7 @@ const UserInputText = ({
   disabled = false,
   autoPassword = true,
   onEnter = null,
+  ...props
 }: IUserInputText) => {
   const [isFocus, setFocus] = useState<boolean>(false);
 
@@ -53,6 +54,7 @@ const UserInputText = ({
           disabled={disabled}
           onKeyDown={handleKeyDown}
           autoComplete={autoPassword ? "new-password" : undefined}
+          {...props}
         />
       </UserStyles.InputBox>
     </UserStyles.InputContainer>

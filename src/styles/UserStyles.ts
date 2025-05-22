@@ -83,7 +83,7 @@ export const MyInfoContainer = tw.div`
     flex flex-col w-64 h-[36rem] p-4
     rounded-lg bg-stone-200
     drop-shadow-xl
-    overflow-hidden
+    overflow-y-scroll scroll-transparent
 `;
 export const MyInfoSection = tw.div`
     flex flex-col mb-2

@@ -1,6 +1,6 @@
 import * as UserStyles from "@/styles/UserStyles";
 import CommonUtils from "@/utils/CommonUtils";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import UserInputText from "./inputs/UserInputs";
 
 import User from "@/types/user/User";
@@ -12,12 +12,20 @@ export interface IMyInfoModal {
   user: User;
 }
 const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
+  const [maxHeight, setMaxHeight] = useState<number>(0);
+
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [passwordCurrent, setPasswordCurrent] = useState<string>("");
   const [password1, setPassword1] = useState<string>("");
   const [password2, setPassword2] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+
+  useLayoutEffect(() => {
+    // 모바일 대응하는 최대 높이 설정
+    const maxHeight = window.innerHeight * 0.8;
+    setMaxHeight(maxHeight);
+  }, []);
 
   useEffect(() => {
     if (isModalShow) {
@@ -124,7 +132,7 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
   };
 
   return (
-    <UserStyles.MyInfoContainer>
+    <UserStyles.MyInfoContainer style={{ maxHeight: maxHeight }}>
       <UserStyles.MyInfoSection>
         <span className="title">회원 정보 수정</span>
         <div className="flex flex-col w-full space-y-3">

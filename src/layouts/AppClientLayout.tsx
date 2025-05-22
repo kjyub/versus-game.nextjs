@@ -27,8 +27,6 @@ export default function AppClientLayout({ children }: { children: React.ReactNod
 
   const requestGuestId = async () => {
     const response = await ApiUtils.request("/api/users/guest", "POST");
-    // const [bResult, statusCode, resultData] = response
-    // // alert(resultData["message"] ?? "없음", resultData)
   };
 
   return (
