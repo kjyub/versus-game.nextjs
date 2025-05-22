@@ -124,7 +124,7 @@ const Navigation = ({}: INavigation) => {
               회원 정보
             </MS.LoginButton>
             <MS.LoginLayout $is_show={isUserShow}>
-              <MyInfoModal isModalShow={isUserShow} user={user} />
+              <MyInfoModal isModalShow={isUserShow} />
             </MS.LoginLayout>
           </MS.LoginButtonContainer>
 

@@ -5,15 +5,17 @@ import UserInputText from "./inputs/UserInputs";
 
 import User from "@/types/user/User";
 import ApiUtils from "@/utils/ApiUtils";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export interface IMyInfoModal {
   isModalShow: boolean;
-  user: User;
 }
-const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
+const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
   const [maxHeight, setMaxHeight] = useState<number>(0);
 
+  const session = useSession();
+
+  const [user, setUser] = useState<User>(new User());
   const [email, setEmail] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [passwordCurrent, setPasswordCurrent] = useState<string>("");
@@ -28,10 +30,10 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
   }, []);
 
   useEffect(() => {
-    if (isModalShow) {
+    if (isModalShow && session.status === "authenticated") {
       getUserInfo();
     }
-  }, [isModalShow, user]);
+  }, [isModalShow, session]);
 
   useEffect(() => {
     if (!passwordCurrent) {
@@ -40,11 +42,18 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
     }
   }, [passwordCurrent]);
 
-  const getUserInfo = () => {
-    if (!user.id) {
+  const getUserInfo = async () => {
+    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user._id}`, "GET");
+
+    if (!result) {
+      alert(data["message"] ?? "요청 실패했습니다.");
       return;
     }
 
+    const user = new User();
+    user.parseResponse(data);
+
+    setUser(user);
     setName(user.name);
     setEmail(user.email);
   };
@@ -58,11 +67,6 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       alert("이름은 빈값을 넣을 수 없습니다.");
       return;
     }
-
-    // if (!passwordCurrent) {
-    //   setError("현재 비밀번호를 입력해주세요.");
-    //   return;
-    // }
 
     if (passwordCurrent && !CommonUtils.isValidPassword(password1)) {
       alert("비밀번호는 6자 이상의 영문자와 숫자를 포함해야 합니다.");
@@ -78,8 +82,6 @@ const MyInfoModal = ({ isModalShow, user }: IMyInfoModal) => {
       passwordCurrent: passwordCurrent,
       passwordNew: password1,
     };
-
-    console.log("handleUserUpdate", data);
 
     const { result, data: responseData } = await ApiUtils.request(`/api/users/user_info/${user.id}`, "PUT", {
       data,

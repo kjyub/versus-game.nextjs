@@ -86,6 +86,10 @@ export default class CommonUtils {
     return result;
   }
   static isValidPassword(value: string): boolean {
+    if (!value) {
+      return false;
+    }
+
     // 정규식: 최소 6자리, 영문자와 숫자 포함
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     return regex.test(value);
