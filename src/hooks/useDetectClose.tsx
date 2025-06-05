@@ -1,25 +1,29 @@
-import { useEffect, useRef, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from 'react';
 
-export const useDetectClose = (): [React.MutableRefObject<HTMLElement | null>, boolean] => {
-  const ref = useRef<HTMLElement | null>(null)
+export const useDetectClose = <T extends HTMLElement>(): [
+  React.MutableRefObject<T | null>,
+  boolean,
+  Dispatch<SetStateAction<boolean>>,
+] => {
+  const ref = useRef<T | null>(null);
 
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const pageClickEvent = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        setIsOpen(!isOpen)
+    const pageClickEvent = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setIsOpen(!isOpen);
       }
-    }
+    };
 
     if (isOpen) {
-      window.addEventListener('click', pageClickEvent)
+      window.addEventListener('click', pageClickEvent);
     }
 
     return () => {
-      window.removeEventListener('click', pageClickEvent)
-    }
-  }, [isOpen, ref])
+      window.removeEventListener('click', pageClickEvent);
+    };
+  }, [isOpen, ref]);
 
-  return [ref, isOpen, setIsOpen]
-}
+  return [ref, isOpen, setIsOpen];
+};

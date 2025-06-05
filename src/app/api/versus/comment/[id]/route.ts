@@ -1,21 +1,23 @@
-import { auth } from "@/auth";
-import MUser from "@/models/user/MUser";
-import MVersusGame from "@/models/versus/MVersusGame";
-import MVersusGameComment from "@/models/versus/MVersusGameComment";
-import { IPaginationResponse } from "@/types/common/Responses";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import DBUtils from "@/utils/DBUtils";
-import { NextRequest } from "next/server";
+import { auth } from '@/auth';
+import MUser from '@/models/user/MUser';
+import MVersusGame from '@/models/versus/MVersusGame';
+import MVersusGameComment from '@/models/versus/MVersusGameComment';
+import type { IPaginationResponse } from '@/types/common/Responses';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import DBUtils from '@/utils/DBUtils';
+import dayjs from 'dayjs';
+import type { FilterQuery } from 'mongoose';
+import type { NextRequest } from 'next/server';
 
 // 게임의 댓글들을 반환한다.
 export async function GET(req: NextRequest) {
   await DBUtils.connect();
 
-  const filterGameNanoId = req.nextUrl.searchParams.get("gameNanoId");
+  const filterGameNanoId = req.nextUrl.searchParams.get('gameNanoId');
   // 게임 확인
   if (!filterGameNanoId) {
-    return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('게임을 찾을 수 없습니다.');
   }
 
   const mGame = await MVersusGame.findOne({
@@ -23,21 +25,22 @@ export async function GET(req: NextRequest) {
     isDeleted: false,
   });
   if (!mGame) {
-    return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('게임을 찾을 수 없습니다.');
   }
 
-  let filter = {
+  const filter: FilterQuery<typeof MVersusGameComment> = {
     gameId: String(mGame._id),
     isDeleted: false,
+    gameChoiceId: null,
   };
-  const filterGameChoiceId = req.nextUrl.searchParams.get("gameChoiceId");
+  const filterGameChoiceId = req.nextUrl.searchParams.get('gameChoiceId');
   if (filterGameChoiceId) {
-    filter["gameChoiceId"] = filterGameChoiceId;
+    filter.gameChoiceId = filterGameChoiceId;
   }
 
   // 페이지네이션
-  let pageIndex = Number(req.nextUrl.searchParams.get("pageIndex") ?? -1);
-  const pageSize = Number(req.nextUrl.searchParams.get("pageSize") ?? 50);
+  let pageIndex = Number(req.nextUrl.searchParams.get('pageIndex') ?? -1);
+  const pageSize = Number(req.nextUrl.searchParams.get('pageSize') ?? 50);
   const itemCount = (await MVersusGameComment.aggregate([{ $match: filter }])).length;
   const maxPage = Math.ceil(itemCount / pageSize);
 
@@ -51,6 +54,7 @@ export async function GET(req: NextRequest) {
       pageIndex: 1,
       maxPage: 0,
       items: [],
+      lastId: '',
     };
 
     return ApiUtils.response(result);
@@ -61,9 +65,9 @@ export async function GET(req: NextRequest) {
     { $sort: { createdAt: 1 } },
     { $skip: (pageIndex - 1) * pageSize },
     { $limit: pageSize },
-    { $addFields: { userObjectId: { $toObjectId: "$userId" } } },
-    { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
-    { $unwind: "$user" },
+    { $addFields: { userObjectId: { $toObjectId: '$userId' } } },
+    { $lookup: { from: 'users', localField: 'userObjectId', foreignField: '_id', as: 'user' } },
+    { $unwind: '$user' },
   ]);
   // .find(filter)
   // .sort({ createdAt: 1 })
@@ -73,8 +77,8 @@ export async function GET(req: NextRequest) {
 
   const formattedItems = items.map((comment) => ({
     ...comment,
-    created: CommonUtils.getMoment(comment.createdAt).fromNow(),
-    updated: CommonUtils.getMoment(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
+    created: CommonUtils.getDayjs(comment.createdAt).fromNow(),
+    updated: CommonUtils.getDayjs(comment.updatedAt).fromNow(), // 상대 시간으로 포맷팅
   }));
 
   const result: IPaginationResponse = {
@@ -82,13 +86,14 @@ export async function GET(req: NextRequest) {
     pageIndex: pageIndex,
     maxPage: maxPage,
     items: formattedItems,
+    lastId: formattedItems.length > 0 ? formattedItems[formattedItems.length - 1]._id : '',
   };
 
   return ApiUtils.response(result);
 }
 
 // 유저가 댓글을 수정한다.
-export async function PUT(req: NextRequest, props: { id: string }) {
+export async function PUT(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { content } = await req.json();
   const { id } = params;
@@ -96,24 +101,25 @@ export async function PUT(req: NextRequest, props: { id: string }) {
   await DBUtils.connect();
 
   // 댓글 확인
-  let mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false });
+  const mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false });
   if (!mComment) {
-    return ApiUtils.badRequest("댓글을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('댓글을 찾을 수 없습니다.');
   }
 
   // 유저 확인
   const session = await auth();
   if (!session) {
-    return ApiUtils.notAuth("유저를 찾을 수 없습니다.");
+    return ApiUtils.notAuth('유저를 찾을 수 없습니다.');
   }
 
+  // @ts-ignore
   const mUser = await MUser.findOne({ _id: session?.user._id });
   if (!mUser) {
-    return ApiUtils.notAuth("유저를 찾을 수 없습니다.");
+    return ApiUtils.notAuth('유저를 찾을 수 없습니다.');
   }
 
   if (String(mUser._id) !== String(mComment.userId)) {
-    return ApiUtils.badRequest("권한이 없습니다.");
+    return ApiUtils.badRequest('권한이 없습니다.');
   }
 
   // 수정
@@ -124,37 +130,38 @@ export async function PUT(req: NextRequest, props: { id: string }) {
 
     return ApiUtils.response(result);
   } catch (err: any) {
-    console.log("에러", err);
+    console.log('에러', err);
     return ApiUtils.serverError(err);
   }
 }
 
 // 유저가 댓글을 삭제한다.
-export async function DELETE(req: NextRequest, props: { id: string }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
 
   await DBUtils.connect();
 
   // 댓글 확인
-  let mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false });
+  const mComment = await MVersusGameComment.findOne({ _id: id, isDeleted: false });
   if (!mComment) {
-    return ApiUtils.badRequest("댓글을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('댓글을 찾을 수 없습니다.');
   }
 
   // 유저 확인
   const session = await auth();
   if (!session) {
-    return ApiUtils.notAuth("유저를 찾을 수 없습니다.");
+    return ApiUtils.notAuth('유저를 찾을 수 없습니다.');
   }
 
+  // @ts-ignore
   const mUser = await MUser.findOne({ _id: session?.user._id });
   if (!mUser) {
-    return ApiUtils.notAuth("유저를 찾을 수 없습니다.");
+    return ApiUtils.notAuth('유저를 찾을 수 없습니다.');
   }
 
   if (String(mUser._id) !== String(mComment.userId)) {
-    return ApiUtils.badRequest("권한이 없습니다.");
+    return ApiUtils.badRequest('권한이 없습니다.');
   }
 
   // 삭제
@@ -165,7 +172,7 @@ export async function DELETE(req: NextRequest, props: { id: string }) {
 
     return ApiUtils.response(result);
   } catch (err: any) {
-    console.log("에러", err);
+    console.log('에러', err);
     return ApiUtils.serverError(err);
   }
 }

@@ -1,7 +1,7 @@
-import { UserRole } from '@/types/UserTypes'
-import mongoose from 'mongoose'
+import { UserRole } from '@/types/UserTypes';
+import mongoose from 'mongoose';
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
@@ -29,8 +29,8 @@ const userSchema = new Schema(
     },
   },
   { timestamps: true },
-)
+);
 
-export default mongoose.models.users || mongoose.model('users', userSchema)
+export default mongoose.models.users || mongoose.model('users', userSchema);
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

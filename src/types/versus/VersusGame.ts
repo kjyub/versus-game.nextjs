@@ -1,13 +1,13 @@
-import { AbsApiObject } from "../ApiTypes";
-import { GameState, PrivacyTypes, ThumbnailImageTypes } from "../VersusTypes";
-import VersusFile from "../file/VersusFile";
-import User from "../user/User";
-import VersusGameChoice from "./VersusGameChoice";
+import { AbsApiObject } from '../ApiTypes';
+import { GameState, PrivacyTypes, ThumbnailImageTypes } from '../VersusTypes';
+import VersusFile from '../file/VersusFile';
+import User from '../user/User';
+import VersusGameChoice from './VersusGameChoice';
 
 const CHOICE_COUNT = 10;
 
 export default class VersusGame extends AbsApiObject {
-  private _id: string;
+  protected _id: string;
   private _nanoId: string;
   private _title: string;
   private _content: string;
@@ -24,17 +24,18 @@ export default class VersusGame extends AbsApiObject {
 
   // 임의 정의
   private _user: User;
-  private _isView: booelan; // 사용자가 게임을 조회 했었는지 여부
+  private _isView: boolean; // 사용자가 게임을 조회 했었는지 여부
+  private _isChoice: boolean; // 사용자가 게임을 선택 했었는지 여부
 
   private _relatedGames: Array<VersusGame>;
 
   constructor() {
     super();
-    this._id = "";
-    this._nanoId = "";
-    this._title = "";
-    this._content = "";
-    this._userId = "";
+    this._id = '';
+    this._nanoId = '';
+    this._title = '';
+    this._content = '';
+    this._userId = '';
     this._images = [];
     this._privacyType = PrivacyTypes.PUBLIC;
     this._choiceCount = 4;
@@ -43,7 +44,6 @@ export default class VersusGame extends AbsApiObject {
     this._answerCount = 0;
     this._state = GameState.NORMAL;
 
-    this._choiceCountType = 200;
     this._choices = [];
     for (let i = 0; i < CHOICE_COUNT; i++) {
       this._choices.push(new VersusGameChoice());
@@ -56,7 +56,7 @@ export default class VersusGame extends AbsApiObject {
     this._relatedGames = [];
   }
 
-  parseResponse(json: object) {
+  parseResponse(json: any) {
     if (json._id) this._id = String(json._id);
     if (json.nanoId) this._nanoId = String(json.nanoId);
     if (json.title) this._title = json.title;
@@ -64,7 +64,7 @@ export default class VersusGame extends AbsApiObject {
     if (json.userId) this._userId = json.userId;
     if (json.images && Array.isArray(json.images)) {
       this._images = [];
-      json.images.map((_data) => {
+      json.images.map((_data: any) => {
         const image = new VersusFile();
         image.parseResponse(_data);
         this._images.push(image);
@@ -77,9 +77,8 @@ export default class VersusGame extends AbsApiObject {
     if (json.answerCount) this._answerCount = json.answerCount;
     if (json.state) this._state = json.state;
 
-    if (json.choiceCountType) this._choiceCountType = json.choiceCountType;
     if (json.choices && Array.isArray(json.choices)) {
-      let newChoices: Array<VersusGameChoice> = [];
+      const newChoices: Array<VersusGameChoice> = [];
       json.choices
         .filter((choiceData: any) => choiceData.title)
         .map((choiceData: any) => {
@@ -90,7 +89,7 @@ export default class VersusGame extends AbsApiObject {
       this._choices = newChoices;
     }
 
-    if (json.user && typeof json.user === "object") {
+    if (json.user && typeof json.user === 'object') {
       this._user = new User();
       this._user.parseResponse(json.user);
     }
@@ -103,7 +102,7 @@ export default class VersusGame extends AbsApiObject {
 
     if (json.relatedGames && Array.isArray(json.relatedGames)) {
       this._relatedGames = [];
-      json.relatedGames.map((_data) => {
+      json.relatedGames.map((_data: any) => {
         const relatedGame = new VersusGame();
         relatedGame.parseResponse(_data);
         this._relatedGames.push(relatedGame);
@@ -125,7 +124,6 @@ export default class VersusGame extends AbsApiObject {
       favs: this._favs,
       answerCount: this._answerCount,
       state: this._state,
-      choiceCountType: this._choiceCountType,
       choices: this._choices.map((choice) => choice.toRawData()),
       user: this._user,
       isView: this._isView,
@@ -153,7 +151,7 @@ export default class VersusGame extends AbsApiObject {
   get images(): Array<VersusFile> {
     return this._images;
   }
-  get privacyType(): number {
+  get privacyType(): PrivacyTypes {
     return this._privacyType;
   }
   get choiceCount(): number {
@@ -170,9 +168,6 @@ export default class VersusGame extends AbsApiObject {
   }
   get state(): GameState {
     return this._state;
-  }
-  get choiceCountType(): number {
-    return this._choiceCountType;
   }
   get user(): User {
     return this._user;
@@ -215,9 +210,6 @@ export default class VersusGame extends AbsApiObject {
     this._choices = v;
   }
 
-  set choiceCountType(v: number) {
-    this._choiceCountType = v;
-  }
   get choices(): Array<VersusGameChoice> {
     return this._choices;
   }

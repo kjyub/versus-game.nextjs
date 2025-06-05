@@ -1,42 +1,54 @@
-import { auth } from "@/auth";
-import VersusList from "@/components/versus/VersusList";
-import VersusMainTitle from "@/components/versus/VersusMainTitle";
-import * as MainStyles from "@/styles/MainStyles";
-import { IPaginationResponse } from "@/types/common/Responses";
-import ApiUtils from "@/utils/ApiUtils";
-import AuthUtils from "@/utils/AuthUtils";
-import CommonUtils from "@/utils/CommonUtils";
+import { auth } from '@/auth';
+import VersusList from '@/components/versus/VersusList';
+import VersusMainTitle from '@/components/versus/VersusMainTitle';
+import * as MainStyles from '@/styles/MainStyles';
+import type { IPaginationResponse } from '@/types/common/Responses';
+import ApiUtils from '@/utils/ApiUtils';
+import AuthUtils from '@/utils/AuthUtils';
+import type { ObjectId } from 'mongodb';
 
-const getGameList = async (search: string | undefined, myGames: boolean, choiced: boolean, userId: string) => {
-  let params = {};
+const getGameList = async (
+  search: string | undefined,
+  myGames: boolean,
+  choiced: boolean,
+  userId: string,
+): Promise<IPaginationResponse> => {
+  const params: {
+    search?: string;
+    myGames?: number;
+    choiced?: number;
+    userId?: string;
+  } = {};
 
   if (search) {
-    params["search"] = search;
+    params.search = search;
   }
   if (myGames) {
-    params["myGames"] = 1;
+    params.myGames = 1;
   }
   if (choiced) {
-    params["choiced"] = 1;
+    params.choiced = 1;
   }
   if (userId) {
-    params["userId"] = userId;
+    params.userId = userId;
   }
 
-  const { data } = await ApiUtils.request("/api/versus/game", "GET", { params });
+  const { data } = await ApiUtils.request('/api/versus/game', 'GET', { params });
 
-  return data;
+  return data as IPaginationResponse;
 };
 
-export default async function Home(props) {
+export default async function Home(props: {
+  searchParams: Promise<{ search?: string; myGames?: string; choiced?: string }>;
+}) {
   const searchParams = await props.searchParams;
   const session = await auth();
-  const userId: string = await AuthUtils.getUserOrGuestIdBySSR(session);
+  const userId: string | ObjectId = await AuthUtils.getUserOrGuestIdBySSR(session);
 
-  const search: string = searchParams.search ? searchParams.search : "";
-  const myGames: boolean = searchParams.myGames ? true : false;
-  const choiced: boolean = searchParams.choiced ? true : false;
-  const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, choiced, userId);
+  const search: string = searchParams.search ? searchParams.search : '';
+  const myGames: boolean = !!searchParams.myGames;
+  const choiced: boolean = !!searchParams.choiced;
+  const gamePaginationData: IPaginationResponse = await getGameList(search, myGames, choiced, userId.toString());
 
   return (
     <MainStyles.PageLayout id="game-list-page">

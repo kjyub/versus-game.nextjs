@@ -1,5 +1,5 @@
-export default class StyleUtils {
-  static rollbackScreen() {
+namespace StyleUtils {
+  export function rollbackScreen() {
     // window.scrollTo({
     //   top: 0,
     //   left: 0,
@@ -15,7 +15,7 @@ export default class StyleUtils {
     // }
   }
 
-  static isVisibleVirtualKeyboard() {
+  export function isVisibleVirtualKeyboard() {
     // 초기 높이
     const initialHeight = window.screen.height;
 
@@ -26,7 +26,7 @@ export default class StyleUtils {
     return currentHeight < initialHeight;
   }
 
-  static initScrollEvent() {
+  export function initScrollEvent() {
     // const initScroll = () => {
     //   if (!this.isVisibleVirtualKeyboard()) {
     //     this.rollbackScreen();
@@ -42,3 +42,5 @@ export default class StyleUtils {
     // }
   }
 }
+
+export default StyleUtils;

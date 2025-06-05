@@ -1,9 +1,9 @@
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import { AbsApiObject } from "../ApiTypes";
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import { AbsApiObject } from '../ApiTypes';
 
 export default class VersusGameChoice extends AbsApiObject {
-  private _id: string;
+  protected _id: string;
   private _gameId: string;
   private _title: string;
   private _content: string;
@@ -12,15 +12,15 @@ export default class VersusGameChoice extends AbsApiObject {
 
   constructor() {
     super();
-    this._id = "";
-    this._gameId = "";
-    this._title = "";
-    this._content = "";
+    this._id = '';
+    this._gameId = '';
+    this._title = '';
+    this._content = '';
     this._voteCount = 0;
     this._voteRate = 0;
   }
 
-  parseResponse(json: object) {
+  parseResponse(json: any) {
     if (json._id) this._id = String(json._id);
     if (json.gameId) this._gameId = json.gameId;
     if (json.title) this._title = json.title;
@@ -29,14 +29,14 @@ export default class VersusGameChoice extends AbsApiObject {
   }
 
   parseRequest(): object {
-    let data = {
+    const data: Record<string, any> = {
       gameId: this._gameId,
       title: this._title,
       content: this._content,
       voteCount: this._voteCount,
     };
     if (this._id) {
-      data["_id"] = this._id;
+      data._id = this._id;
     }
 
     return data;

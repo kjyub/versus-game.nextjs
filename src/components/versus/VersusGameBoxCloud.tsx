@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useUi } from "@/hooks/useUi";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useUi } from '@/hooks/useUi';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 export const CLOUD_COUNT = 20; // 몇개의 박스만 클라우딩 할 지
 
@@ -42,7 +42,7 @@ const getBlur = (index: number) => {
 
 export default function VersusGameBoxCloud({ index, children }: { index: number; children: React.ReactNode }) {
   const { isCloudActive: isCloudActiveUi } = useUi();
-  const [isMobile] = useMediaQuery(["(max-width: 768px)"]);
+  const [isMobile] = useMediaQuery(['(max-width: 768px)']);
 
   const [isCloudActive, setIsCloudActive] = useState<boolean>(false);
   const [styleValues, setStyleValues] = useState<StyleValues>(initialStyleValues);
@@ -86,7 +86,7 @@ export default function VersusGameBoxCloud({ index, children }: { index: number;
         filter: `blur(${styleValues.blur}px)`,
       }}
     >
-      <div className={`list-game-card-cloud ${isCloudActive ? "active" : ""}`}>{children}</div>
+      <div className={`list-game-card-cloud ${isCloudActive ? 'active' : ''}`}>{children}</div>
     </div>
   );
 }

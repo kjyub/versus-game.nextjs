@@ -1,14 +1,14 @@
-import * as VS from "@/styles/VersusStyles";
-import VersusGame from "@/types/versus/VersusGame";
-import { useCallback, useEffect, useState, useMemo } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import * as VS from '@/styles/VersusStyles';
+import VersusGame from '@/types/versus/VersusGame';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 interface IVersusEmbedModal {
   gameNanoId: string;
   close: () => void;
 }
 export default function VersusEmbedModal({ gameNanoId, close }: IVersusEmbedModal) {
-  const [source, setSource] = useState<string>("");
+  const [source, setSource] = useState<string>('');
 
   useEffect(() => {
     const url = new URL(`/embed/${gameNanoId}`, process.env.NEXT_PUBLIC_API_URL);
@@ -22,7 +22,7 @@ export default function VersusEmbedModal({ gameNanoId, close }: IVersusEmbedModa
         dangerouslySetInnerHTML={{ __html: source }}
       />
     ),
-    [source]
+    [source],
   );
 
   return (
@@ -40,10 +40,10 @@ export default function VersusEmbedModal({ gameNanoId, close }: IVersusEmbedModa
 
 const SourceCode = ({ source }: { source: string }) => {
   const [showMessage, setShowMessage] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('');
 
   const handleCopy = useCallback(() => {
-    setMessage("소스가 복사되었습니다.");
+    setMessage('소스가 복사되었습니다.');
     setShowMessage(true);
     setTimeout(() => {
       setShowMessage(false);
@@ -64,6 +64,7 @@ const SourceCode = ({ source }: { source: string }) => {
       />
       <CopyToClipboard text={source}>
         <button
+          type="button"
           onClick={handleCopy}
           className="w-full p-2 text-stone-200 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-colors"
         >

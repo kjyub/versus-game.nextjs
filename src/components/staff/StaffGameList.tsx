@@ -1,16 +1,17 @@
-"use client";
+'use client';
 
-import * as SS from "@/styles/StaffStyles";
-import { TextFormats } from "@/types/CommonTypes";
-import { GameState, PrivacyTypes } from "@/types/VersusTypes";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import ModalContainer from "../ModalContainer";
-import VersusEditor from "../versus/VersusEditor";
+import * as SS from '@/styles/StaffStyles';
+import { TextFormats } from '@/types/CommonTypes';
+import { GameState, PrivacyTypes } from '@/types/VersusTypes';
+import type { IPaginationResponse } from '@/types/common/Responses';
+import VersusGame from '@/types/versus/VersusGame';
+import type VersusGameChoice from '@/types/versus/VersusGameChoice';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import ModalContainer from '../ModalContainer';
+import VersusEditor from '../versus/VersusEditor';
 
 const PAGE_SIZE = 100;
 
@@ -20,19 +21,19 @@ export default function StaffGameList() {
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [itemCount, setItemCount] = useState<number>(0);
   const [maxPage, setMaxPage] = useState<number>(0);
-  const [search, setSearch] = useState<string>("");
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [search, setSearch] = useState<string>('');
+  const [searchValue, setSearchValue] = useState<string>('');
 
   // 게임 수정
   const [isEditorShow, setEditorShow] = useState<boolean>(false);
   const [editorGameData, setEditorGameData] = useState<object | null>(null);
 
   useEffect(() => {
-    getGameList(1, "");
+    getGameList(1, '');
   }, []);
 
-  const getGameList = async (_pageIndex = 1, _search = "") => {
-    const { result, data } = await ApiUtils.request(`/api/versus/game`, "GET", {
+  const getGameList = async (_pageIndex = 1, _search = '') => {
+    const { result, data } = await ApiUtils.request('/api/versus/game', 'GET', {
       params: {
         pageIndex: _pageIndex,
         pageSize: PAGE_SIZE,
@@ -45,7 +46,7 @@ export default function StaffGameList() {
 
     const pagination: IPaginationResponse = data;
 
-    let _games: Array<VersusGame> = [];
+    const _games: Array<VersusGame> = [];
     pagination.items.map((item) => {
       const newGame = new VersusGame();
       newGame.parseResponse(item);
@@ -59,7 +60,7 @@ export default function StaffGameList() {
   };
 
   const openGameEditor = async (gameId: string) => {
-    const { result, data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET");
+    const { result, data } = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET');
 
     if (result) {
       setEditorGameData(data);
@@ -81,7 +82,7 @@ export default function StaffGameList() {
         <div className="p-4 rounded-lg bg-white/20 backdrop-blur-xl">
           <VersusEditor
             isUpdate={true}
-            gameData={editorGameData}
+            gameData={editorGameData === null ? undefined : editorGameData}
             saveOnClose={() => {
               setEditorShow(false);
             }}
@@ -118,17 +119,17 @@ const Game = ({ game, openGameEditor }: IGame) => {
     };
 
     // 저장 성공 여부
-    let saveResult: boolean = false;
+    const saveResult = false;
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, "PUT", {
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, 'PUT', {
       data,
     });
 
     if (!result) {
-      if (responseData["message"]) {
-        alert(responseData["message"]);
+      if (responseData.message) {
+        alert(responseData.message);
       } else {
-        alert("저장 실패했습니다.");
+        alert('저장 실패했습니다.');
       }
 
       return;
@@ -148,17 +149,17 @@ const Game = ({ game, openGameEditor }: IGame) => {
     };
 
     // 저장 성공 여부
-    let saveResult: boolean = false;
+    const saveResult = false;
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, "PUT", {
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game_state/${game.nanoId}`, 'PUT', {
       data,
     });
 
     if (!result) {
-      if (responseData["message"]) {
-        alert(responseData["message"]);
+      if (responseData.message) {
+        alert(responseData.message);
       } else {
-        alert("저장 실패했습니다.");
+        alert('저장 실패했습니다.');
       }
 
       return;
@@ -172,7 +173,7 @@ const Game = ({ game, openGameEditor }: IGame) => {
   };
 
   const handleRefresh = async () => {
-    const { result, data } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "GET");
+    const { result, data } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, 'GET');
 
     if (result) {
       const newGame = new VersusGame();
@@ -187,18 +188,19 @@ const Game = ({ game, openGameEditor }: IGame) => {
       <div className="flex items-center w-full h-28 p-2 space-x-2">
         {/* 썸네일 */}
         <div className="relative flex flex-center h-full aspect-4/3 bg-stone-700">
-          {!versusGame.thumbnailImageUrl ? (
+          <span className="text-stone-400">이미지 없음</span>
+          {/* {!versusGame.thumbnailImageUrl ? (
             <span className="text-stone-400">이미지 없음</span>
           ) : (
-            <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={""} />
-          )}
+            <Image src={ApiUtils.mediaUrl(versusGame.thumbnailImageUrl)} fill alt={''} />
+          )} */}
         </div>
 
         {/* 내용 */}
         <div className="flex flex-col justify-start w-full h-full space-y-1">
           {/* 1단 */}
           <div className="flex w-full space-x-2">
-            <span className={`font-semibold ${state === GameState.BLOCK ? "text-red-500" : "text-stone-200"}`}>
+            <span className={`font-semibold ${state === GameState.BLOCK ? 'text-red-500' : 'text-stone-200'}`}>
               {versusGame.title}
             </span>
             <span className="text-stone-400">
@@ -308,15 +310,16 @@ const Game = ({ game, openGameEditor }: IGame) => {
           <div key={index} className="flex flex-col items-center w-full">
             {/* 이미지 */}
             <div className="relative flex flex-center w-full max-w-[12rem] aspect-4/3 bg-stone-800">
-              {!choice.imageUrl ? (
+              <span className="text-stone-400">이미지 없음</span>
+              {/* {!choice.imageUrl ? (
                 <span className="text-stone-400">이미지 없음</span>
               ) : (
                 <Image src={ApiUtils.mediaUrl(choice.imageUrl)} fill alt={""} />
-              )}
+              )} */}
             </div>
             {/* 내용 */}
             <div className="flex flex-col w-full h-16">
-              <span className={`${choice.title !== "" ? "text-stone-300" : "text-stone-600"}`}>
+              <span className={`${choice.title !== '' ? 'text-stone-300' : 'text-stone-600'}`}>
                 [{index + 1}] {choice.title}
               </span>
             </div>

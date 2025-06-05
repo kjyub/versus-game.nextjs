@@ -1,5 +1,5 @@
-import * as MS from "@/styles/MainStyles";
-import * as VS from "@/styles/VersusStyles";
+import * as MS from '@/styles/MainStyles';
+import * as VS from '@/styles/VersusStyles';
 
 export default function Loading() {
   return (

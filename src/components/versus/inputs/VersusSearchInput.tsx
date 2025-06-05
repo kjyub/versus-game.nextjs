@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as VersusStyles from "@/styles/VersusStyles";
-import { Dispatch, SetStateAction } from "react";
+import * as VersusStyles from '@/styles/VersusStyles';
+import type { Dispatch, SetStateAction } from 'react';
 
 export interface IVersusSearchInput {
   value: string;
@@ -11,14 +11,14 @@ export interface IVersusSearchInput {
 }
 const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchInput) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (onEnter && e.key === "Enter") {
+    if (onEnter && e.key === 'Enter') {
       e.preventDefault();
       onEnter();
     }
   };
 
   const handleClear = () => {
-    setValue("");
+    setValue('');
   };
 
   return (
@@ -34,7 +34,7 @@ const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchI
         placeholder="주제를 찾거나 추가해보세요"
       />
       <i
-        className={`clear fa-solid fa-circle-xmark ${value ? "opacity-100" : "opacity-0"}`}
+        className={`clear fa-solid fa-circle-xmark ${value ? 'opacity-100' : 'opacity-0'}`}
         onClick={() => {
           handleClear();
         }}

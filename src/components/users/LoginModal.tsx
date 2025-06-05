@@ -1,24 +1,23 @@
-import * as UserStyles from "@/styles/UserStyles";
-import CommonUtils from "@/utils/CommonUtils";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import UserInputText from "./inputs/UserInputs";
+import * as UserStyles from '@/styles/UserStyles';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import UserInputText from './inputs/UserInputs';
 
-import { SIGNUP_AGREEMENT } from "@/types/UserTypes";
-import ApiUtils from "@/utils/ApiUtils";
-import { AuthError } from "next-auth";
-import { signIn } from "next-auth/react";
+import { SIGNUP_AGREEMENT } from '@/types/UserTypes';
+import ApiUtils from '@/utils/ApiUtils';
+import { AuthError } from 'next-auth';
+import { signIn } from 'next-auth/react';
 
 export enum LoginModalPage {
-  LOGIN,
-  REGIST,
-  REGIST_AGREE,
-  FIND_PASSWORD,
+  LOGIN = 0,
+  REGIST = 1,
+  REGIST_AGREE = 2,
+  FIND_PASSWORD = 3,
 }
 
 export interface ILoginModal {
   isModalShow: boolean;
   setModalShow: Dispatch<SetStateAction<boolean>>;
-  defaultPage: LoginModalPage;
+  defaultPage?: LoginModalPage;
 }
 const LoginModal = ({ isModalShow, setModalShow, defaultPage = LoginModalPage.LOGIN }: ILoginModal) => {
   const [page, setPage] = useState<LoginModalPage>(LoginModalPage.LOGIN);
@@ -43,21 +42,21 @@ export default LoginModal;
 export interface IPage {
   page: LoginModalPage;
   setPage: Dispatch<SetStateAction<LoginModalPage>>;
-  setModalShow: Dispatch<SetStateAction<boolean>>;
+  setModalShow?: Dispatch<SetStateAction<boolean>>;
 }
 const LoginPage = ({ page, setPage }: IPage) => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const login = async () => {
-    if (email === "" || password === "") {
-      setErrorMessage("이메일과 비밀번호를 입력해주세요.");
+    if (email === '' || password === '') {
+      setErrorMessage('이메일과 비밀번호를 입력해주세요.');
     }
 
     try {
-      const response = await signIn("credentials", {
+      const response = await signIn('credentials', {
         email: email,
         password: password,
         redirect: false,
@@ -66,16 +65,16 @@ const LoginPage = ({ page, setPage }: IPage) => {
       const errorMessage = response?.error;
       if (!errorMessage) {
         return;
-      } else if (errorMessage === "CredentialsSignin") {
-        alert("로그인 성공");
+      } else if (errorMessage === 'CredentialsSignin') {
+        alert('로그인 성공');
         return;
       } else {
-        alert("이메일 및 비밀번호를 확인해주세요.");
+        alert('이메일 및 비밀번호를 확인해주세요.');
         return;
       }
     } catch (error) {
       if (error instanceof AuthError) {
-        return "로그인 실패";
+        return '로그인 실패';
       }
       throw error;
     }
@@ -84,7 +83,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-        ${page === LoginModalPage.LOGIN ? "top-0" : "-top-full"}
+        ${page === LoginModalPage.LOGIN ? 'top-0' : '-top-full'}
         bg-linear-to-t from-stone-300 to-stone-200 from-10%
       `}
     >
@@ -97,8 +96,8 @@ const LoginPage = ({ page, setPage }: IPage) => {
       </UserStyles.LoginTitleBox>
       <div className="flex flex-col w-full space-y-2">
         <UserInputText
-          label={"이메일"}
-          placeholder={"honggildong@example.com"}
+          label={'이메일'}
+          placeholder={'honggildong@example.com'}
           value={email}
           setValue={setEmail}
           onEnter={() => {
@@ -106,9 +105,9 @@ const LoginPage = ({ page, setPage }: IPage) => {
           }}
         />
         <UserInputText
-          label={"비밀번호"}
-          placeholder={""}
-          type={"password"}
+          label={'비밀번호'}
+          placeholder={''}
+          type={'password'}
           value={password}
           setValue={setPassword}
           onEnter={() => {
@@ -143,9 +142,9 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-                ${page === LoginModalPage.LOGIN ? "top-full" : ""}
-                ${page === LoginModalPage.REGIST_AGREE ? "top-0" : ""}
-                ${page === LoginModalPage.REGIST ? "-top-full" : ""}
+                ${page === LoginModalPage.LOGIN ? 'top-full' : ''}
+                ${page === LoginModalPage.REGIST_AGREE ? 'top-0' : ''}
+                ${page === LoginModalPage.REGIST ? '-top-full' : ''}
             `}
     >
       <UserStyles.LoginPageHead>
@@ -167,7 +166,7 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
           <UserStyles.AgreeTitleBox>
             <span className="title">개인정보 동의</span>
             <div
-              className={`agree ${isAgree ? "active" : ""}`}
+              className={`agree ${isAgree ? 'active' : ''}`}
               onClick={() => {
                 setAgree(!isAgree);
               }}
@@ -198,34 +197,34 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
 
 const isDuplicatedEmail = async (email: string): Promise<string> => {
   if (!email) {
-    return "";
+    return '';
   }
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
-    return "이메일을 올바르게 입력해주세요.";
+    return '이메일을 올바르게 입력해주세요.';
   }
 
-  const { result, data: isDuplicated } = await ApiUtils.request("/api/users/email_check", "POST", {
+  const { result, data: isDuplicated } = await ApiUtils.request('/api/users/email_check', 'POST', {
     data: {
       email: email,
     },
   });
 
-  return isDuplicated ? "이미 존재하는 이메일입니다." : "";
+  return isDuplicated ? '이미 존재하는 이메일입니다.' : '';
 };
 
 const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password1, setPassword1] = useState<string>("");
-  const [password2, setPassword2] = useState<string>("");
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password1, setPassword1] = useState<string>('');
+  const [password2, setPassword2] = useState<string>('');
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isPasswordSame, setPasswordSame] = useState<boolean>(false);
 
-  const [emailMessage, setEmailMessage] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [emailMessage, setEmailMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     setPasswordSame(password1 === password2);
@@ -237,18 +236,18 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   };
 
   const handleRegist = async () => {
-    let validateMessages: Array<string> = [];
-    if (email === "") {
-      validateMessages.push("이메일을 입력해주세요.");
+    const validateMessages: Array<string> = [];
+    if (email === '') {
+      validateMessages.push('이메일을 입력해주세요.');
     }
-    if (name === "") {
-      validateMessages.push("닉네임을 입력해주세요.");
+    if (name === '') {
+      validateMessages.push('닉네임을 입력해주세요.');
     }
-    if (password1 === "" || password2 === "") {
-      validateMessages.push("비밀번호를 입력해주세요.");
+    if (password1 === '' || password2 === '') {
+      validateMessages.push('비밀번호를 입력해주세요.');
     }
     if (validateMessages.length > 0) {
-      alert(validateMessages.join("\n"));
+      alert(validateMessages.join('\n'));
       return;
     }
 
@@ -263,27 +262,25 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
       password: password1,
       name: name,
     };
-    const { result, data: responseData } = await ApiUtils.request("/api/users/regist", "POST", { data });
+    const { result, data: responseData } = await ApiUtils.request('/api/users/regist', 'POST', { data });
 
     if (result) {
-      alert("회원가입되었습니다.");
+      alert('회원가입되었습니다.');
       try {
-        const response = await signIn("credentials", {
+        await signIn('credentials', {
           email: email,
           password: password1,
         });
-        if (response?.status === "200") {
-          setModalShow(false);
-          return;
-        }
+        setModalShow?.(false);
+        return;
       } catch (error) {
         if (error instanceof AuthError) {
-          return "로그인 실패";
+          return '로그인 실패';
         }
         throw error;
       }
     } else {
-      const _message = responseData["message"] ?? "실패했습니다.";
+      const _message = responseData.message ?? '실패했습니다.';
       setErrorMessage(_message);
     }
   };
@@ -291,7 +288,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-        ${page === LoginModalPage.REGIST ? "top-0" : "top-full"}
+        ${page === LoginModalPage.REGIST ? 'top-0' : 'top-full'}
       `}
     >
       <UserStyles.LoginPageHead>
@@ -308,10 +305,10 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
         <h3>이메일로 간편하게 회원가입이 가능합니다.</h3>
       </UserStyles.LoginTitleBox>
       <div className="flex flex-col w-full space-y-2">
-        <UserInputText label={"닉네임"} placeholder={"홍길동"} value={name} setValue={setName} disabled={isLoading} />
+        <UserInputText label={'닉네임'} placeholder={'홍길동'} value={name} setValue={setName} disabled={isLoading} />
         <UserInputText
-          label={"이메일"}
-          placeholder={"honggildong@example.com"}
+          label={'이메일'}
+          placeholder={'honggildong@example.com'}
           value={email}
           setValue={setEmail}
           disabled={isLoading}
@@ -319,17 +316,17 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
           onBlur={() => checkEmailDuplicate()}
         />
         <UserInputText
-          label={"비밀번호"}
-          placeholder={""}
-          type={"password"}
+          label={'비밀번호'}
+          placeholder={''}
+          type={'password'}
           value={password1}
           setValue={setPassword1}
           disabled={isLoading}
         />
         <UserInputText
-          label={"비밀번호 확인"}
-          placeholder={""}
-          type={"password"}
+          label={'비밀번호 확인'}
+          placeholder={''}
+          type={'password'}
           value={password2}
           setValue={setPassword2}
           disabled={isLoading}

@@ -1,9 +1,9 @@
-import CommonUtils from "@/utils/CommonUtils";
-import { AbsApiObject } from "../ApiTypes";
-import User from "../user/User";
+import CommonUtils from '@/utils/CommonUtils';
+import { AbsApiObject } from '../ApiTypes';
+import User from '../user/User';
 
 export default class VersusGameComment extends AbsApiObject {
-  private _id: string;
+  protected _id: string;
   private _parentId: string;
   private _gameId: string;
   private _gameChoiceId: string;
@@ -18,21 +18,21 @@ export default class VersusGameComment extends AbsApiObject {
 
   constructor() {
     super();
-    this._id = "";
-    this._parentId = "";
-    this._gameId = "";
-    this._gameChoiceId = "";
-    this._userId = "";
+    this._id = '';
+    this._parentId = '';
+    this._gameId = '';
+    this._gameChoiceId = '';
+    this._userId = '';
     this._user = new User();
-    this._content = "";
+    this._content = '';
     this._voteUps = 0;
     this._voteDowns = 0;
 
-    this._created = "";
-    this._updated = "";
+    this._created = '';
+    this._updated = '';
   }
 
-  parseResponse(json: object) {
+  parseResponse(json: any) {
     if (json._id) this._id = String(json._id);
     if (json.parentId) this._parentId = json.parentId;
     if (json.gameId) this._gameId = json.gameId;
@@ -51,11 +51,11 @@ export default class VersusGameComment extends AbsApiObject {
   }
 
   parseRequest(): object {
-    let data = {
+    const data: Record<string, string> = {
       content: this._content,
     };
     if (this._id) {
-      data["_id"] = this._id;
+      data._id = this._id;
     }
 
     return data;

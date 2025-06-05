@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import * as VS from "@/styles/VersusStyles";
-import { TextFormats } from "@/types/CommonTypes";
-import { CHOICE_COUNT_CONST, ChoiceSelectStatus } from "@/types/VersusTypes";
-import VersusFile from "@/types/file/VersusFile";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import VersusChoiceProgressBar from "./VersusChoiceProgressBar";
+import * as VS from '@/styles/VersusStyles';
+import { TextFormats } from '@/types/CommonTypes';
+import { CHOICE_COUNT_CONST, ChoiceSelectStatus } from '@/types/VersusTypes';
+import VersusFile from '@/types/file/VersusFile';
+import type VersusGame from '@/types/versus/VersusGame';
+import type VersusGameChoice from '@/types/versus/VersusGameChoice';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import VersusChoiceProgressBar from './VersusChoiceProgressBar';
 
 interface IVersusChoiceView {
   game: VersusGame;
@@ -85,7 +85,7 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
         <span
           className="title"
           style={{
-            textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
+            textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
           }}
         >
           {choice.title}

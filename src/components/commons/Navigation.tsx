@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useDetectClose } from "@/hooks/useDetectClose";
-import * as MS from "@/styles/MainStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { UserRole } from "@/types/UserTypes";
-import User from "@/types/user/User";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import LoginModal from "../users/LoginModal";
-import MyInfoModal from "../users/MyInfoModal";
-import MobileNav from "./MobileNav";
-import { useUser } from "@/hooks/useUser";
+import { useDetectClose } from '@/hooks/useDetectClose';
+import { useUser } from '@/hooks/useUser';
+import * as MS from '@/styles/MainStyles';
+import { CookieConsts } from '@/types/ApiTypes';
+import { UserRole } from '@/types/UserTypes';
+import User from '@/types/user/User';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import Link from 'next/link';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import LoginModal from '../users/LoginModal';
+import MyInfoModal from '../users/MyInfoModal';
+import MobileNav from './MobileNav';
 
-export interface INavigation {}
-const Navigation = ({}: INavigation) => {
+const Navigation = () => {
   const user = useUser();
 
-  const [userRef, isUserShow, setUserShow] = useDetectClose();
-  const [loginRef, isLoginShow, setLoginShow] = useDetectClose();
-  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose();
+  const [userRef, isUserShow, setUserShow] = useDetectClose<HTMLDivElement>();
+  const [loginRef, isLoginShow, setLoginShow] = useDetectClose<HTMLDivElement>();
+  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose<HTMLDivElement>();
 
   const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     userCheck();
@@ -39,13 +39,13 @@ const Navigation = ({}: INavigation) => {
   };
 
   const userCheck = async () => {
-    await ApiUtils.request("/api/users/user_check", "POST");
+    await ApiUtils.request('/api/users/user_check', 'POST');
   };
 
   const handleGameAdd = (e: React.MouseEvent<HTMLElement>) => {
     if (!user.isAuth) {
       e.preventDefault();
-      alert("로그인 후 이용가능합니다.");
+      alert('로그인 후 이용가능합니다.');
       return;
     }
   };
@@ -59,7 +59,7 @@ const Navigation = ({}: INavigation) => {
         <MS.NavButtonList className="max-md:hidden md:flex">
           <MS.NavButtonContainer $is_show={true}>
             <Link
-              href={"/game/add"}
+              href={'/game/add'}
               onClick={() => {
                 sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
               }}
@@ -72,7 +72,7 @@ const Navigation = ({}: INavigation) => {
           </MS.NavButtonContainer>
           {user.userRole === UserRole.STAFF && (
             <MS.NavButtonContainer $is_show={true} className="max-md:left-40 md:left-40">
-              <Link href={"/csstaff"}>
+              <Link href={'/csstaff'}>
                 <MS.NavButton>
                   <i className="fa-solid fa-hammer mr-2"></i>
                   관리
@@ -103,7 +103,7 @@ const Navigation = ({}: INavigation) => {
         {/* 내비게이션 로고 */}
         <MS.NavTitle>
           <Link
-            href={"/"}
+            href={'/'}
             className="title"
             onClick={() => {
               sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);

@@ -1,24 +1,28 @@
-import CommonUtils from "@/utils/CommonUtils";
-import { AbsApiObject } from "../ApiTypes";
-import { UserRole } from "../UserTypes";
+import CommonUtils from '@/utils/CommonUtils';
+import { AbsApiObject } from '../ApiTypes';
+import { UserRole } from '../UserTypes';
 
 export default class User extends AbsApiObject {
-  private _id: string;
+  protected _id: string;
   private _email: string;
   private _name: string;
   private _profileImageUrl: string;
   private _userRole: UserRole;
 
+  // next-auth 속성
+  private _emailVerified: Date | null;
+
   constructor() {
     super();
-    this._id = "";
-    this._email = "";
-    this._name = "";
-    this._profileImageUrl = "";
+    this._id = '';
+    this._email = '';
+    this._name = '';
+    this._profileImageUrl = '';
     this._userRole = UserRole.GUEST;
+    this._emailVerified = null;
   }
 
-  parseResponse(json: object) {
+  parseResponse(json: any) {
     if (!json) {
       return;
     }
@@ -28,6 +32,16 @@ export default class User extends AbsApiObject {
     if (json.name) this._name = json.name;
     if (json.profile_image_url) this._profileImageUrl = json.profile_image_url;
     if (json.userRole) this._userRole = json.userRole;
+    if (json.emailVerified) {
+      const parsedDate = new Date(json.emailVerified);
+      if (!Number.isNaN(parsedDate.getTime())) {
+        this._emailVerified = parsedDate;
+      } else {
+        this._emailVerified = null;
+      }
+    } else {
+      this._emailVerified = null;
+    }
 
     // this.ID = id !== undefined ? id : -1
     // this.Name = name !== undefined ? name : ""
@@ -49,6 +63,10 @@ export default class User extends AbsApiObject {
   }
   get userRole(): UserRole {
     return this._userRole;
+  }
+
+  get emailVerified(): Date | null {
+    return this._emailVerified;
   }
 
   get isAuth(): boolean {

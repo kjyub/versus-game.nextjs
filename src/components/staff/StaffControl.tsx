@@ -1,21 +1,21 @@
-"use client";
-import * as SS from "@/styles/StaffStyles";
-import ApiUtils from "@/utils/ApiUtils";
+'use client';
+import * as SS from '@/styles/StaffStyles';
+import ApiUtils from '@/utils/ApiUtils';
 
 const PAGE_SIZE = 100;
 
 export default function StaffControl() {
   const handleCron = async () => {
-    const { result, data } = await ApiUtils.request(`/api/cron/`, "GET", {
+    const { result, data } = await ApiUtils.request('/api/cron/', 'GET', {
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_CRON_SECRET}`,
       },
     });
 
     if (result) {
-      alert("실행되었습니다.");
+      alert('실행되었습니다.');
     } else {
-      alert("요청 실패했습니다.");
+      alert('요청 실패했습니다.');
     }
   };
 

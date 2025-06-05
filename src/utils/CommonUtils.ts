@@ -1,91 +1,61 @@
-import { TextFormats } from "@/types/CommonTypes";
-import dayjs from "dayjs";
-import moment, { Moment } from "moment";
-import "moment/locale/ko";
+import { TextFormats } from '@/types/CommonTypes';
+import dayjs, { type Dayjs } from 'dayjs';
+// import moment, { type Moment } from 'moment';
+// import 'moment/locale/ko';
 
-export default class CommonUtils {
-  static round(value: number, round: number = 0): number {
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
+dayjs.locale('ko');
+
+namespace CommonUtils {
+  export function round(value: number, round = 0): number {
     // return Math.round(value * Math.pow(10, round)) / Math.pow(10, round)
     return Number(value.toPrecision(round));
   }
-  static getRandomEnumValue<T>(enumeration: T): T[keyof T] {
-    const enumValues = Object.values(enumeration);
-    const randomIndex = Math.floor(Math.random() * enumValues.length);
-    return enumValues[randomIndex];
+  export async function copyClipboard(value: string): Promise<void> {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch (e) {
+      //
+    }
   }
-  static getRandomChoice<T>(list: Array<T>): T {
+  export function getRandomChoice<T>(list: Array<T>): T {
     const randomIndex = Math.floor(Math.random() * list.length);
 
     return list[randomIndex];
   }
-  static getCurrentBaseUrl(): string {
-    return window.location.href.split("/").slice(0, 3).join("/");
+  export function getCurrentBaseUrl(): string {
+    return window.location.href.split('/').slice(0, 3).join('/');
   }
-  static async copyClipboard(value: string): boolean {
-    try {
-      await navigator.clipboard.writeText(value);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
-  static sha256(value: string): string {
-    const hash = crypto.createHash("sha256");
-    hash.update(value);
-    return hash.digest("hex");
-  }
-  static textFormat(text: string, format: TextFormats): string {
-    let result = text;
+  export function textFormat(text: string | number, format: TextFormats): string {
+    let result = !text ? '' : String(text);
 
     if (format === TextFormats.NUMBER) {
       const number = Number(text);
-      if (!isNaN(number)) {
+
+      if (number === 0) {
+        result = '0';
+      } else if (
+        !Number.isNaN(number) &&
+        result[result.length - 1] !== '.' &&
+        result !== '' &&
+        !(result.includes('.') && result[result.length - 1] === '0')
+      ) {
         result = number.toLocaleString();
       }
-      // // 숫자를 문자열로 변환
-      // let numStr = text.toString()
-
-      // // 정수 부분과 소수 부분 분리
-      // const parts = numStr.split(".")
-      // const integerPart = parts[0]
-      // const decimalPart = parts[1] || ""
-
-      // // 정수 부분에 콤마 추가
-      // const integerWithCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-
-      // // 소수 부분과 합치기
-      // result =
-      //     decimalPart || text[text.length - 1] === "." ? `${integerWithCommas}.${decimalPart}` : integerWithCommas
-      // console.log(decimalPart)
     } else if (format === TextFormats.PRICE) {
       const number = CommonUtils.textFormat(text, TextFormats.NUMBER);
-      result = number + "원";
+      result = `${number}원`;
     }
 
     if (!result) {
-      result = "";
+      result = '';
     }
 
     return result;
   }
-  static textFormatInput(text: string, format: TextFormats): string {
-    let result = text;
-
-    if (format === TextFormats.NUMBER) {
-      result = text.replaceAll(",", "");
-    } else if (format === TextFormats.NUMBER_ONLY) {
-      result = text.replace(/[^0-9]/g, "");
-    } else if (format === TextFormats.PRICE) {
-      // 미구현
-      const number = CommonUtils.textFormatInput(text, TextFormats.NUMBER);
-      result = number.replaceAll("원", "");
-    } else if (format === TextFormats.TEL) {
-      result = CommonUtils.telFormat(text);
-    }
-
-    return result;
-  }
-  static isValidPassword(value: string): boolean {
+  export function isValidPassword(value: string): boolean {
     if (!value) {
       return false;
     }
@@ -94,42 +64,31 @@ export default class CommonUtils {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
     return regex.test(value);
   }
-  // 현재 사용안함
-  static relativeDateTime(dateString: string): string {
-    const datetime = dayjs(dateString);
-
-    if (!datetime.isValid()) {
-      return "-";
-    }
-
-    const now = dayjs();
-    const oneMonthAgo = now.subtract(30, "day");
-
-    if (datetime.isBefore(oneMonthAgo)) {
-      // 1달 보다 전이면 날짜로 표기
-    } else {
-      // 1달 이내면 상대날짜로 표기
-    }
+  // export function getMoment(dateString: string | null): Moment {
+  //   const m = new moment(dateString);
+  //   return m;
+  // }
+  export function getDayjs(date: string | Date | number): Dayjs {
+    return dayjs(date);
   }
-  static getMoment(dateString: string | null): Moment {
-    const m = new moment(dateString);
-    return m;
-  }
-  static setTextareaAutoHeight(e: any) {
+  export function setTextareaAutoHeight(e: any) {
     const element = e.target;
 
     if (!element) {
       return;
     }
 
-    element.style.height = "auto";
-    element.style.height = Number(element.scrollHeight) + 4 + "px";
+    element.style.height = 'auto';
+    element.style.height = `${Number(element.scrollHeight) + 4}px`;
   }
-  static debounce(func: () => void, delay: number) {
+  export function debounce(func: () => void, delay: number) {
     let timeout: NodeJS.Timeout | null = null;
     return function (...args: any[]) {
       if (timeout) clearTimeout(timeout);
+      // @ts-ignore
       timeout = setTimeout(() => func.apply(this, args), delay);
     };
   }
 }
+
+export default CommonUtils;

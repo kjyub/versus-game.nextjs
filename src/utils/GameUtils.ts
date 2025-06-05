@@ -1,23 +1,23 @@
-import MVersusGame from "@/models/versus/MVersusGame";
-import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer";
-import MVersusGameView from "@/models/versus/MVersusGameView";
-import { GameConsts } from "@/types/VersusTypes";
-import { Dictionary } from "@/types/common/Dictionary";
-import mongoose from "mongoose";
-import CommonUtils from "./CommonUtils";
+import MVersusGame from '@/models/versus/MVersusGame';
+import MVersusGameAnswer from '@/models/versus/MVersusGameAnswer';
+import MVersusGameView from '@/models/versus/MVersusGameView';
+import { GameConsts } from '@/types/VersusTypes';
+import { Dictionary } from '@/types/common/Dictionary';
+import mongoose from 'mongoose';
+import CommonUtils from './CommonUtils';
 
 // 게임 조회수 및 데이터 관련 유틸
 
-export default class GameUtils {
-  static async updateRelatedGames(): void {
+namespace GameUtils {
+  export async function updateRelatedGames(): Promise<void> {
     // 연관 게임 업데이트
     const games = await MVersusGame.find({ isDeleted: false });
 
-    let viewedDic = new Dictionary<string, number>();
+    const viewedDic = new Dictionary<string, number>();
 
     for (const game of games) {
       // console.log(`0. 게임 ${game._id} ${game.nanoId} ${game.title}`)
-      let gameUserDic = {};
+      const gameUserDic = {};
 
       // 1. 게임 조회자
       const viewers = await MVersusGameView.find({ gameId: game._id });
@@ -31,7 +31,7 @@ export default class GameUtils {
       const viewerIds = viewers.map((view) => view.userId);
       const relatedGames = await MVersusGameView.aggregate([
         { $match: { gameId: { $ne: game._id }, userId: { $in: viewerIds } } },
-        { $group: { _id: "$gameId", viewsCount: { $sum: 1 } } },
+        { $group: { _id: '$gameId', viewsCount: { $sum: 1 } } },
         { $sort: { viewsCount: -1 } },
         { $limit: GameConsts.RELATED_GAME_COUNT },
       ]);
@@ -48,15 +48,13 @@ export default class GameUtils {
       game.answerCount = answers.length;
       await game.save();
     }
-
-    console.log("END");
   }
 
   // 조회하거나 선택했는지 확인
-  static async setIsViewAndChoiceGames(items: Array<MVersusGame>, userId: string) {
-    let newItems: Array<MVersusGame> = [];
+  export async function setIsViewAndChoiceGames(items: Array<typeof MVersusGame>, userId: string) {
+    const newItems: Array<typeof MVersusGame> = [];
 
-    const gameIds = items.map((item) => item._id);
+    const gameIds = items.map((item: any) => item._id.toString());
     const views = await MVersusGameView.find({ gameId: { $in: gameIds }, userId: userId });
     const viewIdSet = new Set(views.map((view) => view.gameId));
 
@@ -64,8 +62,8 @@ export default class GameUtils {
     const choiceIdSet = new Set(choiceds.map((choiced) => choiced.gameId));
 
     if (views.length > 0) {
-      items.map((item) => {
-        let newItem = item instanceof mongoose.Model ? item.toObject() : item;
+      items.map((item: any) => {
+        const newItem = item instanceof mongoose.Model ? item.toObject() : item;
 
         newItem.isView = viewIdSet.has(String(item._id));
         newItem.isChoice = choiceIdSet.has(String(item._id));
@@ -75,22 +73,20 @@ export default class GameUtils {
       return items;
     }
 
-    // console.log("new Items", newItems)
-
     return newItems;
   }
 
   // 연관 게임 가져오기
-  static async getRelatedGames(
+  export async function getRelatedGames(
     relatedGameIds: Array<string> = [],
-    userId: string = "",
-    gameCount: number = GameConsts.RELATED_GAME_COUNT
+    userId: string | null = null,
+    gameCount: number = GameConsts.RELATED_GAME_COUNT,
   ) {
     const relatedGameObjectIds: Array<mongoose.Types.ObjectId> = relatedGameIds.map(
-      (gameId) => new mongoose.Types.ObjectId(gameId)
+      (gameId) => new mongoose.Types.ObjectId(gameId),
     );
 
-    let answeredGameObjectIds: Array<string> = [];
+    let answeredGameObjectIds: Array<mongoose.Types.ObjectId> = [];
     if (userId) {
       const answeredGames = await MVersusGameAnswer.find({ userId: userId });
       answeredGameObjectIds = answeredGames.map((answeredGame) => new mongoose.Types.ObjectId(answeredGame.gameId));
@@ -106,16 +102,16 @@ export default class GameUtils {
   }
 
   // 연관 랜덤 게임 가져오기
-  static async getRelatedRandomGames(
+  export async function getRelatedRandomGames(
     excludeGameIds: Array<string> = [],
-    userId: string = "",
-    gameCount: number = GameConsts.RELATED_GAME_COUNT
+    userId: string | null = null,
+    gameCount: number = GameConsts.RELATED_GAME_COUNT,
   ) {
     const excludeGameObjectIds: Array<mongoose.Types.ObjectId> = excludeGameIds.map(
-      (gameId) => new mongoose.Types.ObjectId(gameId)
+      (gameId) => new mongoose.Types.ObjectId(gameId),
     );
 
-    let answeredGameObjectIds: Array<string> = [];
+    let answeredGameObjectIds: Array<mongoose.Types.ObjectId> = [];
     if (userId) {
       const answeredGames = await MVersusGameAnswer.find({ userId: userId });
       answeredGameObjectIds = answeredGames.map((answeredGame) => new mongoose.Types.ObjectId(answeredGame.gameId));
@@ -151,3 +147,5 @@ export default class GameUtils {
     return resultRelatedGames.slice(0, gameCount);
   }
 }
+
+export default GameUtils;

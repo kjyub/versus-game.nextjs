@@ -1,8 +1,8 @@
-import { NextApiRequest } from 'next'
+import type { NextApiRequest } from 'next';
 
 export async function POST(req: NextApiRequest) {
-  const r = await req.json()
-  console.log(r)
+  const r = await req.json();
+  console.log(r);
 
   // await DBUtils.connect()
 

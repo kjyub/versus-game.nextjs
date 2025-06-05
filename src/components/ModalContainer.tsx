@@ -1,6 +1,7 @@
-import React, { Dispatch, SetStateAction } from "react";
-import Modal from "react-modal";
-import tw from "tailwind-styled-components";
+import type React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
+import Modal from 'react-modal';
+import tw from 'tailwind-styled-components';
 
 const Background = tw.div`
     flex flex-center w-full h-full
@@ -9,8 +10,8 @@ const Background = tw.div`
 export interface IModalContainer {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  isBlur: boolean;
-  isCloseByBackground: boolean;
+  isBlur?: boolean;
+  isCloseByBackground?: boolean;
   children: React.ReactNode;
 }
 const ModalContainer = ({
@@ -39,8 +40,8 @@ const ModalContainer = ({
       onRequestClose={() => {
         setIsOpen(false);
       }}
-      style={{ overlay: { backgroundColor: "transparent", zIndex: 500 } }}
-      className={`flex flex-center w-screen h-screen layer-bg outline-hidden ${isBlur && "backdrop-blur-xs"}`}
+      style={{ overlay: { backgroundColor: 'transparent', zIndex: 500 } }}
+      className={`flex flex-center w-screen h-screen layer-bg outline-hidden ${isBlur && 'backdrop-blur-xs'}`}
     >
       <Background onClick={handleClick}>
         {/* {children && children} */}

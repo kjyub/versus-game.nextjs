@@ -1,19 +1,14 @@
-"use client";
+'use client';
 
-import { useUser } from "@/hooks/useUser";
-import * as VS from "@/styles/VersusStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { UserRole } from "@/types/UserTypes";
-import { GameState, PrivacyTypeIcons, PrivacyTypeNames } from "@/types/VersusTypes";
-import User from "@/types/user/User";
-import VersusGame from "@/types/versus/VersusGame";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import StorageUtils from "@/utils/StorageUtils";
-import Image from "next/image";
-import Link from "next/link";
-// import VersusMainSearch from "@/components/versus/VersusMainSearch"
-import { useState, useEffect, useRef } from "react";
+import { useUser } from '@/hooks/useUser';
+import * as VS from '@/styles/VersusStyles';
+import { UserRole } from '@/types/UserTypes';
+import { GameState, PrivacyTypeIcons, PrivacyTypeNames } from '@/types/VersusTypes';
+import type VersusGame from '@/types/versus/VersusGame';
+import type VersusGameChoice from '@/types/versus/VersusGameChoice';
+import CommonUtils from '@/utils/CommonUtils';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 interface IGameBox {
   game: VersusGame;
@@ -35,10 +30,10 @@ export default function VersusGameBox({ game, storeListState }: IGameBox) {
       <Link href={`/game/${game.nanoId}`} onClick={handleGame}>
         <VS.ListGameContentBox>
           {/* title */}
-          <h3 className={`title ${game.isView ? "viewed" : ""}`}>
+          <h3 className={`title ${game.isView ? 'viewed' : ''}`}>
             {/* 선택했었는지 여부 */}
             {game.isChoice && (
-              <i title={"이미 선택한 게임입니다."} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
+              <i title={'이미 선택한 게임입니다.'} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
             )}
             {/* 제목 */}
             {game.title}
@@ -75,7 +70,7 @@ export default function VersusGameBox({ game, storeListState }: IGameBox) {
   );
 }
 
-const Choices = ({ choices }: { choices: VersusChoice[] }) => {
+const Choices = ({ choices }: { choices: VersusGameChoice[] }) => {
   const [isLeftMask, setLeftMask] = useState<boolean>(false);
   const [isRightMask, setRightMask] = useState<boolean>(false);
 
@@ -101,12 +96,12 @@ const Choices = ({ choices }: { choices: VersusChoice[] }) => {
     const debouncedHandleScroll = CommonUtils.debounce(handleScroll, 100);
     handleScroll();
 
-    listRef.current?.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", debouncedHandleScroll);
+    listRef.current?.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', debouncedHandleScroll);
 
     return () => {
-      listRef.current?.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", debouncedHandleScroll);
+      listRef.current?.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', debouncedHandleScroll);
     };
   }, []);
 

@@ -1,21 +1,22 @@
-import { auth } from "@/auth";
-import VersusGameEmbedView from "@/components/versus/VersusGameEmbedView";
-import ApiUtils from "@/utils/ApiUtils";
-import AuthUtils from "@/utils/AuthUtils";
+import { auth } from '@/auth';
+import VersusGameEmbedView from '@/components/versus/VersusGameEmbedView';
+import ApiUtils from '@/utils/ApiUtils';
+import AuthUtils from '@/utils/AuthUtils';
+import type { ObjectId } from 'mongodb';
 
 const getGame = async (gameId: string, userId: string) => {
-  let params = {};
+  const params: Record<string, string> = {};
 
   if (userId) {
-    params["userId"] = userId;
+    params.userId = userId;
   }
 
-  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET", { params });
+  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET', { params });
 
   return data;
 };
 const getUserChoice = async (gameId: string, userId: string) => {
-  const { data } = await ApiUtils.request(`/api/versus/game_choice/${gameId}`, "POST", {
+  const { data } = await ApiUtils.request(`/api/versus/game_choice/${gameId}`, 'POST', {
     data: {
       userId: userId,
     },
@@ -24,7 +25,7 @@ const getUserChoice = async (gameId: string, userId: string) => {
   return Object.keys(data).length === 0 ? null : data;
 };
 const countGameView = async (gameId: string, userId: string) => {
-  const { data } = await ApiUtils.request(`/api/versus/game_view_count/${gameId}`, "POST", {
+  const { data } = await ApiUtils.request(`/api/versus/game_view_count/${gameId}`, 'POST', {
     data: {
       userId: userId,
     },
@@ -33,15 +34,13 @@ const countGameView = async (gameId: string, userId: string) => {
   return data;
 };
 
-export default async function GamePage(props: { gameId: string }) {
-  const params = await props.params;
+export default async function GamePage(props: { params: { gameId: string } }) {
+  const { gameId } = await props.params;
   const session = await auth();
-  const userId: string = await AuthUtils.getUserOrGuestIdBySSR(session);
+  const userId: string | ObjectId = await AuthUtils.getUserOrGuestIdBySSR(session);
 
-  const { gameId } = params;
-
-  const gameData = await getGame(gameId, userId);
-  const userChoiceData = await getUserChoice(gameId, userId);
+  const gameData = await getGame(gameId, userId.toString());
+  const userChoiceData = await getUserChoice(gameId, userId.toString());
 
   return <VersusGameEmbedView gameData={gameData} userChoiceData={userChoiceData} />;
 }

@@ -1,9 +1,9 @@
-import { randomUUID } from 'crypto'
-import { DEFAULT_CHOICE_COUNT } from '@/types/VersusTypes'
-import mongoose from 'mongoose'
-import MFile from '../file/MFile'
+import { randomUUID } from 'crypto';
+import { DEFAULT_CHOICE_COUNT } from '@/types/VersusTypes';
+import mongoose from 'mongoose';
+import MFile from '../file/MFile';
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const choiceSchema = new Schema({
   _id: {
@@ -27,7 +27,7 @@ const choiceSchema = new Schema({
     type: Number,
     default: 0,
   },
-})
+});
 
 const schema = new Schema(
   {
@@ -112,7 +112,7 @@ const schema = new Schema(
       'choices.title': 1,
     },
   },
-)
+);
 
 // schema.virtual("user", {
 //     ref: "users",
@@ -121,6 +121,6 @@ const schema = new Schema(
 //     justOne: true
 // })
 
-export default mongoose.models.versus_games || mongoose.model('versus_games', schema)
+export default mongoose.models.versus_games || mongoose.model('versus_games', schema);
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

@@ -1,11 +1,11 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 interface Props {
   code?: string;
   message?: string;
   redirectUrl?: string;
 }
-export default function Error({ code, message, redirectUrl }: Props) {
+export default function ErrorComponent({ code, message, redirectUrl }: Props) {
   return (
     <div className="flex flex-center w-full h-screen">
       <div className="flex flex-col flex-center px-32 py-18 gap-8 rounded-4xl layer-bg-2">
@@ -15,7 +15,10 @@ export default function Error({ code, message, redirectUrl }: Props) {
         </div>
         {redirectUrl && (
           <Link href={redirectUrl}>
-            <button className="px-8 py-4 text-xl font-medium text-white rounded-xl layer-bg layer-hover transition-colors">
+            <button
+              className="px-8 py-4 text-xl font-medium text-white rounded-xl layer-bg layer-hover transition-colors"
+              type="button"
+            >
               홈으로 돌아가기
             </button>
           </Link>

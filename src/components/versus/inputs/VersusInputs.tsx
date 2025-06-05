@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import * as VersusStyles from "@/styles/VersusStyles";
-import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from "react";
+import * as VersusStyles from '@/styles/VersusStyles';
+import { type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction, useState } from 'react';
 
-export interface IVersusInputText {
+export interface IVersusInputText extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  label: string;
-  placeholder: string;
-  type?: HTMLInputTypeAttribute | undefined;
-  labelMessage: ReactNode;
-  disabled: boolean;
-  onEnter: () => void;
+  label?: string;
+  placeholder?: string;
+  labelMessage?: ReactNode;
+  disabled?: boolean;
+  onEnter?: () => void;
 }
 export const VersusInputText = ({
   value,
   setValue,
-  label = "",
-  placeholder = "",
-  type = "text",
+  label = '',
+  placeholder = '',
+  type = 'text',
   labelMessage = null,
   disabled = false,
-  onEnter = null,
+  onEnter,
+  ...props
 }: IVersusInputText) => {
   const [isFocus, setFocus] = useState<boolean>(false);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (onEnter && e.key === "Enter") {
+    if (onEnter && e.key === 'Enter') {
       e.preventDefault();
       onEnter();
     }
@@ -51,30 +51,30 @@ export const VersusInputText = ({
           onBlur={() => setFocus(false)}
           disabled={disabled}
           onKeyDown={handleKeyDown}
+          {...props}
         />
       </VersusStyles.InputBox>
     </VersusStyles.InputContainer>
   );
 };
 
-export interface IVersusTextAreaText {
+export interface IVersusTextAreaText extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
-  label: string;
-  placeholder: string;
-  rows: number;
-  labelMessage: ReactNode;
-  disabled: boolean;
-  onEnter: () => void;
+  label?: string;
+  placeholder?: string;
+  labelMessage?: ReactNode;
+  disabled?: boolean;
+  onEnter?: () => void;
 }
 export const VersusInputTextArea = ({
   value,
   setValue,
-  label = "",
-  placeholder = "",
-  rows = "4",
+  label = '',
+  placeholder = '',
   labelMessage = null,
   disabled = false,
+  ...props
 }: IVersusTextAreaText) => {
   const [isFocus, setFocus] = useState<boolean>(false);
 
@@ -87,7 +87,6 @@ export const VersusInputTextArea = ({
       <VersusStyles.InputBox $is_focus={isFocus} $disabled={disabled}>
         <textarea
           className="input resize-none w-full"
-          rows={rows}
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
@@ -96,6 +95,7 @@ export const VersusInputTextArea = ({
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           disabled={disabled}
+          {...props}
         />
       </VersusStyles.InputBox>
     </VersusStyles.InputContainer>

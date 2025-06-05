@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import ModalContainer from "@/components/ModalContainer";
-import { CookieConsts } from "@/types/ApiTypes";
-import ApiUtils from "@/utils/ApiUtils";
-import BrowserUtils from "@/utils/BrowserUtils";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import ModalContainer from '@/components/ModalContainer';
+import { CookieConsts } from '@/types/ApiTypes';
+import ApiUtils from '@/utils/ApiUtils';
+import BrowserUtils from '@/utils/BrowserUtils';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function AppClientLayout({ children }: { children: React.ReactNode }) {
   const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false);
@@ -26,17 +26,18 @@ export default function AppClientLayout({ children }: { children: React.ReactNod
   }, [pathname]);
 
   const requestGuestId = async () => {
-    const response = await ApiUtils.request("/api/users/guest", "POST");
+    const response = await ApiUtils.request('/api/users/guest', 'POST');
   };
 
   return (
     <>
       <ModalContainer isOpen={isInAppBrowser} setIsOpen={() => {}}>
-        <div className="flex flex-col rounded-xl bg-white/70 backdrop-blur" style={{ padding: "1.5rem" }}>
+        <div className="flex flex-col rounded-xl bg-white/70 backdrop-blur" style={{ padding: '1.5rem' }}>
           <span className="text-lg font-semibold text-stone-800">추즈밍은 외부 웹브라우저에서 사용 가능합니다</span>
 
           <button
             className="p-2 mt-4 rounded-xl bg-rose-500 text-white"
+            type="button"
             onClick={() => {
               BrowserUtils.redirectToExternalBrowser();
             }}

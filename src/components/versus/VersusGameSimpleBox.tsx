@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useUser } from "@/hooks/useUser";
-import * as VS from "@/styles/VersusStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { GameState } from "@/types/VersusTypes";
-import VersusGame from "@/types/versus/VersusGame";
-import StorageUtils from "@/utils/StorageUtils";
-import Link from "next/link";
-import { useState } from "react";
+import { useUser } from '@/hooks/useUser';
+import * as VS from '@/styles/VersusStyles';
+import { CookieConsts } from '@/types/ApiTypes';
+import { GameState } from '@/types/VersusTypes';
+import type VersusGame from '@/types/versus/VersusGame';
+import StorageUtils from '@/utils/StorageUtils';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface IGameBox {
   game: VersusGame;
@@ -28,10 +28,10 @@ export default function VersusGameSimpleBox({ game, storeListState }: IGameBox) 
       <VS.ListGameSimpleContentBox>
         <Link href={`/game/${game.nanoId}`} onClick={handleGame}>
           <VS.ListGameContentBox>
-            <span className={`title ${game.isView ? "viewed" : ""}`}>
+            <span className={`title ${game.isView ? 'viewed' : ''}`}>
               {/* 선택했었는지 여부 */}
               {game.isChoice && (
-                <i title={"이미 선택한 게임입니다."} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
+                <i title={'이미 선택한 게임입니다.'} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
               )}
               {/* 제목 */}
               {game.title}

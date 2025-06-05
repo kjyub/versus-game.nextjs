@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import * as VS from "@/styles/VersusStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import VersusSearchInput from "./inputs/VersusSearchInput";
-import { useUi } from "@/hooks/useUi";
+import { useUi } from '@/hooks/useUi';
+import * as VS from '@/styles/VersusStyles';
+import { CookieConsts } from '@/types/ApiTypes';
+import { useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import VersusSearchInput from './inputs/VersusSearchInput';
 
 interface IVersusMainSearch {
   searchValue: string;
@@ -26,21 +26,21 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
   const [isChoiceGame, setChoiceGame] = useState<boolean>(false);
 
   useEffect(() => {
-    const search = searchParams.get("search");
+    const search = searchParams.get('search');
 
     if (search) {
       router.push(`/?search=${search}`);
     }
 
-    const myGames = searchParams.get("myGames");
+    const myGames = searchParams.get('myGames');
     setMyGame(myGames !== null);
 
-    const choiced = searchParams.get("choiced");
+    const choiced = searchParams.get('choiced');
     setChoiceGame(choiced !== null);
   }, [searchParams]);
 
   const handleSearch = () => {
-    let query = {};
+    const query: Record<string, string> = {};
 
     // 게임 리스트 페이지로 되돌아 올 시 저장하는 데이터 삭제
     sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
@@ -52,14 +52,14 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
 
     // 검색어가 없으면 query에서 search 제거
     if (searchValue) {
-      query["search"] = searchValue;
+      query.search = searchValue;
     } else {
       delete query.search;
     }
 
-    let queryUrl = "";
+    let queryUrl = '';
     if (Object.keys(query).length > 0) {
-      queryUrl += "?";
+      queryUrl += '?';
       queryUrl += new URLSearchParams(query).toString();
     }
 
@@ -67,7 +67,7 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
   };
 
   const handleMyGame = () => {
-    let query = {};
+    const query: Record<string, string> = {};
 
     // 현재 쿼리를 query에 추가
     searchParams.forEach((value: string, key: string, parent: URLSearchParams) => {
@@ -76,21 +76,21 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
 
     // 내 게임을 활성화
     if (!isMyGame) {
-      query["myGames"] = 1;
+      query.myGames = '1';
     } else {
       delete query.myGames;
     }
 
-    let queryUrl = "";
+    let queryUrl = '';
     if (Object.keys(query).length > 0) {
-      queryUrl += "?";
+      queryUrl += '?';
       queryUrl += new URLSearchParams(query).toString();
     }
 
     router.push(`/${queryUrl}`);
   };
   const handleChoiceGame = () => {
-    let query = {};
+    const query: Record<string, string> = {};
 
     // 현재 쿼리를 query에 추가
     searchParams.forEach((value: string, key: string, parent: URLSearchParams) => {
@@ -99,14 +99,14 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
 
     // 내 게임을 활성화
     if (!isChoiceGame) {
-      query["choiced"] = 1;
+      query.choiced = '1';
     } else {
       delete query.choiced;
     }
 
-    let queryUrl = "";
+    let queryUrl = '';
     if (Object.keys(query).length > 0) {
-      queryUrl += "?";
+      queryUrl += '?';
       queryUrl += new URLSearchParams(query).toString();
     }
 
@@ -127,7 +127,7 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
         {/* 정렬 (사용 안할 수도 있음) */}
         <div className="section"></div>
         <div className="section">
-          {session.status === "authenticated" && (
+          {session.status === 'authenticated' && (
             <VS.MainSearchFilterMenuButton
               $is_active={isChoiceGame}
               onClick={() => {
@@ -137,7 +137,7 @@ const VersusMainSearch = ({ searchValue, setSearchValue, openMenu, isMenuShow }:
               참여한 게임
             </VS.MainSearchFilterMenuButton>
           )}
-          {session.status === "authenticated" && (
+          {session.status === 'authenticated' && (
             <VS.MainSearchFilterMenuButton
               $is_active={isMyGame}
               onClick={() => {

@@ -1,4 +1,4 @@
-import './BgMoveLines.css'
+import './BgMoveLines.css';
 
 const BgMoveLines = () => {
   return (
@@ -14,10 +14,11 @@ const BgMoveLines = () => {
         position: 'absolute',
         height: '100vh',
         aspectRatio: '1820/1080',
-        enableBackground: 'new 0 0 1820 1080',
       }}
+      enableBackground="new 0 0 1820 1080"
       xmlSpace="preserve"
     >
+      <title>bg-move-lines</title>
       <g id="home">
         <defs>
           <rect id="masque" y="0.4" width="1820" height="1080" />
@@ -124,6 +125,6 @@ const BgMoveLines = () => {
         </g>
       </g>
     </svg>
-  )
-}
-export default BgMoveLines
+  );
+};
+export default BgMoveLines;

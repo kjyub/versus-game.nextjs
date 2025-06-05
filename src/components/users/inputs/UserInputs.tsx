@@ -1,36 +1,35 @@
-"use client";
+'use client';
 
-import * as UserStyles from "@/styles/UserStyles";
-import CommonUtils from "@/utils/CommonUtils";
-import { Dispatch, KeyboardEvent, ReactNode, SetStateAction, useState } from "react";
+import * as UserStyles from '@/styles/UserStyles';
+import CommonUtils from '@/utils/CommonUtils';
+import { type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction, useState } from 'react';
 
 export interface IUserInputText extends React.InputHTMLAttributes<HTMLInputElement> {
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
-  label: string;
-  placeholder: string;
-  type?: HTMLInputTypeAttribute | undefined;
-  labelMessage: ReactNode;
-  disabled: boolean;
-  autoPassword: boolean;
-  onEnter: () => void;
+  setValue?: Dispatch<SetStateAction<string>>;
+  label?: string;
+  placeholder?: string;
+  labelMessage?: ReactNode;
+  disabled?: boolean;
+  autoPassword?: boolean;
+  onEnter?: () => void;
 }
 const UserInputText = ({
   value,
   setValue,
-  label = "",
-  placeholder = "",
-  type = "text",
+  label = '',
+  placeholder = '',
+  type = 'text',
   labelMessage = null,
   disabled = false,
   autoPassword = true,
-  onEnter = null,
+  onEnter,
   ...props
 }: IUserInputText) => {
   const [isFocus, setFocus] = useState<boolean>(false);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
-    if (onEnter && e.key === "Enter") {
+    if (onEnter && e.key === 'Enter') {
       e.preventDefault();
       onEnter();
     }
@@ -53,7 +52,7 @@ const UserInputText = ({
           onBlur={() => setFocus(false)}
           disabled={disabled}
           onKeyDown={handleKeyDown}
-          autoComplete={autoPassword ? "new-password" : undefined}
+          autoComplete={autoPassword ? 'new-password' : undefined}
           {...props}
         />
       </UserStyles.InputBox>

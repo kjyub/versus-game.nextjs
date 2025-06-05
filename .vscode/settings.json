@@ -9,10 +9,19 @@
     "titleBar.activeForeground": "#FAFAFA"
   },
   "editor.tabSize": 2,
-  "editor.detectIndentation": false,
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "biomejs.biome",
-  "biome.enableLinting": true,
-  "biome.enableFormatting": true
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "prettier.enable": false,
+  "eslint.format.enable": false,
+  "editor.detectIndentation": false,
 }

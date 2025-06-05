@@ -1,43 +1,30 @@
-"use client";
-import * as VS from "@/styles/VersusStyles";
-import {
-  CHOICE_COUNT_CONST,
-  DEFAULT_CHOICE_COUNT,
-  GameState,
-  PrivacyTypeIcons,
-  PrivacyTypeNames,
-  PrivacyTypes,
-  ThumbnailImageTypes,
-} from "@/types/VersusTypes";
-import VersusFile from "@/types/file/VersusFile";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import { useSession } from "next-auth/react";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import ModalContainer from "../ModalContainer";
-import VersusChoiceEdit from "./inputs/VersusChoiceEdit";
-import { VersusInputText, VersusInputTextArea } from "./inputs/VersusInputs";
-import VersusThumbnailImageEdit from "./inputs/VersusThumbnailImageEdit";
-import VersusPrivacyModal from "./modals/VersusPrivacyModal";
-import { usePreventLeave } from "@/hooks/usePreventLeave";
+'use client';
+import { usePreventLeave } from '@/hooks/usePreventLeave';
+import * as VS from '@/styles/VersusStyles';
+import { GameState, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes } from '@/types/VersusTypes';
+import VersusGame from '@/types/versus/VersusGame';
+import ApiUtils from '@/utils/ApiUtils';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import ModalContainer from '../ModalContainer';
+import VersusChoiceEdit from './inputs/VersusChoiceEdit';
+import { VersusInputText, VersusInputTextArea } from './inputs/VersusInputs';
+import VersusPrivacyModal from './modals/VersusPrivacyModal';
 
 interface IVersusEditor {
   isUpdate: boolean;
-  gameData: object | null;
-  saveOnClose: () => void | null;
+  gameData?: object;
+  saveOnClose?: () => void;
 }
-export default function VersusEditor({ isUpdate = false, gameData = null, saveOnClose = null }: IVersusEditor) {
+export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }: IVersusEditor) {
   const router = useRouter();
   const session = useSession();
 
   const [game, setGame] = useState<VersusGame>(new VersusGame());
 
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC);
 
   const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false);
@@ -61,14 +48,14 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   }, [privacyType]);
 
   // 업데이트 모드 시 불러온 게임 데이터를 이용해 초기화
-  const loadGameData = (data: object) => {
+  const loadGameData = (data?: object) => {
     // 세션 불러오는 중에는 넘어가기
-    if (!session || session.status === "loading") {
+    if (!session || session.status === 'loading') {
       return;
     }
     // 로그인 안했으면 나가기
-    if (session.status === "unauthenticated") {
-      router.push("/");
+    if (session.status === 'unauthenticated') {
+      router.push('/');
       return;
     }
 
@@ -84,9 +71,10 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     }
 
     // 작성자가 아니면 권한 X
+    // @ts-ignore
     if (isUpdate && session.data?.user?._id !== _game.userId) {
-      alert("권한이 없습니다");
-      router.push("/");
+      alert('권한이 없습니다');
+      router.push('/');
       return;
     }
 
@@ -97,26 +85,26 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
 
     // 게임이 차단된 경우
     if (_game.state === GameState.BLOCK) {
-      alert("관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.");
+      alert('관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.');
     }
   };
 
   // 게임 저장 유효성 검사
   const gameValidate = () => {
-    let errorMessages: Array<string> = [];
+    const errorMessages: Array<string> = [];
     // 1. 제목 확인 (필수)
     if (!game.title) {
-      errorMessages.push("제목을 입력해 주세요.");
+      errorMessages.push('제목을 입력해 주세요.');
     }
 
     // 2. 썸네일 확인 (아직은 선택)
     const isChoicesValid = game.choices.filter((_c) => _c.title).length > 0;
     if (!isChoicesValid) {
-      errorMessages.push("선택지를 최소 하나 이상 입력해 주세요.");
+      errorMessages.push('선택지를 최소 하나 이상 입력해 주세요.');
     }
 
     if (errorMessages.length > 0) {
-      alert(errorMessages.join("\n"));
+      alert(errorMessages.join('\n'));
 
       return false;
     }
@@ -141,16 +129,16 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     };
 
     // 저장 성공 여부
-    let saveResult: boolean = false;
+    let saveResult = false;
 
     if (!game.id) {
-      const { result, data: responseData } = await ApiUtils.request("/api/versus/game", "POST", { data });
+      const { result, data: responseData } = await ApiUtils.request('/api/versus/game', 'POST', { data });
 
       if (!result) {
-        if (responseData["message"]) {
-          alert(responseData["message"]);
+        if (responseData.message) {
+          alert(responseData.message);
         } else {
-          alert("저장 실패했습니다.");
+          alert('저장 실패했습니다.');
         }
 
         return;
@@ -163,13 +151,13 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
         saveResult = true;
       }
     } else {
-      const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "PUT", { data });
+      const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, 'PUT', { data });
 
       if (!result) {
-        if (responseData["message"]) {
-          alert(responseData["message"]);
+        if (responseData.message) {
+          alert(responseData.message);
         } else {
-          alert("저장 실패했습니다.");
+          alert('저장 실패했습니다.');
         }
 
         return;
@@ -178,8 +166,8 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
     }
 
     if (saveResult) {
-      if (saveOnClose === null) {
-        router.push("/");
+      if (!saveOnClose) {
+        router.push('/');
         router.refresh();
       } else {
         saveOnClose();
@@ -188,22 +176,22 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
   };
 
   const handleDelete = async () => {
-    if (!confirm("정말 삭제하시겠습니까?")) {
+    if (!confirm('정말 삭제하시겠습니까?')) {
       return;
     }
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, "DELETE");
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/game/${game.nanoId}`, 'DELETE');
 
     if (!result) {
-      if (responseData["message"]) {
-        alert(responseData["message"]);
+      if (responseData.message) {
+        alert(responseData.message);
       } else {
-        alert("삭제 실패했습니다.");
+        alert('삭제 실패했습니다.');
       }
 
       return;
     }
-    router.push("/");
+    router.push('/');
     router.refresh();
   };
 
@@ -214,7 +202,7 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
           <span className="title">기본 정보</span>
 
           {/* 제목 */}
-          <VersusInputText label={"제목"} placeholder={"제목을 입력해주세요."} value={title} setValue={setTitle} />
+          <VersusInputText label={'제목'} placeholder={'제목을 입력해주세요.'} value={title} setValue={setTitle} />
 
           {/* 썸네일 */}
           {/* <VS.InputContainer>
@@ -224,8 +212,8 @@ export default function VersusEditor({ isUpdate = false, gameData = null, saveOn
 
           {/* 내용 */}
           <VersusInputTextArea
-            label={"내용"}
-            placeholder={"게임에 대한 내용을 입력해주세요.(선택)"}
+            label={'내용'}
+            placeholder={'게임에 대한 내용을 입력해주세요.(선택)'}
             value={content}
             setValue={setContent}
             rows={8}

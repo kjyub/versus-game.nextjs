@@ -1,19 +1,18 @@
-"use client";
+'use client';
 
-import * as VS from "@/styles/VersusStyles";
-import { EditStateTypes } from "@/types/DataTypes";
-import { Dictionary } from "@/types/common/Dictionary";
-import { IPaginationResponse } from "@/types/common/Responses";
-import User from "@/types/user/User";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import VersusGameComment from "@/types/versus/VersusGameComment";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import VersusCommentPagination from "./VersusCommentPagination";
-import { useUser } from "@/hooks/useUser";
-import { useCallback, useEffect, useState } from "react";
-import CommentBox from "./CommentBox";
+import { useUser } from '@/hooks/useUser';
+import * as VS from '@/styles/VersusStyles';
+import { Dictionary } from '@/types/common/Dictionary';
+import type { IPaginationResponse } from '@/types/common/Responses';
+import type VersusGame from '@/types/versus/VersusGame';
+import type VersusGameChoice from '@/types/versus/VersusGameChoice';
+import VersusGameComment from '@/types/versus/VersusGameComment';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import type React from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from 'react';
+import CommentBox from './CommentBox';
+import VersusCommentPagination from './VersusCommentPagination';
 
 const PAGE_SIZE = 5;
 
@@ -32,7 +31,7 @@ export default function VersusGameViewComment({
   const user = useUser();
 
   const [choiceDic, setChoiceDic] = useState<Dictionary<string, VersusGameChoice>>(
-    new Dictionary<string, VersusGameChoice>()
+    new Dictionary<string, VersusGameChoice>(),
   );
 
   const [comments, setComments] = useState<Array<VersusGameComment>>([]);
@@ -59,7 +58,7 @@ export default function VersusGameViewComment({
         return;
       }
 
-      const { result, data } = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, "GET", {
+      const { result, data } = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, 'GET', {
         params: {
           gameNanoId: game.nanoId,
           pageIndex: _pageIndex,
@@ -73,7 +72,7 @@ export default function VersusGameViewComment({
 
       const pagination: IPaginationResponse = data;
 
-      let _comments: Array<VersusGameComment> = [];
+      const _comments: Array<VersusGameComment> = [];
       pagination.items.map((item) => {
         const newComment = new VersusGameComment();
         newComment.parseResponse(item);
@@ -87,14 +86,14 @@ export default function VersusGameViewComment({
 
       setCommentCount(pagination.itemCount);
     },
-    [game]
+    [game],
   );
 
   const handlePageIndex = useCallback(
     async (_pageIndex: number) => {
       await getComments(_pageIndex);
     },
-    [getComments]
+    [getComments],
   );
 
   const getCurrentComments = useCallback(() => {
@@ -138,10 +137,10 @@ export default function VersusGameViewComment({
 interface ICommentInputBox {
   game: VersusGame;
   answerChoice: VersusGameChoice;
-  getComments: () => Promise<void>;
+  getComments: (_pageIndex: number) => Promise<void>;
 }
 const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) => {
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>('');
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
 
@@ -152,28 +151,28 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
 
     setWriteLoading(true);
 
-    let data = {
+    const data = {
       parentId: null,
       gameId: game.id,
       gameChoiceId: answerChoice.id,
       content: content,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment`, "POST", { data });
+    const { result, data: responseData } = await ApiUtils.request('/api/versus/comment', 'POST', { data });
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData["message"] ?? "실패했습니다.");
+      alert(responseData.message ?? '실패했습니다.');
       return;
     }
 
-    setContent("");
+    setContent('');
     getComments(-1);
     setWriteLoading(false);
   };
 
-  const handleWriteCommentEnter = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleWriteCommentEnter = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleWriteComment();
     }
@@ -188,7 +187,7 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
           <span
             className="absolute z-10 flex flex-center w-full h-full text-white layer-bg"
             style={{
-              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
+              textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
             }}
           >
             {answerChoice.title}
@@ -196,8 +195,7 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
         </div>
         <div className="max-sm:hidden flex-1">
           <textarea
-            type={"text"}
-            style={{ height: "50px" }}
+            style={{ height: '50px' }}
             value={content}
             onChange={(e) => {
               setContent(e.target.value);
@@ -221,8 +219,7 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
       </div>
       <div className="max-sm:block sm:hidden w-full">
         <textarea
-          type={"text"}
-          style={{ height: "50px" }}
+          style={{ height: '50px' }}
           value={content}
           onChange={(e) => {
             setContent(e.target.value);

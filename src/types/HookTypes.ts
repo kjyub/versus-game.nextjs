@@ -1,3 +1,3 @@
-import React from 'react'
+import type React from 'react';
 
-export type MutableRef = React.MutableRefObject<HTMLElement | null>
+export type MutableRef = React.MutableRefObject<HTMLElement | null>;

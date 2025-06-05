@@ -1,29 +1,29 @@
 export enum EditTypes {
-  ADD,
-  MODIFY,
-  REMOVE,
+  ADD = 0,
+  MODIFY = 1,
+  REMOVE = 2,
 }
 
 export enum EditStateTypes {
-  WAIT,
-  DISABLED,
-  EDITED,
-  PENDING,
-  DONE,
-  FAILED,
+  WAIT = 0,
+  DISABLED = 1,
+  EDITED = 2,
+  PENDING = 3,
+  DONE = 4,
+  FAILED = 5,
 }
 
 export interface Paging<T> {
-  pageCount: number
-  datas: Array<T>
+  pageCount: number;
+  datas: Array<T>;
 }
 
 export const PagingBlank = {
   pageCount: 1,
   datas: [],
-}
+};
 
 export enum DataTypes {
-  TEXT,
-  IMAGE,
+  TEXT = 0,
+  IMAGE = 1,
 }

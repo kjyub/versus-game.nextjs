@@ -1,11 +1,11 @@
-"use client";
-import * as VS from "@/styles/VersusStyles";
-import VersusMainSearch from "./VersusMainSearch";
-import { useState } from "react";
-import { useDetectClose } from "@/hooks/useDetectClose";
+'use client';
+import { useDetectClose } from '@/hooks/useDetectClose';
+import * as VS from '@/styles/VersusStyles';
+import { useState } from 'react';
+import VersusMainSearch from './VersusMainSearch';
 
 const VersusMainTitle = () => {
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchValue, setSearchValue] = useState<string>('');
   const [menuRef, isMenuShow, setIsMenuShow] = useDetectClose();
 
   const openMenu = () => {
@@ -24,7 +24,7 @@ const VersusMainTitle = () => {
         isMenuShow={isMenuShow}
         openMenu={openMenu}
       />
-      <div className={`title-search-menu ${isMenuShow ? "show" : ""}`}></div>
+      <div className={`title-search-menu ${isMenuShow ? 'show' : ''}`}></div>
     </VS.MainTitleLayout>
   );
 };

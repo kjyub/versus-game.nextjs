@@ -1,14 +1,17 @@
-import { IPaginationResponse } from "../common/Responses";
-import { AbsApiObject } from "../ApiTypes";
+import type { AbsApiObject } from '../ApiTypes';
+import type { IPaginationResponse } from '../common/Responses';
+
 export default class Pagination<T extends AbsApiObject> {
   private _count: number;
   private _items: Array<T>;
   private _pageIndex: number;
+  private _maxPage: number;
 
-  constructor(count: number = 0, items: Array<T> = []) {
+  constructor(count = 0, items: Array<T> = []) {
     this._count = count;
     this._items = items;
     this._pageIndex = 1;
+    this._maxPage = 0;
   }
 
   get count(): number {
@@ -20,9 +23,12 @@ export default class Pagination<T extends AbsApiObject> {
   get pageIndex(): number {
     return this._pageIndex;
   }
+  get maxPage(): number {
+    return this._maxPage;
+  }
 
   parseResponse(data: IPaginationResponse, cls: new () => T): void {
-    if (data === {}) {
+    if (Object.keys(data).length === 0) {
       return;
     }
 
@@ -30,7 +36,7 @@ export default class Pagination<T extends AbsApiObject> {
 
     if (Array.isArray(items)) {
       this._items = items.map((result) => {
-        let instance: T = new cls();
+        const instance: T = new cls();
         instance.parseResponse(result);
         return instance;
       });
@@ -40,5 +46,6 @@ export default class Pagination<T extends AbsApiObject> {
 
     this._count = data.itemCount || 0;
     this._pageIndex = data.pageIndex || 1;
+    this._maxPage = data.maxPage || 0;
   }
 }

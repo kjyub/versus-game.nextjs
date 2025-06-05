@@ -1,19 +1,18 @@
-"use client";
-import { useUser } from "@/hooks/useUser";
-import * as VS from "@/styles/VersusStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { IListState } from "@/types/CommonTypes";
-import { IPaginationResponse } from "@/types/common/Responses";
-import VersusGame from "@/types/versus/VersusGame";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import StorageUtils from "@/utils/StorageUtils";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useInView } from "react-intersection-observer";
-import VersusGameBox from "./VersusGameBox";
-import Pagination from "@/types/apis/pagination";
-import VersusGameBoxCloud from "./VersusGameBoxCloud";
+'use client';
+import { useUser } from '@/hooks/useUser';
+import * as VS from '@/styles/VersusStyles';
+import { CookieConsts } from '@/types/ApiTypes';
+import type { IListState } from '@/types/CommonTypes';
+import Pagination from '@/types/apis/pagination';
+import type { IPaginationResponse } from '@/types/common/Responses';
+import VersusGame from '@/types/versus/VersusGame';
+import ApiUtils from '@/utils/ApiUtils';
+import StorageUtils from '@/utils/StorageUtils';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import VersusGameBox from './VersusGameBox';
+import VersusGameBoxCloud from './VersusGameBoxCloud';
 
 const PAGE_SIZE = 50;
 
@@ -26,7 +25,7 @@ const convertGameDataToGame = (gameData: Array<object>): Array<VersusGame> => {
   const gameChoicesCache: Array<string> = StorageUtils.getSessionStorageList(CookieConsts.GAME_CHOICED_SESSION);
   const gameChoicesCacheSet: Set<string> = new Set(gameChoicesCache);
 
-  let newGames: Array<VersusGame> = gameData.map((data) => {
+  const newGames: Array<VersusGame> = gameData.map((data) => {
     const game = new VersusGame();
     game.parseResponse(data);
 
@@ -46,7 +45,7 @@ const convertGameDataToGame = (gameData: Array<object>): Array<VersusGame> => {
 const handleTop = () => {
   window.scrollTo({
     top: 0,
-    behavior: "smooth",
+    behavior: 'smooth',
   });
 };
 
@@ -71,14 +70,14 @@ export default function VersusList({ versusGameData }: IVersusList) {
   // 페이지네이션
   const searchParams = useSearchParams();
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const [lastId, setLastId] = useState<string>("");
+  const [lastId, setLastId] = useState<string>('');
   const [itemCount, setItemCount] = useState<number>(0);
   const [maxPage, setMaxPage] = useState<number>(0);
   const [scrollRef, scrollInView] = useInView();
   const [isScrollLoading, setScrollLoading] = useState<boolean>(false);
 
   // 무한 스크롤 관련
-  const [listState, setListState] = useState<IListState>({});
+  const [listState, setListState] = useState<IListState>({} as IListState);
   const [rollbackScrollLocation, setRollbackScrollLocation] = useState<number>(-1); // 목록으로 되돌아 왔을 때 이동할 스크롤 위치
 
   useEffect(() => {
@@ -110,18 +109,18 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
     setGames(newGames);
     setPageIndex(1);
-    let _lastId: string = "";
+    let _lastId = '';
     if (newGames.length > 0) {
       _lastId = newGames[newGames.length - 1].id;
     } else {
-      _lastId = "";
+      _lastId = '';
     }
     setLastId(_lastId);
     setItemCount(initPagination.count);
     setMaxPage(initPagination.maxPage);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState([], _lastId, versusGameData.items);
+    updateListState([], _lastId, versusGameData.items, initPagination.pageIndex);
     // 페이지를 처음 들어온 경우 이전 기억을 지운다.
     sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
   }, [versusGameData]);
@@ -138,20 +137,20 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
     setScrollLoading(true);
 
-    let params = {
-      ...ApiUtils.getParams(searchParams, ["search", "myGames"]),
+    const params = {
+      ...ApiUtils.getParams(searchParams, ['search', 'myGames']),
       lastId: lastId,
       userId: user.id,
     };
 
-    const { result, data } = await ApiUtils.request("/api/versus/game", "GET", { params });
+    const { result, data } = await ApiUtils.request('/api/versus/game', 'GET', { params });
 
     if (!result) {
       setScrollLoading(false);
       return;
     }
 
-    const pagination: IPaginationResponse = data;
+    const pagination: IPaginationResponse = data as IPaginationResponse;
     const items = pagination.items;
 
     if (pagination.itemCount === 0) {
@@ -168,27 +167,31 @@ export default function VersusList({ versusGameData }: IVersusList) {
     setMaxPage(pagination.maxPage);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState(listState.items, pagination.lastId, items);
+    updateListState(listState.items, pagination.lastId, items, pagination.pageIndex);
 
     setScrollLoading(false);
   }, [isScrollLoading, lastId, pageIndex, searchParams, user.id, games, listState]);
 
   // 뒤로가기로 돌아왔을 때 사용할 데이터 업데이트
-  const updateListState = useCallback((rawDataItems: IListState = [], lastId: string, newDataItems: Array<object>) => {
-    let scrollLocation = 0;
-    const page = document.body;
-    if (page) {
-      scrollLocation = page.scrollHeight;
-    }
+  const updateListState = useCallback(
+    (rawDataItems: Array<any>, lastId: string, newDataItems: Array<any>, pageIndex: number) => {
+      let scrollLocation = 0;
+      const page = document.body;
+      if (page) {
+        scrollLocation = page.scrollHeight;
+      }
 
-    const newRawData: IListState = {
-      lastId: lastId,
-      items: [...rawDataItems, ...newDataItems],
-      scrollLocation: scrollLocation,
-    };
+      const newRawData: IListState = {
+        pageIndex: pageIndex,
+        lastId: lastId,
+        items: [...rawDataItems, ...newDataItems],
+        scrollLocation: scrollLocation,
+      };
 
-    setListState(newRawData);
-  }, []);
+      setListState(newRawData);
+    },
+    [],
+  );
 
   // 현재 목록 상태를 세션스토리지에 저장한다.
   const storeListState = useCallback(
@@ -210,7 +213,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
       sessionStorage.setItem(CookieConsts.GAME_LIST_DATA_SESSION, jsonData);
       StorageUtils.pushSessionStorageList(CookieConsts.GAME_VIEWED_SESSION, _game.nanoId);
     },
-    [listState]
+    [listState],
   );
 
   // 리스트 상태를 이전 상태로 되돌린다.
@@ -231,7 +234,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     setMaxPage(0);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState([], _rawData.lastId, _rawData.items);
+    updateListState([], _rawData.lastId, _rawData.items, 1);
     setRollbackScrollLocation(_rawData.scrollLocation);
 
     return true;
@@ -242,7 +245,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
       <VS.ListGrid>
         {games.map((game: VersusGame, index: number) => (
           <VersusGameBoxCloud key={index} index={index}>
-            <VersusGameBox game={game} user={user} storeListState={storeListState} />
+            <VersusGameBox game={game} storeListState={storeListState} />
           </VersusGameBoxCloud>
         ))}
       </VS.ListGrid>

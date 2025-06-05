@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import StaffControl from '@/components/staff/StaffControl'
-import StaffGameList from '@/components/staff/StaffGameList'
+import StaffControl from '@/components/staff/StaffControl';
+import StaffGameList from '@/components/staff/StaffGameList';
 
 export default function StaffPage() {
   return (
@@ -11,5 +11,5 @@ export default function StaffPage() {
       <StaffControl />
       <StaffGameList />
     </div>
-  )
+  );
 }

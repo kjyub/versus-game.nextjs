@@ -1,17 +1,17 @@
-import * as VS from '@/styles/VersusStyles'
-import { PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes } from '@/types/VersusTypes'
-import { Dispatch, SetStateAction } from 'react'
+import * as VS from '@/styles/VersusStyles';
+import { PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes } from '@/types/VersusTypes';
+import type { Dispatch, SetStateAction } from 'react';
 
 interface IVersusPrivacyModal {
-  privacyType: PrivacyTypes
-  setPrivacyType: Dispatch<SetStateAction<PrivacyTypes>>
-  close: () => void
+  privacyType: PrivacyTypes;
+  setPrivacyType: Dispatch<SetStateAction<PrivacyTypes>>;
+  close: () => void;
 }
 export default function VersusPrivacyModal({ privacyType, setPrivacyType, close }: IVersusPrivacyModal) {
   const handlePrivacyType = (_privacyType) => {
-    setPrivacyType(_privacyType)
-    close()
-  }
+    setPrivacyType(_privacyType);
+    close();
+  };
 
   return (
     <VS.PrivacyModalLayout>
@@ -21,7 +21,7 @@ export default function VersusPrivacyModal({ privacyType, setPrivacyType, close 
         <VS.PrivacyModalItem
           $is_active={privacyType === PrivacyTypes.PUBLIC}
           onClick={() => {
-            handlePrivacyType(PrivacyTypes.PUBLIC)
+            handlePrivacyType(PrivacyTypes.PUBLIC);
           }}
         >
           {PrivacyTypeIcons[PrivacyTypes.PUBLIC]}
@@ -33,7 +33,7 @@ export default function VersusPrivacyModal({ privacyType, setPrivacyType, close 
         <VS.PrivacyModalItem
           $is_active={privacyType === PrivacyTypes.RESTRICTED}
           onClick={() => {
-            handlePrivacyType(PrivacyTypes.RESTRICTED)
+            handlePrivacyType(PrivacyTypes.RESTRICTED);
           }}
         >
           {PrivacyTypeIcons[PrivacyTypes.RESTRICTED]}
@@ -45,7 +45,7 @@ export default function VersusPrivacyModal({ privacyType, setPrivacyType, close 
         <VS.PrivacyModalItem
           $is_active={privacyType === PrivacyTypes.PRIVATE}
           onClick={() => {
-            handlePrivacyType(PrivacyTypes.PRIVATE)
+            handlePrivacyType(PrivacyTypes.PRIVATE);
           }}
         >
           {PrivacyTypeIcons[PrivacyTypes.PRIVATE]}
@@ -56,5 +56,5 @@ export default function VersusPrivacyModal({ privacyType, setPrivacyType, close 
         </VS.PrivacyModalItem>
       </div>
     </VS.PrivacyModalLayout>
-  )
+  );
 }

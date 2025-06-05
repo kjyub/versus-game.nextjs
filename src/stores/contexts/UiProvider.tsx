@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { createContext, useEffect, useState } from "react";
-import { useSearchParams, usePathname } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { createContext, useEffect, useState } from 'react';
 
 interface UiContextProps {
   isScrollTop: boolean;
@@ -16,7 +16,7 @@ const initialState: UiContextProps = {
 export const UiContext = createContext<UiContextProps>(initialState);
 
 export const UiProvider = ({ children }: { children: React.ReactNode }) => {
-  const isBrowser = typeof window !== "undefined";
+  const isBrowser = typeof window !== 'undefined';
 
   const [isScrollTop, setIsScrollTop] = useState<boolean>(true);
   const [isCloudActive, setIsCloudActive] = useState<boolean>(true);
@@ -31,10 +31,10 @@ export const UiProvider = ({ children }: { children: React.ReactNode }) => {
       setIsScrollTop(window.scrollY <= 0);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
     };
   }, [isBrowser]);
 
@@ -47,6 +47,6 @@ export const UiProvider = ({ children }: { children: React.ReactNode }) => {
 
 const getIsCloudActive = (isScrollTop: boolean, pathname: string, searchParams: URLSearchParams) => {
   const isParamsEmpty = searchParams.size === 0;
-  const isMainPage = pathname === "/";
+  const isMainPage = pathname === '/';
   return isParamsEmpty && isMainPage && isScrollTop;
 };

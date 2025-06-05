@@ -1,7 +1,7 @@
 export const AUTH_PROVIDER_TYPES = {
   NONE: 0,
   GOOGLE: 1,
-}
+};
 
 export enum UserRole {
   GUEST = 0,
@@ -67,4 +67,4 @@ export const SIGNUP_AGREEMENT = `
 'VersusGame'는 개인정보보호법 제29조에 따라 다음과 같이 안전성 확보에 필요한 기술적/관리적 및 물리적 조치를 하고 있습니다.
 1. 비밀번호의 암호화
 이용자의 비밀번호는 암호화 되어 저장 및 관리되고 있어, 본인만이 알 수 있습니다.
-`
+`;

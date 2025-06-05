@@ -4,10 +4,10 @@ const nextConfig = {
     domains: ['kr.cafe24obs.com'],
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   reactStrictMode: false, // RootLayout 2번 실행되므로 false
   async headers() {
@@ -26,8 +26,8 @@ const nextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

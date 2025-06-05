@@ -1,9 +1,9 @@
-import VersusEditor from "@/components/versus/VersusEditor";
-import ApiUtils from "@/utils/ApiUtils";
-import dynamic from "next/dynamic";
+import VersusEditor from '@/components/versus/VersusEditor';
+import ApiUtils from '@/utils/ApiUtils';
+import dynamic from 'next/dynamic';
 
 const getGame = async (gameId: string) => {
-  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, "GET");
+  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET');
 
   return data;
 };

@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import * as S from "@/styles/VersusStyles";
-import { CookieConsts } from "@/types/ApiTypes";
-import { TextFormats } from "@/types/CommonTypes";
-import { Dictionary } from "@/types/common/Dictionary";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import StorageUtils from "@/utils/StorageUtils";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import VersusGameHead from "./VersusGameHead";
-import VersusGameViewComment from "./VersusGameViewComment";
-import VersusGameViewRelated from "./VersusGameViewRelated";
-import VersusChoiceView from "./inputs/VersusChoiceView";
-import { usePreventLeave } from "@/hooks/usePreventLeave";
+import { usePreventLeave } from '@/hooks/usePreventLeave';
+import * as S from '@/styles/VersusStyles';
+import { CookieConsts } from '@/types/ApiTypes';
+import { TextFormats } from '@/types/CommonTypes';
+import { Dictionary } from '@/types/common/Dictionary';
+import VersusGame from '@/types/versus/VersusGame';
+import VersusGameChoice from '@/types/versus/VersusGameChoice';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import StorageUtils from '@/utils/StorageUtils';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import VersusGameHead from './VersusGameHead';
+import VersusGameViewComment from './VersusGameViewComment';
+import VersusGameViewRelated from './VersusGameViewRelated';
+import VersusChoiceView from './inputs/VersusChoiceView';
 
 interface IVersusGameView {
-  gameData: object | null;
-  userChoiceData: object | null;
+  gameData?: any;
+  userChoiceData?: any;
 }
-export default function VersusGameView({ gameData = null, userChoiceData = null }: IVersusGameView) {
+export default function VersusGameView({ gameData, userChoiceData }: IVersusGameView) {
   const router = useRouter();
   const session = useSession();
 
@@ -41,7 +41,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
   const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true);
 
-  const commentBoxRef = useRef(null);
+  const commentBoxRef = useRef<HTMLDivElement>(null);
   const [commentCount, setCommentCount] = useState<number>(0);
 
   useEffect(() => {
@@ -57,17 +57,17 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   // 유저가 선택한 데이터 세팅
   const updateUserChoice = async () => {
     // 세션 불러오는 중에는 넘어가기
-    if (!session || session.status === "loading") {
+    if (!session || session.status === 'loading') {
       return;
     }
 
     setMyAnswerLoading(true);
 
     // 유저가 선택한 선택지가 있는지 불러온다.
-    let isChoice: boolean = false;
+    let isChoice = false;
     if (userChoiceData !== null) {
       const answerId = userChoiceData.gameChoiceId;
-      let answer = new VersusGameChoice();
+      const answer = new VersusGameChoice();
 
       for (let i = 0; i < game.choices.length; i++) {
         const _choice: VersusGameChoice = game.choices[i];
@@ -94,7 +94,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
   };
 
   const getAnswerResults = async () => {
-    const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "GET", {
+    const { result, data: responseData } = await ApiUtils.request('/api/versus/game_choice', 'GET', {
       params: {
         gameNanoId: game.nanoId,
       },
@@ -105,25 +105,25 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     }
 
     // 데이터 정리
-    const totalDatas: Array<object> = responseData["totalCount"] ?? [];
+    const totalDatas: Array<object> = responseData.totalCount ?? [];
     if (totalDatas.length === 0) {
       return;
     }
-    const totalData: Array<object> = totalDatas[0];
-    const _totalVotes = totalData["total"] ?? 0;
-    const choicesData: Array<object> = responseData["choices"] ?? [];
+    const totalData: any = totalDatas[0];
+    const _totalVotes = totalData.total ?? 0;
+    const choicesData: Array<object> = responseData.choices ?? [];
     if (choicesData.length === 0 || _totalVotes === 0) {
       return;
     }
 
     setTotalVotes(_totalVotes);
     const choiceDic: Dictionary<string, number> = new Dictionary<string, number>();
-    choicesData.map((choiceData) => {
-      choiceDic.push(choiceData["_id"] ?? "", choiceData["count"] ?? 0);
+    choicesData.map((choiceData: any) => {
+      choiceDic.push(choiceData._id ?? '', choiceData.count ?? 0);
     });
 
     // 선택지 결과 계산 및 값 설정
-    let _choices = choices.map((_choice) => {
+    const _choices = choices.map((_choice) => {
       if (choiceDic.contains(_choice.id)) {
         _choice.voteCount = choiceDic.getValue(_choice.id);
         _choice.voteRate = (_choice.voteCount / _totalVotes) * 100;
@@ -150,7 +150,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
     if (isMyAnswerLoading) return;
 
     if (!selectedChoice.id) {
-      alert("선택지를 선택해주세요.");
+      alert('선택지를 선택해주세요.');
       return;
     }
 
@@ -161,7 +161,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       gameAnswerId: selectedChoice.id,
     };
 
-    const { result, data: responseData } = await ApiUtils.request("/api/versus/game_choice", "POST", { data });
+    const { result, data: responseData } = await ApiUtils.request('/api/versus/game_choice', 'POST', { data });
     setMyAnswerLoading(false);
 
     if (result) {
@@ -170,13 +170,13 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
 
       StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId);
     } else {
-      alert(responseData["message"] ?? "요청 실패했습니다.");
+      alert(responseData.message ?? '요청 실패했습니다.');
     }
   };
   const handleReset = () => {
     if (isShowResult) {
       // 이미 선택을 한 경우
-      if (!confirm("선택을 취소하시겠습니까?")) {
+      if (!confirm('선택을 취소하시겠습니까?')) {
         return;
       }
 
@@ -194,7 +194,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
       return;
     }
 
-    commentBoxRef.current.scrollIntoView({ behavior: "smooth" });
+    commentBoxRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -211,9 +211,10 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
         />
       </S.GameViewChoiceLayout>
 
-      <S.GameViewSelectLayout className={`${isMyAnswerLoading ? "animate-pulse" : ""}`}>
+      <S.GameViewSelectLayout className={`${isMyAnswerLoading ? 'animate-pulse' : ''}`}>
         <button
           className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
+          type="button"
           onClick={() => {
             handleReset();
           }}
@@ -223,6 +224,7 @@ export default function VersusGameView({ gameData = null, userChoiceData = null 
         </button>
         <button
           className="grow bg-indigo-600/70 hover:bg-indigo-700/70"
+          type="button"
           onClick={() => {
             handleAnswer();
           }}

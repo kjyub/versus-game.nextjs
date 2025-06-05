@@ -1,24 +1,25 @@
-import * as VS from "@/styles/VersusStyles";
-import { Dictionary } from "@/types/common/Dictionary";
-import { EditStateTypes } from "@/types/DataTypes";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import VersusGameComment from "@/types/versus/VersusGameComment";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import { useEffect, useState, useRef } from "react";
+import * as VS from '@/styles/VersusStyles';
+import { EditStateTypes } from '@/types/DataTypes';
+import type { Dictionary } from '@/types/common/Dictionary';
+import type User from '@/types/user/User';
+import VersusGameChoice from '@/types/versus/VersusGameChoice';
+import type VersusGameComment from '@/types/versus/VersusGameComment';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import { useEffect, useRef, useState } from 'react';
 
 interface ICommentBox {
   comment: VersusGameComment;
   choiceDic: Dictionary<string, VersusGameChoice>;
   user: User;
-  getCurrentComments: (_pageIndex: number) => void;
+  getCurrentComments: () => void;
 }
 const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBox) => {
   const [choice, setChoice] = useState<VersusGameChoice>(new VersusGameChoice());
 
   const [editState, setEditState] = useState<EditStateTypes>(EditStateTypes.WAIT);
 
-  const [content, setContent] = useState<string>("");
+  const [content, setContent] = useState<string>('');
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -44,15 +45,15 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
 
     setWriteLoading(true);
 
-    let data = {
+    const data = {
       content: content,
     };
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, "PUT", { data });
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, 'PUT', { data });
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData["message"] ?? "실패했습니다.");
+      alert(responseData.message ?? '실패했습니다.');
       return;
     }
 
@@ -61,12 +62,12 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
     setEditState(EditStateTypes.WAIT);
   };
 
-  const handleWriteCommentEnter = (e: KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
+  const handleWriteCommentEnter = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleEditComment();
     }
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       e.preventDefault();
       setEditState(EditStateTypes.WAIT);
     }
@@ -86,17 +87,17 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       return;
     }
 
-    if (!confirm("댓글을 삭제하시겠습니까?")) {
+    if (!confirm('댓글을 삭제하시겠습니까?')) {
       return;
     }
 
     setWriteLoading(true);
 
-    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, "DELETE");
+    const { result, data: responseData } = await ApiUtils.request(`/api/versus/comment/${comment.id}`, 'DELETE');
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData["message"] ?? "실패했습니다.");
+      alert(responseData.message ?? '실패했습니다.');
       return;
     }
 
@@ -114,7 +115,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
           <span
             className="absolute z-10 flex flex-center w-full h-full text-white layer-bg"
             style={{
-              textShadow: "-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c",
+              textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
             }}
           >
             {choice.title}
@@ -154,8 +155,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
         <VS.GameViewCommentInputBox className="flex-row">
           <textarea
             ref={textareaRef}
-            type={"text"}
-            style={{ height: "50px" }}
+            style={{ height: '50px' }}
             value={content}
             onChange={(e) => {
               setContent(e.target.value);

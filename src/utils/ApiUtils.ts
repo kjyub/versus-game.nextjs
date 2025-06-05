@@ -1,11 +1,9 @@
-import { RequestInit } from "next/dist/server/web/spec-extension/request";
-import { NextResponse } from "next/server";
-import CommonUtils from "./CommonUtils";
-import { ReadonlyURLSearchParams } from "next/navigation";
-import { pipe, map, fromEntries, when, filter } from "@fxts/core";
-import path from "path";
+import { filter, fromEntries, map, pipe } from '@fxts/core';
+import type { RequestInit } from 'next/dist/server/web/spec-extension/request';
+import type { ReadonlyURLSearchParams } from 'next/navigation';
+import { NextResponse } from 'next/server';
 
-type RequestMethodTypes = "GET" | "POST" | "PUT" | "DELETE" | (string & {});
+type RequestMethodTypes = 'GET' | 'POST' | 'PUT' | 'DELETE' | (string & {});
 
 interface RequestOption {
   params?: object;
@@ -17,52 +15,56 @@ interface RequestOption {
 interface RequestResult {
   result: boolean;
   statusCode: number;
-  data: object;
+  data: any;
 }
 
-export default class ApiUtils {
+namespace ApiUtils {
   // Request
-  static async request(url: string, method: RequestMethodTypes, options: RequestOption = {}): Promise<RequestResult> {
+  export async function request(
+    url: string,
+    method: RequestMethodTypes,
+    options: RequestOption = {},
+  ): Promise<RequestResult> {
     if (!url) {
       return { result: false, statusCode: 400, data: {} };
     }
 
     const { params = undefined, data = undefined, useCache = false, headers = {} } = options;
-    let bResult: boolean = false;
-    let statusCode: number = 200;
-    let resultData: object = {};
+    let bResult = false;
+    const statusCode = 200;
+    let resultData: any = {};
 
     let requestUrl = url;
     let requestData = null;
 
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       // SSR
-      requestUrl = new URL(url, process.env.NEXT_PUBLIC_API_URL);
+      requestUrl = new URL(url, process.env.NEXT_PUBLIC_API_URL ?? '').toString();
     } else {
       // CSR
     }
 
     if (params && Object.keys(params).length > 0) {
-      const queryString = new URLSearchParams(params).toString();
+      const queryString = new URLSearchParams(params as Record<string, string>).toString();
       requestUrl = `${requestUrl}?${queryString}`;
     }
     if (data) {
       requestData = JSON.stringify(data);
     }
 
-    let requestInit: RequestInit = {
+    const requestInit: RequestInit = {
       method: method,
       body: requestData,
       headers: {
-        "Content-Type": "application/json",
-        credentials: "include",
+        'Content-Type': 'application/json',
+        credentials: 'include',
         ...headers,
       },
     };
     if (!useCache) {
-      requestInit["cache"] = "no-store";
+      requestInit.cache = 'no-store';
     } else {
-      requestInit["cache"] = "force-cache";
+      requestInit.cache = 'force-cache';
     }
 
     const response = await fetch(requestUrl, requestInit);
@@ -74,20 +76,20 @@ export default class ApiUtils {
 
     return { result: bResult, statusCode: statusCode, data: resultData };
   }
-  static async fileUpload(file: File): Promise<RequestResult> {
-    let bResult: boolean = false;
-    let statusCode: number = 200;
+  export async function fileUpload(file: File): Promise<RequestResult> {
+    let bResult = false;
+    let statusCode = 200;
 
-    let resultData: object = {};
+    let resultData: any = {};
 
     const formData = new FormData();
-    formData.append("files", file, file.name);
+    formData.append('files', file, file.name);
 
-    await fetch("/api/files/upload_file", {
-      method: "POST",
+    await fetch('/api/files/upload_file', {
+      method: 'POST',
       body: formData,
       headers: {
-        credentials: "include",
+        credentials: 'include',
       },
     })
       .then(async (response) => {
@@ -100,72 +102,67 @@ export default class ApiUtils {
       })
       .catch((error) => {
         console.log(error);
-        resultData = "에러";
+        resultData = '에러';
       });
 
     return { result: bResult, statusCode: statusCode, data: resultData };
   }
 
   // Response
-  static parseData(data: any = {}) {
-    if (typeof data === "string" || typeof data === "number") {
-      data = { message: data };
-    } else if (typeof data === "object") {
-      data = data;
-    } else if (typeof data === "boolean") {
-      data = data;
+  export function parseData(data: any = {}) {
+    if (typeof data === 'string' || typeof data === 'number') {
+      return { message: data };
+    } else if (typeof data === 'object') {
+      return data;
+    } else if (typeof data === 'boolean') {
+      return data;
     } else {
-      data = {};
+      return {};
     }
-
-    return data;
   }
-  static response(data: any = {}) {
-    let response: NextResponse = NextResponse.json(this.parseData(data), {
+  export function response(data: any = {}) {
+    const response: NextResponse = NextResponse.json(ApiUtils.parseData(data), {
       status: 200,
     });
 
     return response;
   }
-  static badRequest(data: any = {}, status: number = 400) {
-    return NextResponse.json(this.parseData(data), { status: 400 });
+  export function badRequest(data: any = {}, status = 400) {
+    return NextResponse.json(ApiUtils.parseData(data), { status: 400 });
   }
-  static notAuth(data: any = {}) {
-    return this.badRequest(data, 401);
+  export function notAuth(data: any = {}) {
+    return ApiUtils.badRequest(data, 401);
   }
-  static notFound(data: any = {}) {
-    return this.badRequest(data, 404);
+  export function notFound(data: any = {}) {
+    return ApiUtils.badRequest(data, 404);
   }
-  static serverError(data: any = {}) {
-    return this.badRequest(data, 500);
+  export function serverError(data: any = {}) {
+    return ApiUtils.badRequest(data, 500);
   }
 
-  static mediaUrl(_url) {
+  export function mediaUrl(_url: string) {
     if (_url) {
-      return "https://kr.cafe24obs.com/" + _url;
+      return `https://kr.cafe24obs.com/${_url}`;
     }
 
-    return "";
+    return '';
   }
 
-  static getParams(searchParams: ReadonlyURLSearchParams, keys?: string[]): Record<string, string> {
-    if (keys) {
-      const getValue = (key: string) => {
-        return searchParams.get(key);
-      };
-      return pipe(
-        keys,
-        map(getValue),
-        filter((value) => value !== null),
-        fromEntries
-      );
+  export function getParams(searchParams: ReadonlyURLSearchParams, _keys?: string[]): Record<string, string> {
+    const getValue = (key: string): [string, string | null] => {
+      return [key, searchParams.get(key)];
+    };
+    const excludeNull = (value: [string, string | null]) => !!value[1];
+
+    let keys: string[] = [];
+    if (_keys) {
+      keys = _keys;
     } else {
-      const keyAll = searchParams.getAll();
-      return pipe(
-        keyAll,
-        filter((value) => value !== null),
-        fromEntries
-      );
+      keys = Array.from(searchParams.keys());
     }
+
+    return pipe(keys, map(getValue), filter(excludeNull), fromEntries) as Record<string, string>;
   }
 }
+
+export default ApiUtils;

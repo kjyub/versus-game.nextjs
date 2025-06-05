@@ -1,12 +1,12 @@
-"use client";
-import * as VS from "@/styles/VersusStyles";
-import User from "@/types/user/User";
-import VersusGame from "@/types/versus/VersusGame";
-import CommonUtils from "@/utils/CommonUtils";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect, useState } from "react";
-import VersusGameBox from "./VersusGameBox";
-import VersusGameSimpleBox from "./VersusGameSimpleBox";
+'use client';
+import * as VS from '@/styles/VersusStyles';
+import User from '@/types/user/User';
+import type VersusGame from '@/types/versus/VersusGame';
+import CommonUtils from '@/utils/CommonUtils';
+import { useRouter } from 'next/navigation';
+import { type ReactNode, useEffect, useState } from 'react';
+import VersusGameBox from './VersusGameBox';
+import VersusGameSimpleBox from './VersusGameSimpleBox';
 
 const PAGE_SIZE = 5;
 

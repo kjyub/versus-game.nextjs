@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import ImageDragAndDrop from "@/components/commons/inputs/ImageDragAndDrop";
-import * as VS from "@/styles/VersusStyles";
-import { StyleProps } from "@/types/StyleTypes";
-import VersusFile from "@/types/file/VersusFile";
-import ApiUtils from "@/utils/ApiUtils";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import tw from "tailwind-styled-components";
+import ImageDragAndDrop from '@/components/commons/inputs/ImageDragAndDrop';
+import * as VS from '@/styles/VersusStyles';
+import { StyleProps } from '@/types/StyleTypes';
+import VersusFile from '@/types/file/VersusFile';
+import ApiUtils from '@/utils/ApiUtils';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import tw from 'tailwind-styled-components';
 
 const Layout = tw.div`
     flex flex-col w-full gap-2
@@ -31,10 +31,10 @@ export default function VersusThumbnailImageEdit({ isShow, oldImageId, updateThu
       return;
     }
 
-    const { result, data } = await ApiUtils.request(`/api/files/${oldImageId}`, "GET");
+    const { result, data } = await ApiUtils.request(`/api/files/${oldImageId}`, 'GET');
 
     if (!result) {
-      alert("썸네일 파일을 찾을 수 없습니다.");
+      alert('썸네일 파일을 찾을 수 없습니다.');
       return;
     }
 
@@ -49,7 +49,7 @@ export default function VersusThumbnailImageEdit({ isShow, oldImageId, updateThu
     const { result, data } = await ApiUtils.fileUpload(_file);
 
     if (!result) {
-      alert("업로드 실패했습니다.");
+      alert('업로드 실패했습니다.');
       return;
     }
 
@@ -71,11 +71,11 @@ export default function VersusThumbnailImageEdit({ isShow, oldImageId, updateThu
     <Layout $is_show={isShow}>
       <VS.ThumbnailImageEditPreviewBox>
         <VS.ThumbnailImageEditPreviewImageBox>
-          {!image.isEmpty() ? <Image src={image.mediaUrl()} fill alt="" /> : "이미지가 없습니다"}
+          {!image.isEmpty() ? <Image src={image.mediaUrl()} fill alt="" /> : '이미지가 없습니다'}
         </VS.ThumbnailImageEditPreviewImageBox>
       </VS.ThumbnailImageEditPreviewBox>
       <VS.ThumbnailImageEditUploadBox>
-        <ImageDragAndDrop handleUpload={handleImageUpload} setFileEnter={setFileEnter} styleClass={"max-sm:hidden"}>
+        <ImageDragAndDrop handleUpload={handleImageUpload} setFileEnter={setFileEnter} styleClass={'max-sm:hidden'}>
           <VS.ThumbnailImageEditUploadDragBox $is_active={isFileEnter}>
             여기에 썸네일 이미지를 드래그하세요
           </VS.ThumbnailImageEditUploadDragBox>
@@ -84,7 +84,7 @@ export default function VersusThumbnailImageEdit({ isShow, oldImageId, updateThu
           <input
             id="versus-thumbnail-image-upload"
             className="hidden"
-            type={"file"}
+            type={'file'}
             onChange={handleImageUploadButton}
           />
           <VS.ThumbnailImageEditUploadButton htmlFor="versus-thumbnail-image-upload">

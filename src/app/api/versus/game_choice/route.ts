@@ -1,21 +1,21 @@
-import { auth } from "@/auth";
-import MVersusGame from "@/models/versus/MVersusGame";
-import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer";
-import ApiUtils from "@/utils/ApiUtils";
-import AuthUtils from "@/utils/AuthUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import DBUtils from "@/utils/DBUtils";
-import { NextRequest } from "next/server";
+import { auth } from '@/auth';
+import MVersusGame from '@/models/versus/MVersusGame';
+import MVersusGameAnswer from '@/models/versus/MVersusGameAnswer';
+import ApiUtils from '@/utils/ApiUtils';
+import AuthUtils from '@/utils/AuthUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import DBUtils from '@/utils/DBUtils';
+import type { NextRequest } from 'next/server';
 
 // 게임의 결과들을 반환한다.
 export async function GET(req: NextRequest) {
-  let filter = {};
+  const filter = {};
 
   await DBUtils.connect();
-  const filterGameNanoId = req.nextUrl.searchParams.get("gameNanoId");
+  const filterGameNanoId = req.nextUrl.searchParams.get('gameNanoId');
   // 게임 확인
   if (!filterGameNanoId) {
-    return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('게임을 찾을 수 없습니다.');
   }
 
   const mGame = await MVersusGame.findOne({
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     isDeleted: false,
   });
   if (!mGame) {
-    return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('게임을 찾을 수 없습니다.');
   }
 
   const mAnswers = await MVersusGameAnswer.aggregate([
@@ -31,22 +31,22 @@ export async function GET(req: NextRequest) {
     {
       $project: {
         _id: 0,
-        gameId: "$gameId",
-        gameChoiceId: "$gameChoiceId",
+        gameId: '$gameId',
+        gameChoiceId: '$gameChoiceId',
       },
     },
-    { $group: { _id: "$gameChoiceId", count: { $sum: 1 } } },
+    { $group: { _id: '$gameChoiceId', count: { $sum: 1 } } },
     {
       $facet: {
         choices: [
           {
             $project: {
-              gameChoiceId: "$gameChoiceId",
-              count: "$count",
+              gameChoiceId: '$gameChoiceId',
+              count: '$count',
             },
           },
         ],
-        totalCount: [{ $group: { _id: null, total: { $sum: "$count" } } }],
+        totalCount: [{ $group: { _id: null, total: { $sum: '$count' } } }],
       },
     },
   ]);
@@ -67,15 +67,15 @@ export async function POST(req: NextRequest) {
   const session = await auth();
 
   // 유저 확인
-  let userId: string = AuthUtils.getUserOrGuestId(req, session);
+  const userId: string = AuthUtils.getUserOrGuestId(req, session);
   if (!userId) {
-    return ApiUtils.badRequest("유저를 찾을 수 없습니다.");
+    return ApiUtils.badRequest('유저를 찾을 수 없습니다.');
   }
 
   // 게임 확인
   const mGame = await MVersusGame.findOne({ _id: gameId, isDeleted: false });
   if (!mGame) {
-    return ApiUtils.badRequest("게임을 찾을 수 없습니다.");
+    return ApiUtils.badRequest('게임을 찾을 수 없습니다.');
   }
 
   // 선택했던 적이 있는지 확인
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     return ApiUtils.response(result);
   } catch (err: any) {
-    console.log("에러", err);
+    console.log('에러', err);
     return ApiUtils.serverError(err);
   }
 }

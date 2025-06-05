@@ -1,4 +1,4 @@
-import * as VS from "@/styles/VersusStyles";
+import * as VS from '@/styles/VersusStyles';
 
 export default function Loading() {
   return (

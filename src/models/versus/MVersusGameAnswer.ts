@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const schema = new Schema(
   {
@@ -18,8 +18,8 @@ const schema = new Schema(
     },
   },
   { timestamps: true },
-)
+);
 
-export default mongoose.models.versus_game_answers || mongoose.model('versus_game_answers', schema)
+export default mongoose.models.versus_game_answers || mongoose.model('versus_game_answers', schema);
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

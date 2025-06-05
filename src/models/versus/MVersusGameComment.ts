@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const schema = new Schema(
   {
@@ -25,7 +25,7 @@ const schema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users',
       default: function () {
-        return this.userId
+        return this.userId;
       },
     },
     content: {
@@ -49,8 +49,8 @@ const schema = new Schema(
     },
   },
   { timestamps: true },
-)
+);
 
-export default mongoose.models.versus_game_comments || mongoose.model('versus_game_comments', schema)
+export default mongoose.models.versus_game_comments || mongoose.model('versus_game_comments', schema);
 
 // String Number Date Buffer Boolean Mixed ObjectId Array

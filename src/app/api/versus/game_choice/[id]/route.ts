@@ -1,11 +1,11 @@
-import { auth } from "@/auth";
-import MVersusGame from "@/models/versus/MVersusGame";
-import MVersusGameAnswer from "@/models/versus/MVersusGameAnswer";
-import ApiUtils from "@/utils/ApiUtils";
-import AuthUtils from "@/utils/AuthUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import DBUtils from "@/utils/DBUtils";
-import { NextRequest } from "next/server";
+import { auth } from '@/auth';
+import MVersusGame from '@/models/versus/MVersusGame';
+import MVersusGameAnswer from '@/models/versus/MVersusGameAnswer';
+import ApiUtils from '@/utils/ApiUtils';
+import AuthUtils from '@/utils/AuthUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import DBUtils from '@/utils/DBUtils';
+import type { NextRequest } from 'next/server';
 
 const gameChoiceView = async (userId: string, gameId: string) => {
   // 유저가 없으면 끝
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest, props: { id: string }) {
   const { id } = params;
 
   const session = await auth();
-  let userId: string = AuthUtils.getUserOrGuestId(req, session);
+  const userId: string = AuthUtils.getUserOrGuestId(req, session);
 
   return gameChoiceView(userId, id);
 }

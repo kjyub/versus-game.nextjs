@@ -1,28 +1,26 @@
-import { auth } from "@/auth";
-import MFile from "@/models/file/MFile";
-import MUser from "@/models/user/MUser";
-import MVersusGame from "@/models/versus/MVersusGame";
-import { UserRole } from "@/types/UserTypes";
-import { GameConsts } from "@/types/VersusTypes";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import DBUtils from "@/utils/DBUtils";
-import GameUtils from "@/utils/GameUtils";
-import { NextRequest } from "next/server";
+import { auth } from '@/auth';
+import MUser from '@/models/user/MUser';
+import MVersusGame from '@/models/versus/MVersusGame';
+import { UserRole } from '@/types/UserTypes';
+import { GameConsts } from '@/types/VersusTypes';
+import ApiUtils from '@/utils/ApiUtils';
+import DBUtils from '@/utils/DBUtils';
+import GameUtils from '@/utils/GameUtils';
+import type { NextRequest } from 'next/server';
 
-export async function GET(req: NextRequest, props: { id: string }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
 
   // 유저 확인
-  const userId = req.nextUrl.searchParams.get("userId");
+  const userId = req.nextUrl.searchParams.get('userId');
 
   await DBUtils.connect();
   const mGames = await MVersusGame.aggregate([
     { $match: { nanoId: id, isDeleted: false } },
-    { $addFields: { userObjectId: { $toObjectId: "$userId" } } },
-    { $lookup: { from: "users", localField: "userObjectId", foreignField: "_id", as: "user" } },
-    { $unwind: "$user" },
+    { $addFields: { userObjectId: { $toObjectId: '$userId' } } },
+    { $lookup: { from: 'users', localField: 'userObjectId', foreignField: '_id', as: 'user' } },
+    { $unwind: '$user' },
     { $limit: 1 },
   ]);
 
@@ -53,7 +51,7 @@ export async function GET(req: NextRequest, props: { id: string }) {
   return ApiUtils.response(mGame);
 }
 
-export async function PUT(req: NextRequest, props: { id: string }) {
+export async function PUT(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
   const { title, content, privacyType, choices, choiceCount } = await req.json();
@@ -63,30 +61,33 @@ export async function PUT(req: NextRequest, props: { id: string }) {
   const session = await auth();
 
   // 유저 확인
-  if (!session.user) {
+  if (!session || !session.user) {
     return ApiUtils.notAuth();
   }
 
   // 관리자 여부 확인
   let isStaff = false;
+  // @ts-ignore
   const mUser = await MUser.findOne({ _id: session.user._id });
   if (mUser.userRole === UserRole.STAFF) {
     isStaff = true;
   }
 
-  let mGame = await MVersusGame.findOne({ nanoId: id });
+  const mGame = await MVersusGame.findOne({ nanoId: id });
 
-  if (mGame["userId"] !== session?.user._id && !isStaff) {
+  // @ts-ignore
+  if (mGame.userId !== session?.user._id && !isStaff) {
     return ApiUtils.notAuth();
   }
 
   // 선택지
   if (!Array.isArray(choices) || choices.length === 0) {
-    return ApiUtils.badRequest("선택지 정보가 없습니다.");
+    return ApiUtils.badRequest('선택지 정보가 없습니다.');
   }
 
   mGame.title = title;
   mGame.content = content;
+  // @ts-ignore
   mGame.userId = session?.user?._id;
   mGame.privacyType = privacyType;
   mGame.choices = choices;
@@ -97,12 +98,12 @@ export async function PUT(req: NextRequest, props: { id: string }) {
 
     return ApiUtils.response(resultGame);
   } catch (err: any) {
-    console.log("에러", err);
+    console.log('에러', err);
     return ApiUtils.serverError();
   }
 }
 
-export async function DELETE(req: NextRequest, props: { id: string }) {
+export async function DELETE(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
 
@@ -111,13 +112,14 @@ export async function DELETE(req: NextRequest, props: { id: string }) {
   const session = await auth();
 
   // 유저 확인
-  if (!session.user) {
+  if (!session || !session.user) {
     return ApiUtils.notAuth();
   }
 
   const mGame = await MVersusGame.findOne({ nanoId: id });
 
-  if (mGame["userId"] !== session?.user._id) {
+  // @ts-ignore
+  if (mGame.userId !== session?.user._id) {
     return ApiUtils.notAuth();
   }
 
@@ -132,7 +134,7 @@ export async function DELETE(req: NextRequest, props: { id: string }) {
 
     return ApiUtils.response(resultGame);
   } catch (err: any) {
-    console.log("에러", err);
+    console.log('에러', err);
     return ApiUtils.serverError();
   }
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { UserRole } from "@/types/UserTypes";
-import User from "@/types/user/User";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { UserRole } from '@/types/UserTypes';
+import User from '@/types/user/User';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function StaffLayout({ children }) {
   const router = useRouter();
@@ -18,13 +18,13 @@ export default function StaffLayout({ children }) {
   }, [session.status]);
 
   const getUser = async () => {
-    if (session.status === "loading") {
+    if (session.status === 'loading') {
       return;
-    } else if (session.status === "unauthenticated") {
-      router.push("/");
+    } else if (session.status === 'unauthenticated') {
+      router.push('/');
     }
 
-    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data.user._id}`, "GET");
+    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data.user._id}`, 'GET');
 
     const newUser = new User();
     if (result) {
@@ -33,7 +33,7 @@ export default function StaffLayout({ children }) {
     }
 
     if (!newUser.id || newUser.userRole !== UserRole.STAFF) {
-      router.push("/");
+      router.push('/');
     }
   };
 

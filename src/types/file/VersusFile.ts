@@ -1,8 +1,8 @@
-import ApiUtils from "@/utils/ApiUtils";
-import { AbsApiObject } from "../ApiTypes";
+import ApiUtils from '@/utils/ApiUtils';
+import { AbsApiObject } from '../ApiTypes';
 
 export default class VersusFile extends AbsApiObject {
-  private _id: string;
+  protected _id: string;
   private _url: string;
   private _fileName: string;
   private _size: number;
@@ -10,14 +10,14 @@ export default class VersusFile extends AbsApiObject {
 
   constructor() {
     super();
-    this._id = "";
-    this._url = "";
-    this._fileName = "";
-    this._size = "";
-    this._isDeleted = "";
+    this._id = '';
+    this._url = '';
+    this._fileName = '';
+    this._size = 0;
+    this._isDeleted = false;
   }
 
-  parseResponse(json: object) {
+  parseResponse(json: any) {
     if (json._id) this._id = String(json._id);
     if (json.url) this._url = json.url;
     if (json.fileName) this._fileName = json.fileName;

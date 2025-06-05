@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as S from "@/styles/VersusStyles";
-import VersusChoiceView from "@/components/versus/inputs/VersusChoiceView";
-import VersusGameHead from "@/components/versus/VersusGameHead";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
+import VersusGameHead from '@/components/versus/VersusGameHead';
+import VersusChoiceView from '@/components/versus/inputs/VersusChoiceView';
+import * as S from '@/styles/VersusStyles';
+import VersusGame from '@/types/versus/VersusGame';
+import VersusGameChoice from '@/types/versus/VersusGameChoice';
 
 export default function Loading() {
   const game = new VersusGame();
@@ -25,8 +25,12 @@ export default function Loading() {
       </S.GameViewChoiceLayout>
 
       <S.GameViewSelectLayout>
-        <button className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50" disabled={true}></button>
-        <button className="grow bg-indigo-600/70 hover:bg-indigo-700/70" disabled={true}></button>
+        <button
+          className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
+          disabled={true}
+          type="button"
+        ></button>
+        <button className="grow bg-indigo-600/70 hover:bg-indigo-700/70" disabled={true} type="button"></button>
       </S.GameViewSelectLayout>
     </S.GameViewLayout>
   );

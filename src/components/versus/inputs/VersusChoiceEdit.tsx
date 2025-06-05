@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import ImageDragAndDrop from "@/components/commons/inputs/ImageDragAndDrop";
-import * as VS from "@/styles/VersusStyles";
-import { CHOICE_COUNT_CONST, MAX_CHOICE } from "@/types/VersusTypes";
-import VersusFile from "@/types/file/VersusFile";
-import VersusGame from "@/types/versus/VersusGame";
-import VersusGameChoice from "@/types/versus/VersusGameChoice";
-import ApiUtils from "@/utils/ApiUtils";
-import CommonUtils from "@/utils/CommonUtils";
-import Image from "next/image";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import ImageDragAndDrop from '@/components/commons/inputs/ImageDragAndDrop';
+import * as VS from '@/styles/VersusStyles';
+import { CHOICE_COUNT_CONST, MAX_CHOICE } from '@/types/VersusTypes';
+import VersusFile from '@/types/file/VersusFile';
+import type VersusGame from '@/types/versus/VersusGame';
+import VersusGameChoice from '@/types/versus/VersusGameChoice';
+import ApiUtils from '@/utils/ApiUtils';
+import CommonUtils from '@/utils/CommonUtils';
+import Image from 'next/image';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 interface IVersusChoiceEdit {
   game: VersusGame;
@@ -28,7 +28,7 @@ export default function VersusChoiceEdit({ game }: IVersusChoiceEdit) {
     }
 
     const diff = MAX_CHOICE - game.choices.length;
-    let newChoices = game.choices;
+    const newChoices = game.choices;
     if (diff > 0) {
       for (let i = 0; i < diff; i++) {
         newChoices.push(new VersusGameChoice());
@@ -60,13 +60,13 @@ interface IChoiceEdit {
   updateChoice: (index: number, choice: VersusGameChoice) => void;
 }
 const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
-  const [title, setTitle] = useState<string>(choice.title || "");
+  const [title, setTitle] = useState<string>(choice.title || '');
   const [isFocus, setFocus] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setTitle(choice.title || "");
+    setTitle(choice.title || '');
   }, [choice]);
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
       <input
         ref={inputRef}
         className="input"
-        type={"text"}
+        type={'text'}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder={`${index + 1}. 제목을 입력하세요`}
