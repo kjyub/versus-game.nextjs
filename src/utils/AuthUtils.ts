@@ -83,25 +83,6 @@ namespace AuthUtils {
 
     return userId;
   }
-  export async function getUserOrGuestIdBySSR(session: Session | null) {
-    let userId: string | mongoose.Types.ObjectId = '';
-
-    const currentCookies = (await cookies()) as unknown as UnsafeUnwrappedCookies;
-
-    // 유저 확인 없으면 게스트
-    if (AuthUtils.isSessionAuth(session)) {
-      // @ts-ignore
-      userId = session?.user._id;
-    } else if (currentCookies.has(CookieConsts.GUEST_ID)) {
-      const guestIdCookie = currentCookies.get(CookieConsts.GUEST_ID);
-      userId = new mongoose.Types.ObjectId(guestIdCookie?.value ?? '');
-    } else {
-      const newGuestId = randomUUID() as string;
-      currentCookies.set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true });
-    }
-
-    return userId;
-  }
 }
 
 export default AuthUtils;

@@ -4,7 +4,7 @@ import VersusMainTitle from '@/components/versus/VersusMainTitle';
 import * as MainStyles from '@/styles/MainStyles';
 import type { IPaginationResponse } from '@/types/common/Responses';
 import ApiUtils from '@/utils/ApiUtils';
-import AuthUtils from '@/utils/AuthUtils';
+import AuthServerUtils from '@/utils/AuthUtils.server';
 import type { ObjectId } from 'mongodb';
 
 const getGameList = async (
@@ -43,7 +43,7 @@ export default async function Home(props: {
 }) {
   const searchParams = await props.searchParams;
   const session = await auth();
-  const userId: string | ObjectId = await AuthUtils.getUserOrGuestIdBySSR(session);
+  const userId: string | ObjectId = await AuthServerUtils.getUserOrGuestIdBySSR(session);
 
   const search: string = searchParams.search ? searchParams.search : '';
   const myGames: boolean = !!searchParams.myGames;
