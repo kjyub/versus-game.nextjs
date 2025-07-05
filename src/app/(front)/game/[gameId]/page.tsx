@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import VersusGameView from '@/components/versus/VersusGameView';
 import { SiteConsts } from '@/types/SiteTypes';
 import ApiUtils from '@/utils/ApiUtils';
-import AuthServerUtils from '@/utils/AuthUtils.server';
+import { getUserOrGuestIdBySSR } from '@/utils/AuthUtils.server';
 import type { ObjectId } from 'mongodb';
 import type { Metadata, ResolvingMetadata } from 'next';
 
@@ -92,7 +92,7 @@ export async function generateMetadata(props: Props, parent: ResolvingMetadata):
 export default async function GamePage(props: { params: Promise<{ gameId: string }> }) {
   const params = await props.params;
   const session = await auth();
-  const userId: string | ObjectId = await AuthServerUtils.getUserOrGuestIdBySSR(session);
+  const userId: string | ObjectId = await getUserOrGuestIdBySSR(session);
 
   const { gameId } = params;
 
