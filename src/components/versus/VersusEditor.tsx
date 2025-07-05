@@ -13,7 +13,7 @@ import { VersusInputText, VersusInputTextArea } from './inputs/VersusInputs';
 import VersusPrivacyModal from './modals/VersusPrivacyModal';
 
 interface IVersusEditor {
-  isUpdate: boolean;
+  isUpdate?: boolean;
   gameData?: object;
   saveOnClose?: () => void;
 }

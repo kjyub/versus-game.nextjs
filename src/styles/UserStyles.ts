@@ -31,10 +31,10 @@ export const LoginTitleBox = tw.div`
 export const LoginButton = tw.button`
     flex items-center w-fit px-8 py-2
     rounded-xl 
-    ${(props: StyleProps) => (props.disabled ? 'bg-stone-500' : 'bg-linear-to-r from-rose-700 to-rose-500')}
+    ${(props: StyleProps) => (props.disabled ? 'grayscale' : 'bg-linear-to-r from-rose-700 to-rose-500')}
     text-white font-medium
     shadow-lg hover:shadow-xl
-    duration-200
+    transition-all duration-200
 `;
 export const LoginRegistButton = tw.button`
     px-4 pt-2
@@ -49,9 +49,9 @@ export const AgreeTitleBox = tw.div`
     flex justify-between items-center w-full
     [&>.title]:font-semibold [&>.title]:text-stone-800
     [&>.agree]:flex [&>.agree]:items-center [&>.agree]:px-2 [&>.agree]:py-1 [&>.agree]:space-x-1 
-    [&>.agree]:rounded-md [&>.agree]:hover:bg-stone-100/40
-    [&>.agree]:text-stone-500 [&>.agree.active]:text-indigo-600
-    [&>.agree]:duration-200 [&>.agree]:cursor-pointer
+    [&>.agree]:rounded-md [&>.agree]:hover:bg-stone-100/40 [&>.agree]:hover:shadow
+    [&>.agree]:text-sm [&>.agree]:text-stone-500 [&>.agree.active]:text-indigo-600
+    [&>.agree]:duration-200 [&>.agree]:cursor-pointer [&>.agree]:select-none
 `;
 export const AgreeContent = tw.div`
     flex w-full max-h-full px-3 py-2

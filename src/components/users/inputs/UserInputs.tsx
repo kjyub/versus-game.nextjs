@@ -1,7 +1,6 @@
 'use client';
 
 import * as UserStyles from '@/styles/UserStyles';
-import CommonUtils from '@/utils/CommonUtils';
 import { type Dispatch, type KeyboardEvent, type ReactNode, type SetStateAction, useState } from 'react';
 
 export interface IUserInputText extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -45,7 +44,7 @@ const UserInputText = ({
           type={type}
           value={value}
           onChange={(e) => {
-            setValue(e.target.value);
+            setValue?.(e.target.value);
           }}
           placeholder={placeholder}
           onFocus={() => setFocus(true)}

@@ -63,7 +63,7 @@ namespace AuthUtils {
 
     return true;
   }
-  export async function getUserOrGuestId(req: NextRequest, session: Session) {
+  export async function getUserOrGuestId(req: NextRequest, session: Session | null) {
     let userId: string | mongoose.Types.ObjectId = '';
 
     // 유저 확인 없으면 게스트

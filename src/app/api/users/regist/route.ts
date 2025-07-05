@@ -2,9 +2,9 @@ import MUser from '@/models/user/MUser';
 import ApiUtils from '@/utils/ApiUtils';
 import DBUtils from '@/utils/DBUtils';
 import bcryptjs from 'bcryptjs';
-import type { NextApiRequest } from 'next';
+import type { NextRequest } from 'next/server';
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
   const { email, password, name } = await req.json();
 
   await DBUtils.connect();

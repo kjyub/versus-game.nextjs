@@ -3,7 +3,7 @@
 import Image from 'next/image';
 
 interface IUserAvatar {
-  imageURL;
+  imageURL: string;
 }
 export default function UserAvatar({ imageURL }: IUserAvatar) {
   return (

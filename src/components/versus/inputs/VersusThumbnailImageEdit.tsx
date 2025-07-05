@@ -2,7 +2,6 @@
 
 import ImageDragAndDrop from '@/components/commons/inputs/ImageDragAndDrop';
 import * as VS from '@/styles/VersusStyles';
-import { StyleProps } from '@/types/StyleTypes';
 import VersusFile from '@/types/file/VersusFile';
 import ApiUtils from '@/utils/ApiUtils';
 import Image from 'next/image';
@@ -59,7 +58,7 @@ export default function VersusThumbnailImageEdit({ isShow, oldImageId, updateThu
     updateThumbnail(versusFile);
   };
 
-  const handleImageUploadButton = (e: ChangeEventHandler<HTMLInputElement>) => {
+  const handleImageUploadButton = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
     if (files && files.length > 0) {

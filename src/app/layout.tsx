@@ -2,8 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
-import BgBubbleBox from '@/components/backgrounds/BgBubbleBox';
-import Navigation from '@/components/commons/Navigation';
 import AppClientLayout from '@/layouts/AppClientLayout';
 import * as MainStyles from '@/styles/MainStyles';
 import { SiteConsts } from '@/types/SiteTypes';

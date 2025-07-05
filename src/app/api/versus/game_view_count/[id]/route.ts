@@ -5,9 +5,8 @@ import CommonUtils from '@/utils/CommonUtils';
 import DBUtils from '@/utils/DBUtils';
 import type { NextRequest } from 'next/server';
 
-export async function POST(req: NextRequest, props: { id: string }) {
-  const params = await props.params;
-  const { id } = params;
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params;
   const { userId } = await req.json();
 
   let bResult = false;

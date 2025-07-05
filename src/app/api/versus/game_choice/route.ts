@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
   const session = await auth();
 
   // 유저 확인
-  const userId: string = AuthUtils.getUserOrGuestId(req, session);
+  const userId: string = (await AuthUtils.getUserOrGuestId(req, session)).toString();
   if (!userId) {
     return ApiUtils.badRequest('유저를 찾을 수 없습니다.');
   }

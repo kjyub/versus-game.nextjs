@@ -8,7 +8,7 @@ interface IVersusPrivacyModal {
   close: () => void;
 }
 export default function VersusPrivacyModal({ privacyType, setPrivacyType, close }: IVersusPrivacyModal) {
-  const handlePrivacyType = (_privacyType) => {
+  const handlePrivacyType = (_privacyType: PrivacyTypes) => {
     setPrivacyType(_privacyType);
     close();
   };

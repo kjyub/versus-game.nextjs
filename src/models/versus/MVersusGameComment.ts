@@ -24,9 +24,7 @@ const schema = new Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'users',
-      default: function () {
-        return this.userId;
-      },
+      default: null,
     },
     content: {
       type: String,

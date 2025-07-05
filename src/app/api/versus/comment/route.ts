@@ -3,7 +3,6 @@ import MUser from '@/models/user/MUser';
 import MVersusGame from '@/models/versus/MVersusGame';
 import MVersusGameComment from '@/models/versus/MVersusGameComment';
 import ApiUtils from '@/utils/ApiUtils';
-import CommonUtils from '@/utils/CommonUtils';
 import DBUtils from '@/utils/DBUtils';
 import type { NextRequest } from 'next/server';
 
@@ -19,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 유저 확인
-  const mUser = await MUser.findOne({ _id: session?.user._id });
+  const mUser = await MUser.findOne({ _id: session?.user?._id });
   if (!mUser) {
     return ApiUtils.notAuth('회원 정보를 찾을 수 없습니다.');
   }
@@ -31,11 +30,11 @@ export async function POST(req: NextRequest) {
   }
 
   // 생성
-  const mComment = await MVersusGameComment({
+  const mComment = new MVersusGameComment({
     parentId: parentId,
     gameId: gameId,
     gameChoiceId: gameChoiceId,
-    userId: session?.user._id,
+    userId: session?.user?._id,
     user: mUser,
     content: content,
   });

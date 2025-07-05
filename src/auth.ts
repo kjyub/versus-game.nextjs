@@ -5,6 +5,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { authConfig } from './auth.config';
 import MUser from './models/user/MUser';
 import DBUtils from './utils/DBUtils';
+import type { AdapterUser } from 'next-auth/adapters';
 
 // https://velog.io/@youngjun625/Next.js14-NextAuth-v5%EB%A1%9C-%EC%9D%B8%EC%A6%9D-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0-1-%EB%A1%9C%EA%B7%B8%EC%9D%B8%EB%A1%9C%EA%B7%B8%EC%95%84%EC%9B%83
 export const { auth, handlers, signIn, signOut } = NextAuth({
@@ -44,7 +45,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async session({ session, token }) {
-      session.user = token.user as User;
+      session.user = token.user as AdapterUser & User;
       return session;
     },
     async jwt({ token, user }) {

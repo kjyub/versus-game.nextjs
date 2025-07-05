@@ -10,7 +10,7 @@ export interface IVersusSearchInput {
   onClick: () => void;
 }
 const VersusSearchInput = ({ value, setValue, onEnter, onClick }: IVersusSearchInput) => {
-  const handleKeyDown = (e: KeyboardEvent<HTMLElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (onEnter && e.key === 'Enter') {
       e.preventDefault();
       onEnter();

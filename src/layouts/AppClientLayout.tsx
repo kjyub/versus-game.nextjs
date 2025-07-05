@@ -7,7 +7,7 @@ import BrowserUtils from '@/utils/BrowserUtils';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function AppClientLayout({ children }: { children: React.ReactNode }) {
+export default function AppClientLayout({ children }: { children?: React.ReactNode }) {
   const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false);
 
   const pathname = usePathname();

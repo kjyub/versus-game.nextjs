@@ -17,9 +17,8 @@ export default function VersusCommentPagination({
   maxPageButtons = 5,
   itemCount,
   setPageIndex,
-}) {
+}: IVersusCommentPagination) {
   const [pages, setPages] = useState<Array<number>>([]);
-  // const [pageCount, setPageCount] = useState(0)
 
   useEffect(() => {
     const _pages = [];
@@ -27,9 +26,6 @@ export default function VersusCommentPagination({
     if (maxPage === 0) {
       return;
     }
-
-    // let _pageCount = Math.ceil(itemCount / pageSize)
-    // setPageCount(_pageCount)
 
     const first = (Math.ceil(pageIndex / maxPageButtons) - 1) * maxPageButtons + 1;
     for (let i = first; i < first + maxPageButtons; i++) {

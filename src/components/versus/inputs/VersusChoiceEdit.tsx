@@ -1,15 +1,10 @@
 'use client';
 
-import ImageDragAndDrop from '@/components/commons/inputs/ImageDragAndDrop';
 import * as VS from '@/styles/VersusStyles';
-import { CHOICE_COUNT_CONST, MAX_CHOICE } from '@/types/VersusTypes';
-import VersusFile from '@/types/file/VersusFile';
+import { MAX_CHOICE } from '@/types/VersusTypes';
 import type VersusGame from '@/types/versus/VersusGame';
 import VersusGameChoice from '@/types/versus/VersusGameChoice';
-import ApiUtils from '@/utils/ApiUtils';
-import CommonUtils from '@/utils/CommonUtils';
-import Image from 'next/image';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface IVersusChoiceEdit {
   game: VersusGame;
@@ -89,7 +84,7 @@ const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
       $is_active={isActive}
       onClick={() => {
         if (inputRef.current) {
-          inputRef.current.focus();
+          (inputRef.current as HTMLInputElement).focus();
         }
       }}
     >

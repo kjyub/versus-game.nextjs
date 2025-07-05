@@ -8,13 +8,11 @@ const getGame = async (gameId: string) => {
   return data;
 };
 
-export default async function GameUpdatePage(props: { gameId: string }) {
+export default async function GameUpdatePage(props: { params: Promise<{ gameId: string }> }) {
   const params = await props.params;
-  const { gameId } = params;
+  const { gameId } = await params;
 
   const gameData = await getGame(gameId);
-
-  await new Promise((resolve) => setTimeout(resolve, 10000));
 
   return <VersusEditor isUpdate={true} gameData={gameData} />;
 }

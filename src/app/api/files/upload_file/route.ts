@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import MFile from '@/models/file/MFile';
 import ApiUtils from '@/utils/ApiUtils';
 import DBUtils from '@/utils/DBUtils';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand, type PutObjectCommandInput, S3Client } from '@aws-sdk/client-s3';
 import type { NextRequest } from 'next/server';
 import { v4 } from 'uuid';
 
@@ -36,10 +36,10 @@ export async function POST(req: NextRequest) {
     const fileUrl = `images/${fileUUID}/${file.name}.${ext}`;
     // ext 필요한지 확인 필요 TODO
 
-    const uploadParams = {
+    const uploadParams: PutObjectCommandInput = {
       Bucket: bucketName,
       Key: fileUrl,
-      Body: await file.arrayBuffer(),
+      Body: new Uint8Array(await file.arrayBuffer()),
       ContentType: file.type,
       ACL: 'public-read',
     };

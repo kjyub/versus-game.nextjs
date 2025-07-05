@@ -1,11 +1,7 @@
 import VersusEditor from '@/components/versus/VersusEditor';
 import { SiteConsts } from '@/types/SiteTypes';
 import type { Metadata, ResolvingMetadata } from 'next';
-import dynamic from 'next/dynamic';
 
-type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
-};
 export async function generateMetadata(parent: ResolvingMetadata): Promise<Metadata> {
   const metaData: Metadata = {
     title: SiteConsts.SITE_TITLE,
