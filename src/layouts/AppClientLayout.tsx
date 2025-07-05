@@ -15,7 +15,7 @@ export default function AppClientLayout({ children }: { children?: React.ReactNo
   const pathname = usePathname();
 
   useEffect(() => {
-    requestGuestId();
+    // requestGuestId();
 
     // 게임 리스트 페이지로 되돌아 올 시 저장하는 데이터 삭제
     sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);

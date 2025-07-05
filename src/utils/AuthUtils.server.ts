@@ -17,6 +17,7 @@ export async function getUserOrGuestIdBySSR(session: Session | null) {
   let userId: string | mongoose.Types.ObjectId = '';
 
   const cookieStore = await cookies();
+  console.log('cookieStore', cookieStore.get(CookieConsts.GUEST_ID));
 
   // 유저 확인 없으면 게스트
   if (isSessionAuth(session)) {
@@ -26,8 +27,17 @@ export async function getUserOrGuestIdBySSR(session: Session | null) {
     const guestIdCookie = cookieStore.get(CookieConsts.GUEST_ID);
     userId = new mongoose.Types.ObjectId(guestIdCookie?.value ?? '');
   } else {
-    const newGuestId = randomUUID() as string;
-    cookieStore.set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true });
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/guest/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const { message: newGuestId } = await response.json();
+    console.log('updated guest id', newGuestId);
+    userId = newGuestId;
+    // const newGuestId = randomUUID() as string;
+    // cookieStore.set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true });
   }
 
   return userId;
