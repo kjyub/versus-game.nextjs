@@ -11,6 +11,9 @@ import ModalContainer from '../ModalContainer';
 import VersusChoiceEdit from './inputs/VersusChoiceEdit';
 import { VersusInputText, VersusInputTextArea } from './inputs/VersusInputs';
 import VersusPrivacyModal from './modals/VersusPrivacyModal';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import { ErrorMessageForm } from '../commons/SystemMessagePopup';
 
 interface IVersusEditor {
   isUpdate?: boolean;
@@ -28,6 +31,9 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
   const [privacyType, setPrivacyType] = useState<PrivacyTypes>(PrivacyTypes.PUBLIC);
 
   const [isShowPrivacy, setShowPrivacy] = useState<boolean>(false);
+
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
 
   usePreventLeave();
 
@@ -73,7 +79,7 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
     // 작성자가 아니면 권한 X
     // @ts-ignore
     if (isUpdate && session.data?.user?._id !== _game.userId) {
-      alert('권한이 없습니다');
+      createToastMessage('권한이 없습니다');
       router.push('/');
       return;
     }
@@ -85,7 +91,10 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
 
     // 게임이 차단된 경우
     if (_game.state === GameState.BLOCK) {
-      alert('관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.');
+      createSystemMessage({
+        type: 'alert',
+        content: '관리자에 의해 게임이 차단되었습니다.\n적절한 내용으로 다시 등록해 주세요.',
+      });
     }
   };
 
@@ -104,7 +113,10 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
     }
 
     if (errorMessages.length > 0) {
-      alert(errorMessages.join('\n'));
+      createSystemMessage({
+        type: 'alert',
+        content: ErrorMessageForm(errorMessages),
+      });
 
       return false;
     }
@@ -136,12 +148,12 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
 
       if (!result) {
         if (responseData.message) {
-          alert(responseData.message);
+          createToastMessage(responseData.message);
         } else {
-          alert('저장 실패했습니다.');
+          createToastMessage('저장 실패했습니다.');
         }
 
-        return;
+        return; 
       }
 
       const newGame = new VersusGame();
@@ -155,9 +167,9 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
 
       if (!result) {
         if (responseData.message) {
-          alert(responseData.message);
+          createToastMessage(responseData.message);
         } else {
-          alert('저장 실패했습니다.');
+          createToastMessage('저장 실패했습니다.');
         }
 
         return;
@@ -176,7 +188,11 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
   };
 
   const handleDelete = async () => {
-    if (!confirm('정말 삭제하시겠습니까?')) {
+    if (!(await createSystemMessage({
+        type: 'confirm',
+        content: '정말 삭제하시겠습니까?',
+      }))
+    ) {
       return;
     }
 
@@ -184,9 +200,9 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
 
     if (!result) {
       if (responseData.message) {
-        alert(responseData.message);
+        createToastMessage(responseData.message);
       } else {
-        alert('삭제 실패했습니다.');
+        createToastMessage('삭제 실패했습니다.');
       }
 
       return;
@@ -261,7 +277,7 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
         </div>
       </VS.EditorControlLayout>
 
-      <ModalContainer isOpen={isShowPrivacy} setIsOpen={setShowPrivacy} isCloseByBackground={true} isBlur={true}>
+      <ModalContainer isOpen={isShowPrivacy} setIsOpen={setShowPrivacy}>
         <VersusPrivacyModal
           privacyType={privacyType}
           setPrivacyType={setPrivacyType}

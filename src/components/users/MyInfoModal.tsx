@@ -6,6 +6,9 @@ import UserInputText from './inputs/UserInputs';
 import User from '@/types/user/User';
 import ApiUtils from '@/utils/ApiUtils';
 import { signOut, useSession } from 'next-auth/react';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import { ErrorMessageForm } from '../commons/SystemMessagePopup';
 
 export interface IMyInfoModal {
   isModalShow: boolean;
@@ -22,6 +25,9 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
   const [password1, setPassword1] = useState<string>('');
   const [password2, setPassword2] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
 
   useLayoutEffect(() => {
     // 모바일 대응하는 최대 높이 설정
@@ -47,7 +53,7 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
     const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user._id}`, 'GET');
 
     if (!result) {
-      alert(data.message ?? '요청 실패했습니다.');
+      createToastMessage(data.message ?? '요청 실패했습니다.');
       return;
     }
 
@@ -64,17 +70,23 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
       return;
     }
 
+    const errorMessages: string[] = [];
     if (!name) {
-      alert('이름은 빈값을 넣을 수 없습니다.');
-      return;
+      errorMessages.push('이름은 빈값을 넣을 수 없습니다.');
     }
 
     if (passwordCurrent && !CommonUtils.isValidPassword(password1)) {
-      alert('비밀번호는 6자 이상의 영문자와 숫자를 포함해야 합니다.');
-      return;
+      errorMessages.push('비밀번호는 6자 이상의 영문자와 숫자를 포함해야 합니다.');
     }
     if (password1 !== password2) {
-      alert('새 비밀번호가 다릅니다.');
+      errorMessages.push('새 비밀번호가 다릅니다.');
+    }
+
+    if (errorMessages.length > 0) {
+      createSystemMessage({
+        type: 'alert',
+        content: ErrorMessageForm(errorMessages),
+      });
       return;
     }
 
@@ -92,9 +104,9 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
       const user = new User();
       user.parseResponse(responseData);
       setName(user.name);
-      alert('저장되었습니다.');
+      createToastMessage('저장되었습니다.');
     } else {
-      alert(responseData.message ?? '요청 실패했습니다.');
+      createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
   };
 
@@ -103,7 +115,11 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
   };
 
   const handleDelete = async () => {
-    if (!confirm('회원 탈퇴하시겠습니까?')) {
+    if (!(await createSystemMessage({
+        type: 'confirm',
+        content: '회원 탈퇴하시겠습니까?',
+      }))
+    ) {
       return;
     }
 
@@ -126,11 +142,11 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
     });
 
     if (result) {
-      alert('회원 탈퇴 처리되었습니다.');
+      createToastMessage('회원 탈퇴 처리되었습니다.');
       await signOut();
       return;
     } else {
-      alert(responseData.message ?? '요청 실패했습니다.');
+      createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
   };
 

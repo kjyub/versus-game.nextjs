@@ -7,6 +7,9 @@ import ApiUtils from '@/utils/ApiUtils';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import MouseFloatingBox from '../atomics/MouseFloatingBox';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import { ErrorMessageForm } from '../commons/SystemMessagePopup';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 export enum LoginModalPage {
   LOGIN = 0,
@@ -68,7 +71,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
       if (!errorMessage) {
         return;
       } else if (errorMessage === 'CredentialsSignin') {
-        alert('로그인 성공');
+        // alert('로그인 성공');
         return;
       } else {
         setErrorMessage('이메일 및 비밀번호를 확인해주세요.');
@@ -232,6 +235,9 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   const [emailMessage, setEmailMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
+
   useEffect(() => {
     setPasswordSame(password1 === password2);
   }, [password1, password2]);
@@ -253,7 +259,10 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
       validateMessages.push('비밀번호를 입력해주세요.');
     }
     if (validateMessages.length > 0) {
-      alert(validateMessages.join('\n'));
+      createSystemMessage({
+        type: 'alert',
+        content: ErrorMessageForm(validateMessages),
+      });
       return;
     }
 
@@ -271,7 +280,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
     const { result, data: responseData } = await ApiUtils.request('/api/users/regist', 'POST', { data });
 
     if (result) {
-      alert('회원가입되었습니다.');
+      createToastMessage('회원가입되었습니다.');
       try {
         await signIn('credentials', {
           email: email,

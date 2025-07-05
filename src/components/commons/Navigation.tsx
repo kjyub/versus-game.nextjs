@@ -5,30 +5,19 @@ import { useUser } from '@/hooks/useUser';
 import * as MS from '@/styles/MainStyles';
 import { CookieConsts } from '@/types/ApiTypes';
 import { UserRole } from '@/types/UserTypes';
-import User from '@/types/user/User';
-import ApiUtils from '@/utils/ApiUtils';
-import CommonUtils from '@/utils/CommonUtils';
 import Link from 'next/link';
 import type React from 'react';
-import { useEffect, useState } from 'react';
 import LoginModal from '../users/LoginModal';
 import MyInfoModal from '../users/MyInfoModal';
-import MobileNav from './MobileNav';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 const Navigation = () => {
   const user = useUser();
 
   const [userRef, isUserShow, setUserShow] = useDetectClose<HTMLDivElement>();
   const [loginRef, isLoginShow, setLoginShow] = useDetectClose<HTMLDivElement>();
-  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose<HTMLDivElement>();
 
-  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
-    userCheck();
-  };
-
-  const handleStopPropagation = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-  };
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
 
   const handleUserInfo = async () => {
     if (isUserShow) {
@@ -38,14 +27,10 @@ const Navigation = () => {
     }
   };
 
-  const userCheck = async () => {
-    await ApiUtils.request('/api/users/user_check', 'POST');
-  };
-
   const handleGameAdd = (e: React.MouseEvent<HTMLElement>) => {
     if (!user.isAuth) {
       e.preventDefault();
-      alert('로그인 후 이용가능합니다.');
+      createToastMessage('로그인 후 이용가능합니다.');
       return;
     }
   };
@@ -81,24 +66,6 @@ const Navigation = () => {
             </MS.NavButtonContainer>
           )}
         </MS.NavButtonList>
-
-        {/* 내비게이션 메뉴 (모바일) */}
-        {/* <MS.NavButtonList className="max-md:flex md:hidden">
-          <MS.NavButtonContainer $is_show={true} ref={mobileNavRef}>
-            <MS.NavMobileMenuButton
-              onClick={() => {
-                setMobileNavShow(!isMobileNavShow);
-              }}
-            >
-              <i className="fa-solid fa-bars text-lg mr-2 mt-[2px]"></i>
-              메뉴
-            </MS.NavMobileMenuButton>
-
-            <MS.MobileNavLayout $is_show={isMobileNavShow}>
-              {isMobileNavShow && <MobileNav isModalShow={isMobileNavShow} setModalShow={setMobileNavShow} user={user} />}
-            </MS.MobileNavLayout>
-          </MS.NavButtonContainer>
-        </MS.NavButtonList> */}
 
         {/* 내비게이션 로고 */}
         <MS.NavTitle>

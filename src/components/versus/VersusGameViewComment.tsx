@@ -13,6 +13,7 @@ import type React from 'react';
 import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from 'react';
 import CommentBox from './CommentBox';
 import VersusCommentPagination from './VersusCommentPagination';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 const PAGE_SIZE = 5;
 
@@ -144,6 +145,8 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
 
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+
   const handleWriteComment = async () => {
     if (isWriteLoading) {
       return;
@@ -162,7 +165,7 @@ const CommentInputBox = ({ game, answerChoice, getComments }: ICommentInputBox) 
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData.message ?? '실패했습니다.');
+      createToastMessage(responseData.message ?? '실패했습니다.');
       return;
     }
 

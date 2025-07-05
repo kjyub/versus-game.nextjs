@@ -31,14 +31,17 @@ export default async function RootLayout({
     <html lang="ko">
       <head>
         <FrontHead />
-        <AppClientLayout />
       </head>
       <MainStyles.Body
         style={{
           backgroundColor: 'repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)',
         }}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <div id="portal"></div>
+          <AppClientLayout />
+          {children}
+        </Providers>
       </MainStyles.Body>
     </html>
   );

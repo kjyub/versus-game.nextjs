@@ -16,6 +16,7 @@
     "@fxts/core": "1.9.0",
     "@types/bcryptjs": "2.4.6",
     "bcryptjs": "2.4.3",
+    "clsx": "2.1.1",
     "crypto": "1.0.1",
     "dayjs": "1.11.12",
     "moment": "2.30.1",
@@ -29,6 +30,7 @@
     "react-copy-to-clipboard": "5.1.0",
     "react-dom": "19.1.0",
     "react-intersection-observer": "9.13.0",
+    "tailwind-merge": "3.3.1",
     "zustand": "5.0.3"
   },
   "devDependencies": {
@@ -36,8 +38,10 @@
     "@tailwindcss/postcss": "4.1.4",
     "@types/node": "^20",
     "@types/react": "19.1.2",
+    "@types/react-copy-to-clipboard": "5.0.7",
     "@types/react-dom": "19.1.2",
     "@types/react-modal": "3.16.3",
+    "@types/uuid": "10.0.0",
     "postcss": "^8",
     "react-modal": "3.16.1",
     "tailwind-styled-components": "2.2.0",

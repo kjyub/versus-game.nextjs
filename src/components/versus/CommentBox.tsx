@@ -4,6 +4,8 @@ import type { Dictionary } from '@/types/common/Dictionary';
 import type User from '@/types/user/User';
 import VersusGameChoice from '@/types/versus/VersusGameChoice';
 import type VersusGameComment from '@/types/versus/VersusGameComment';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 import ApiUtils from '@/utils/ApiUtils';
 import CommonUtils from '@/utils/CommonUtils';
 import { useEffect, useRef, useState } from 'react';
@@ -23,6 +25,9 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
   const [isInputFocus, setInputFocus] = useState<boolean>(false);
   const [isWriteLoading, setWriteLoading] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
 
   useEffect(() => {
     if (choiceDic.contains(comment.gameChoiceId)) {
@@ -53,7 +58,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData.message ?? '실패했습니다.');
+      createToastMessage(responseData.message ?? '실패했습니다.');
       return;
     }
 
@@ -87,7 +92,11 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       return;
     }
 
-    if (!confirm('댓글을 삭제하시겠습니까?')) {
+    if (!(await createSystemMessage({
+        type: 'confirm',
+        content: '댓글을 삭제하시겠습니까?',
+      }))
+    ) {
       return;
     }
 
@@ -97,7 +106,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
 
     if (!result) {
       setWriteLoading(false);
-      alert(responseData.message ?? '실패했습니다.');
+      createToastMessage(responseData.message ?? '실패했습니다.');
       return;
     }
 

@@ -10,6 +10,8 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import VersusGameHead from './VersusGameHead';
 import VersusChoiceView from './inputs/VersusChoiceView';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 interface IVersusGameView {
   gameData: any | null;
@@ -31,6 +33,9 @@ export default function VersusGameEmbedView({ gameData = null, userChoiceData = 
   const [isShowResult, setShowResult] = useState<boolean>(false);
 
   const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true);
+
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
 
   useEffect(() => {
     updateUserChoice();
@@ -136,7 +141,10 @@ export default function VersusGameEmbedView({ gameData = null, userChoiceData = 
 
   const handleAnswer = async () => {
     if (!selectedChoice.id) {
-      alert('선택지를 선택해주세요.');
+      createSystemMessage({
+        type: 'alert',
+        content: '선택지를 선택해주세요.',
+      });
       return;
     }
 
@@ -153,13 +161,17 @@ export default function VersusGameEmbedView({ gameData = null, userChoiceData = 
 
       StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId);
     } else {
-      alert(responseData.message ?? '요청 실패했습니다.');
+      createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
   };
-  const handleReset = () => {
+  const handleReset = async () => {
     if (isShowResult) {
       // 이미 선택을 한 경우
-      if (!confirm('선택을 취소하시겠습니까?')) {
+      if (!(await createSystemMessage({
+          type: 'confirm',
+          content: '선택을 취소하시겠습니까?',
+        }))
+      ) {
         return;
       }
 

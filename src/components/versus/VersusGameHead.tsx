@@ -6,8 +6,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ModalContainer from '../ModalContainer';
 import VersusEmbedModal from './modals/VersusEmbedModal';
 
-const PAGE_SIZE = 5;
-
 interface IVersusGameHead {
   game: VersusGame;
   isEmbed?: boolean;

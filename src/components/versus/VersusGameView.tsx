@@ -17,6 +17,8 @@ import VersusGameHead from './VersusGameHead';
 import VersusGameViewComment from './VersusGameViewComment';
 import VersusGameViewRelated from './VersusGameViewRelated';
 import VersusChoiceView from './inputs/VersusChoiceView';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 
 interface IVersusGameView {
   gameData?: any;
@@ -43,6 +45,9 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
 
   const commentBoxRef = useRef<HTMLDivElement>(null);
   const [commentCount, setCommentCount] = useState<number>(0);
+
+  const createToastMessage = useToastMessageStore((state) => state.createMessage);
+  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
 
   useEffect(() => {
     updateUserChoice();
@@ -150,7 +155,7 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
     if (isMyAnswerLoading) return;
 
     if (!selectedChoice.id) {
-      alert('선택지를 선택해주세요.');
+      createToastMessage('선택지를 선택해주세요.');
       return;
     }
 
@@ -170,13 +175,17 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
 
       StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId);
     } else {
-      alert(responseData.message ?? '요청 실패했습니다.');
+      createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
   };
-  const handleReset = () => {
+  const handleReset = async () => {
     if (isShowResult) {
       // 이미 선택을 한 경우
-      if (!confirm('선택을 취소하시겠습니까?')) {
+      if (!(await createSystemMessage({
+          type: 'confirm',
+          content: '선택을 취소하시겠습니까?',
+        }))
+      ) {
         return;
       }
 

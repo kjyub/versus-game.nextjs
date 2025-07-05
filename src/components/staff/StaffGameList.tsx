@@ -78,7 +78,7 @@ export default function StaffGameList() {
         <Game key={index} game={game} openGameEditor={openGameEditor} />
       ))}
 
-      <ModalContainer isOpen={isEditorShow} setIsOpen={setEditorShow} isCloseByBackground={true} isBlur={true}>
+      <ModalContainer isOpen={isEditorShow} setIsOpen={setEditorShow}>
         <div className="p-4 rounded-lg bg-white/20 backdrop-blur-xl">
           <VersusEditor
             isUpdate={true}
