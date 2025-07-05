@@ -71,24 +71,24 @@ const Wrapper = ({ message }: { message: SystemMessage }) => {
 
 const Layout = tw.div`
   flex flex-col p-6 gap-6
-  border border-stone-500/30 rounded-2xl bg-stone-800/50 backdrop-blur-sm
+  rounded-2xl bg-black/30 backdrop-blur-sm
 
   [&>.content]:flex [&>.content]:flex-col [&>.content]:items-center [&>.content]:pt-1 [&>.content]:gap-2
   [&>.content]:text-stone-200/90 [&>.content]:font-medium 
 
   [&>.control]:flex [&>.control]:justify-center [&>.control]:w-full [&>.control]:h-10 [&>.control]:px-4 [&>.control]:gap-2
-  [&>.control>button]:w-24 [&>.control>button]:rounded-2xl [&>.control>button]:bg-stone-600/30
-  [&>.control>button]:border [&>.control>button]:border-stone-200/10 [&>.control>button]:text-stone-200/80
-  [&>.control>button]:hover:bg-stone-600/40  [&>.control>button]:hover:border-stone-200/20 [&>.control>button]:hover:text-stone-200/90
-  [&>.control>button]:active:bg-stone-600/50 [&>.control>button]:active:border-stone-200/30 [&>.control>button]:active:text-stone-200/95
-  [&>.control>button]:focus:bg-stone-600/40 [&>.control>button]:focus:border-stone-200/20 [&>.control>button]:focus:text-stone-200/90
-  [&>.control>button]:focus-visible:bg-stone-600/40 [&>.control>button [&>.control>button]:focus-visible:border-stone-200/20 [&>.control>button]:focus-visible:text-stone-200/90
+  [&>.control>button]:w-24 [&>.control>button]:rounded-2xl [&>.control>button]:bg-stone-500/50
+  [&>.control>button]:text-stone-200
+  [&>.control>button]:hover:bg-stone-500/60 [&>.control>button]:hover:text-stone-100
+  [&>.control>button]:active:bg-stone-500/60 [&>.control>button]:active:text-stone-100
+  [&>.control>button]:focus:bg-stone-500/60 [&>.control>button]:focus:text-stone-100
+  [&>.control>button]:focus-visible:bg-stone-500/60 [&>.control>button]:focus-visible:text-stone-100
 
-  [&>.control>button.confirm]:bg-indigo-600/50 [&>.control>button.confirm]:border [&>.control>button.confirm]:border-indigo-200/10 [&>.control>button.confirm]:text-indigo-200/80
-  [&>.control>button.confirm]:hover:bg-indigo-600/70 [&>.control>button.confirm]:hover:border-indigo-200/20 [&>.control>button.confirm]:hover:text-indigo-200/90
-  [&>.control>button.confirm]:active:bg-indigo-600/70 [&>.control>button.confirm]:active:border-indigo-200/30 [&>.control>button.confirm]:active:text-indigo-200/95
-  [&>.control>button.confirm]:focus:bg-indigo-600/70 [&>.control>button.confirm]:focus:border-indigo-200/20 [&>.control>button.confirm]:focus:text-indigo-200/90
-  [&>.control>button.confirm]:focus-visible:bg-indigo-600/70 [&>.control>button.confirm]:focus-visible:border-indigo-200/20 [&>.control>button.confirm]:focus-visible:text-indigo-200/90
+  [&>.control>button.confirm]:bg-indigo-600/70 [&>.control>button.confirm]:text-indigo-200
+  [&>.control>button.confirm]:hover:bg-indigo-600/80 [&>.control>button.confirm]:hover:text-indigo-100
+  [&>.control>button.confirm]:active:bg-indigo-600/80 [&>.control>button.confirm]:active:text-indigo-100
+  [&>.control>button.confirm]:focus:bg-indigo-600/80 [&>.control>button.confirm]:focus:text-indigo-100
+  [&>.control>button.confirm]:focus-visible:bg-indigo-600/80 [&>.control>button.confirm]:focus-visible:text-indigo-100
 
   [&>.control>button]:focus-visible:ring-2 [&>.control>button]:focus-visible:ring-stone-400
   [&>.control>button.confirm]:focus-visible:ring-indigo-400

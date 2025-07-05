@@ -58,13 +58,12 @@ const Message = ({ message }: { message: ToastMessage }) => {
       <div
         className={cn([
           'flex flex-center h-9 px-4 space-x-3',
-          'rounded-full bg-slate-600/30 backdrop-blur-sm',
-          'border border-slate-200/10',
-          'text-slate-200/80',
+          'rounded-full bg-black/40 backdrop-blur-sm',
+          'text-stone-200/90',
         ])}
       >
         <div className="">{message.content}</div>
-        <button className="text-slate-500 hover:text-slate-300 transition-colors" onClick={handleClose} type="button">
+        <button className="text-stone-400 hover:text-stone-200 transition-colors" onClick={handleClose} type="button">
           <i className="fa-solid fa-xmark" />
         </button>
       </div>
