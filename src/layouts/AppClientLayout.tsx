@@ -20,6 +20,10 @@ export default function AppClientLayout({ children }: { children: React.ReactNod
   }, []);
 
   useEffect(() => {
+    if (pathname.includes('embed')) {
+      return;
+    }
+
     // 인앱 브라우저 인식 후 외부 브라우저로 이동
     const isRedirect = BrowserUtils.goExternalBrowser();
     setIsInAppBrowser(isRedirect);
