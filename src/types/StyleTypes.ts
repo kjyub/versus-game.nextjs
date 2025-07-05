@@ -4,5 +4,4 @@ export type StyleProps = {
   $is_active: boolean;
   $is_staff: boolean;
   $disabled: boolean;
-  disabled?: boolean;
 };

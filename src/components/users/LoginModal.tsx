@@ -6,6 +6,7 @@ import { SIGNUP_AGREEMENT } from '@/types/UserTypes';
 import ApiUtils from '@/utils/ApiUtils';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
+import MouseFloatingBox from '../atomics/MouseFloatingBox';
 
 export enum LoginModalPage {
   LOGIN = 0,
@@ -53,6 +54,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
   const login = async () => {
     if (email === '' || password === '') {
       setErrorMessage('이메일과 비밀번호를 입력해주세요.');
+      return;
     }
 
     try {
@@ -69,7 +71,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
         alert('로그인 성공');
         return;
       } else {
-        alert('이메일 및 비밀번호를 확인해주세요.');
+        setErrorMessage('이메일 및 비밀번호를 확인해주세요.');
         return;
       }
     } catch (error) {
@@ -83,7 +85,7 @@ const LoginPage = ({ page, setPage }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-        ${page === LoginModalPage.LOGIN ? 'top-0' : '-top-full'}
+        ${page === LoginModalPage.LOGIN ? '' : '-translate-y-full'}
         bg-linear-to-t from-stone-300 to-stone-200 from-10%
       `}
     >
@@ -115,15 +117,17 @@ const LoginPage = ({ page, setPage }: IPage) => {
           }}
         />
       </div>
-      <div className="flex flex-col items-center w-full mt-4 mb-2 space-y-2">
-        {errorMessage && <span className="text-red-500">{errorMessage}</span>}
-        <UserStyles.LoginButton
-          onClick={() => {
-            login();
-          }}
-        >
-          로그인
-        </UserStyles.LoginButton>
+      <div className="flex flex-col items-center w-full mt-4 space-y-2">
+        {errorMessage && <span className="text-sm text-rose-500">{errorMessage}</span>}
+        <MouseFloatingBox>
+          <UserStyles.LoginButton
+            onClick={() => {
+              login();
+            }}
+          >
+            로그인
+          </UserStyles.LoginButton>
+        </MouseFloatingBox>
         <UserStyles.LoginRegistButton
           onClick={() => {
             setPage(LoginModalPage.REGIST_AGREE);
@@ -142,10 +146,10 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-                ${page === LoginModalPage.LOGIN ? 'top-full' : ''}
-                ${page === LoginModalPage.REGIST_AGREE ? 'top-0' : ''}
-                ${page === LoginModalPage.REGIST ? '-top-full' : ''}
-            `}
+        ${page === LoginModalPage.LOGIN ? 'translate-y-full' : ''}
+        ${page === LoginModalPage.REGIST_AGREE ? 'translate-y-0' : ''}
+        ${page === LoginModalPage.REGIST ? '-translate-y-full' : ''}
+      `}
     >
       <UserStyles.LoginPageHead>
         <UserStyles.LoginPageHeadPageButton
@@ -176,20 +180,22 @@ const RegistAgreePage = ({ page, setPage, setModalShow }: IPage) => {
             </div>
           </UserStyles.AgreeTitleBox>
           <UserStyles.AgreeContent>
-            <p>{SIGNUP_AGREEMENT}</p>
+            <pre className="font-pretendard">{SIGNUP_AGREEMENT}</pre>
           </UserStyles.AgreeContent>
         </UserStyles.AgreeSection>
       </div>
 
-      <div className="flex justify-center items-center w-full mt-4 space-y-2">
-        <UserStyles.LoginButton
-          disabled={!isAgree}
-          onClick={() => {
-            setPage(LoginModalPage.REGIST);
-          }}
-        >
-          다음으로
-        </UserStyles.LoginButton>
+      <div className="flex justify-center items-center w-full mt-4 mb-2 space-y-2">
+        <MouseFloatingBox disabled={!isAgree}>
+          <UserStyles.LoginButton
+            disabled={!isAgree}
+            onClick={() => {
+              setPage(LoginModalPage.REGIST);
+            }}
+          >
+            다음으로
+          </UserStyles.LoginButton>
+        </MouseFloatingBox>
       </div>
     </UserStyles.LoginPageContainer>
   );
@@ -288,7 +294,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
   return (
     <UserStyles.LoginPageContainer
       className={`
-        ${page === LoginModalPage.REGIST ? 'top-0' : 'top-full'}
+        ${page === LoginModalPage.REGIST ? '' : 'translate-y-full'}
       `}
     >
       <UserStyles.LoginPageHead>
@@ -308,6 +314,7 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
         <UserInputText label={'닉네임'} placeholder={'홍길동'} value={name} setValue={setName} disabled={isLoading} />
         <UserInputText
           label={'이메일'}
+          type={'email'}
           placeholder={'honggildong@example.com'}
           value={email}
           setValue={setEmail}
@@ -334,14 +341,16 @@ const RegistPage = ({ page, setPage, setModalShow }: IPage) => {
         />
         {errorMessage && <span className="text-red-500">{errorMessage}</span>}
       </div>
-      <div className="flex justify-center items-center w-full mt-4 space-y-2">
-        <UserStyles.LoginButton
-          onClick={() => {
-            handleRegist();
-          }}
-        >
-          회원가입
-        </UserStyles.LoginButton>
+      <div className="flex justify-center items-center w-full mt-4 mb-2 space-y-2">
+        <MouseFloatingBox>
+          <UserStyles.LoginButton
+            onClick={() => {
+              handleRegist();
+            }}
+          >
+            회원가입
+          </UserStyles.LoginButton>
+        </MouseFloatingBox>
       </div>
     </UserStyles.LoginPageContainer>
   );

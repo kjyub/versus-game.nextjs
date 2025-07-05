@@ -10,8 +10,7 @@ export enum UserRole {
   STAFF = 3,
 }
 
-export const SIGNUP_AGREEMENT = `
-1. 개인정보의 처리 목적
+export const SIGNUP_AGREEMENT = `1. 개인정보의 처리 목적
 - 'VersusGame'는 다음의 목적을 위하여 개인정보를 처리하고 있으며, 다음의 목적 이외의 용도로는 이용하지 않습니다.
 - 서비스 이용에 따른 개인식별, 회원 가입의사 확인, 회원자격 유지·관리, 서비스 부정이용 방지, 각종 고지·통지, 분쟁 조정을 위한 기록 보존 등을 목적으로 개인정보를 처리합니다.
 \n
