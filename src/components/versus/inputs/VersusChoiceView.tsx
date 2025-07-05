@@ -11,6 +11,7 @@ import CommonUtils from '@/utils/CommonUtils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import VersusChoiceProgressBar from './VersusChoiceProgressBar';
+import { cn } from '@/utils/StyleUtils';
 
 interface IVersusChoiceView {
   game: VersusGame;
@@ -74,7 +75,7 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
   };
 
   return (
-    <VS.ChoiceBox>
+    <VS.ChoiceBox className={cn([{ 'cursor-pointer': !isShowResult}])}>
       <VS.GameViewChoiceContentBox
         className="content"
         $status={selectStatus}
