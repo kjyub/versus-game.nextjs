@@ -1,7 +1,9 @@
+'use client';
+
 import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from 'react';
 
 export const useDetectClose = <T extends HTMLElement>(): [
-  React.MutableRefObject<T | null>,
+  React.RefObject<T | null>,
   boolean,
   Dispatch<SetStateAction<boolean>>,
 ] => {

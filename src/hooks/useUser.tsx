@@ -1,3 +1,5 @@
+'use client';
+
 import User from '@/types/user/User';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';

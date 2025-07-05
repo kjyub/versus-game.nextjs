@@ -1,4 +1,5 @@
 'use client';
+
 import { useDetectClose } from '@/hooks/useDetectClose';
 import * as VS from '@/styles/VersusStyles';
 import { useState } from 'react';
@@ -11,11 +12,7 @@ const VersusMainTitle = () => {
   const openMenu = () => {
     setIsMenuShow(true);
   };
-
-  const closeMenu = () => {
-    setIsMenuShow(false);
-  };
-
+  
   return (
     <VS.MainTitleLayout ref={menuRef}>
       <VersusMainSearch

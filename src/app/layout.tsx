@@ -7,12 +7,6 @@ import * as MainStyles from '@/styles/MainStyles';
 import { SiteConsts } from '@/types/SiteTypes';
 import ApiUtils from '@/utils/ApiUtils';
 
-const inter = Inter({ subsets: ['latin'] });
-
-async function generateGuestId() {
-  await ApiUtils.request('/api/users/guest', 'POST', { useCache: true });
-}
-
 export const metadata: Metadata = {
   title: SiteConsts.SITE_TITLE,
   description: SiteConsts.SITE_DESCRIPTION,
@@ -25,8 +19,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // await generateGuestId()
-
   return (
     <html lang="ko">
       <head>
