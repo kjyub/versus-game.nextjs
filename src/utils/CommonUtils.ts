@@ -1,12 +1,11 @@
 import { TextFormats } from '@/types/CommonTypes';
 import dayjs, { type Dayjs } from 'dayjs';
-// import moment, { type Moment } from 'moment';
-// import 'moment/locale/ko';
 
 import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko';
 
 dayjs.extend(relativeTime);
-dayjs.locale('ko');
+dayjs.locale('ko'); // 한글 설정
 
 namespace CommonUtils {
   export function round(value: number, round = 0): number {

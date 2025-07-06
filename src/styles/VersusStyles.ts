@@ -294,7 +294,7 @@ export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
 `;
 export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
     z-0
-    flex flex-col items-center max-sm:min-h-[16rem] sm:min-h-[32rem] p-0
+    flex flex-col items-center p-0 pb-24
     overflow-y-auto scroll-transparent scroll-overlay
     overflow-visible
 `;

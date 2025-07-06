@@ -131,7 +131,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
           </span>
         </div>
         {/* 유저 */}
-        <span className="ml-2 text-stone-200 text-sm">{comment.user.name}</span>
+        <span className="ml-2 text-stone-300 text-sm">{comment.user.name}</span>
         {/* 생성일 */}
         <span className="ml-auto text-stone-200 text-sm">{comment.created}</span>
         {/* 작성자 메뉴 */}
@@ -159,7 +159,7 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       </div>
 
       {/* 내용 */}
-      {editState === EditStateTypes.WAIT && <pre className="w-full px-0 text-stone-200">{comment.content}</pre>}
+      {editState === EditStateTypes.WAIT && <pre className="w-full p-1 text-stone-200">{comment.content}</pre>}
       {editState === EditStateTypes.EDITED && (
         <VS.GameViewCommentInputBox className="flex-row">
           <textarea

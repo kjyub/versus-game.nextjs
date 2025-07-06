@@ -59,7 +59,7 @@ export default function VersusGameViewComment({
         return;
       }
 
-      const { result, data } = await ApiUtils.request(`/api/versus/comment/${game.nanoId}`, 'GET', {
+      const { result, data } = await ApiUtils.request('/api/versus/comment', 'GET', {
         params: {
           gameNanoId: game.nanoId,
           pageIndex: _pageIndex,
