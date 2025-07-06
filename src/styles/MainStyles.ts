@@ -28,7 +28,7 @@ export const NavButtonContainer = tw.div`
 export const NavButton = tw.button`
     flex justify-center items-center 
     max-md:px-2 md:px-4 py-1
-    rounded-md hover:bg-black/20
+    rounded-xl hover:bg-black/15
     text-stone-800/80 text-lg font-semibold
     duration-200
 `;

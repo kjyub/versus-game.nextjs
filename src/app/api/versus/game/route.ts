@@ -1,13 +1,10 @@
 import { auth } from '@/auth';
-import MFile from '@/models/file/MFile';
 import MUser from '@/models/user/MUser';
 import MVersusGame from '@/models/versus/MVersusGame';
 import { UserRole } from '@/types/UserTypes';
 import { GameState, PrivacyTypes } from '@/types/VersusTypes';
 import type { IPaginationResponse } from '@/types/common/Responses';
-import VersusGame from '@/types/versus/VersusGame';
 import ApiUtils from '@/utils/ApiUtils';
-import CommonUtils from '@/utils/CommonUtils';
 import DBUtils from '@/utils/DBUtils';
 import GameUtils from '@/utils/GameUtils';
 import mongoose, { type FilterQuery } from 'mongoose';
@@ -62,7 +59,7 @@ export async function GET(req: NextRequest) {
   // 내 게임 필터링
   const myGames = req.nextUrl.searchParams.get('myGames');
   const userId = req.nextUrl.searchParams.get('userId');
-  const userObjectId = new mongoose.Types.ObjectId(userId ?? '');
+  // const userObjectId = new mongoose.Types.ObjectId(userId ?? '');
 
   // 내 게임이 활성화되고 userId가 있으면 내 게임만 검색한다.
   if (myGames !== null && userId) {

@@ -94,7 +94,7 @@ const ChoiceEdit = ({ index, choice, updateChoice }: IChoiceEdit) => {
         type={'text'}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder={`${index + 1}. 제목을 입력하세요`}
+        placeholder={`${index + 1}. 제목을 입력하세요 ${index >= 2 ? ' (선택)' : ''}`}
         onFocus={() => setFocus(true)}
         onBlur={() => {
           setFocus(false);
