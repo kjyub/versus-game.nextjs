@@ -308,7 +308,8 @@ export const GameViewChoiceBox = tw.div`
   ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? '' : '')}
   ${(props: any) => (props.$status === ChoiceSelectStatus.SELECTED ? 'ring-indigo-500' : 'ring-transparent')}
   ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? 'layer-bg-4' : 'layer-bg')}
-  rounded-[28px] ring-3 transition-colors duration-500
+  rounded-[28px] ring-3 
+  transition-colors duration-500
 
   [&>.check-icon]:absolute [&>.check-icon]:top-0 [&>.check-icon]:left-3
   [&>.check-icon]:flex [&>.check-icon]:items-center [&>.check-icon]:h-full

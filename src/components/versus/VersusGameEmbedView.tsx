@@ -26,9 +26,10 @@ export default function VersusGameEmbedView({ gameData = null }: IVersusGameView
 
       <div className="grid grid-cols-2 gap-4 w-full p-4">
         {game.choices.map((choice) => (
-          <S.GameViewChoiceBox 
-            key={choice.id} 
-            onClick={() => setSelectedChoice(selectedChoice.id === choice.id ? new VersusGameChoice() : choice)} 
+          <S.GameViewChoiceBox
+            key={choice.id}
+            className="cursor-pointer"
+            onClick={() => setSelectedChoice(selectedChoice.id === choice.id ? new VersusGameChoice() : choice)}
             $status={selectedChoice.id ? (selectedChoice.id === choice.id ? ChoiceSelectStatus.SELECTED : ChoiceSelectStatus.UNSELECTED) : ChoiceSelectStatus.WAIT}
           >
             <div className={cn(['check-icon', { active: selectedChoice.id === choice.id }])}>
