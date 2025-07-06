@@ -47,6 +47,16 @@ namespace CommonUtils {
     } else if (format === TextFormats.PRICE) {
       const number = CommonUtils.textFormat(text, TextFormats.NUMBER);
       result = `${number}원`;
+    } else if (format === TextFormats.KOREAN_NUMBER_SIMPLE) {
+      const number = Number(text);
+      if (number <= 0) return result;
+
+      const units = ['', '만', '억', '조', '경', '해'];
+      const unitIndex = Math.floor(Math.log10(number) / 4);
+      const unit = units[unitIndex];
+      const value = number / 10 ** (unitIndex * 4);
+
+      result = `${value.toFixed(0)}${unit}`;
     }
 
     if (!result) {

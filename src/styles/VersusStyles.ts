@@ -157,14 +157,14 @@ export const ChoiceLayoutSettingContainer = tw.div`
 export const ChoiceLayoutSettingGrid = tw.div`
     z-10
     grid max-sm:gap-2 max-sm:grid-cols-1 sm:grid-cols-2 sm:gap-4
-    max-sm:w-full sm:w-136
+    max-sm:w-full sm:w-156
     duration-300
 `;
 
 export const ChoiceBox = tw.div`
     relative
     flex flex-col items-center w-full
-    rounded-xl
+    rounded-full
     overflow-hidden
 `;
 export const ChoiceThumbnailBox = tw.div`
@@ -286,7 +286,7 @@ export const GameViewSectionLayoutSize = tw.div`
 `;
 export const GameViewHeadLayout = tw(GameViewSectionLayoutSize)`
     flex flex-col space-y-2
-    rounded-xl layer-bg backdrop-blur-sm
+    rounded-2xl layer-bg-2 backdrop-blur-sm
     duration-300
 
     [&>.title]:text-center [&>.title]:text-xl [&>.title]:font-semibold [&>.title]:text-stone-100
@@ -302,15 +302,27 @@ export const GameViewChoiceLayout = tw(GameViewSectionLayoutSize)`
 export const GameViewChoiceThumbnailBox = tw(ChoiceThumbnailBox)` 
   [&>img]:duration-300
 `;
-export const GameViewChoiceContentBox = tw.div`
-  flex flex-col w-full pb-10
+export const GameViewChoiceBox = tw.div`
+  relative
+  flex flex-col flex-center w-full p-3
   ${(props: any) => (props.$status === ChoiceSelectStatus.WAIT ? '' : '')}
-  ${(props: any) => (props.$status === ChoiceSelectStatus.SELECTED ? 'border-indigo-500' : 'border-transparent')}
+  ${(props: any) => (props.$status === ChoiceSelectStatus.SELECTED ? 'ring-indigo-500' : 'ring-transparent')}
   ${(props: any) => (props.$status === ChoiceSelectStatus.UNSELECTED ? 'layer-bg-4' : 'layer-bg')}
-  rounded-xl border-3 duration-300
-  max-sm:[&>.title]:py-2 sm:[&>.title]:py-4
+  rounded-[28px] ring-3 transition-colors duration-500
+
+  [&>.check-icon]:absolute [&>.check-icon]:top-0 [&>.check-icon]:left-3
+  [&>.check-icon]:flex [&>.check-icon]:items-center [&>.check-icon]:h-full
+  [&>.check-icon]:text-stone-300/50 [&>.check-icon.active]:text-indigo-500/80 [&>.check-icon]:text-[28px]
+  
+  [&>.title]:px-14
   [&>.title]:font-medium [&>.title]:text-center [&>.title]:text-white 
   max-sm:[&>.title]:text-lg max-lg:[&>.title]:text-xl sm:[&>.title]:text-xl 
+
+  [&>.result]:absolute [&>.result]:top-0 [&>.result]:right-3 [&>.result]:max-w-14 [&>.result]:h-full
+  [&>.result]:opacity-0 [&>.result.active]:opacity-100 [&>.result]:duration-200
+
+  [&>.rate]:absolute [&>.rate]:-z-10 [&>.rate]:top-0 [&>.rate]:right-0 [&>.rate]:w-full [&>.rate]:h-full [&>.rate]:rounded-[28px] [&>.rate]:overflow-hidden
+  [&>.rate]:opacity-0 [&>.rate.active]:opacity-100 [&>.rate]:duration-300
 `;
 export const ChoiceImageContentBox = tw.div`
     absolute z-10

@@ -4,6 +4,7 @@ export enum TextFormats {
   NUMBER_ONLY = 2,
   PRICE = 3,
   TEL = 4,
+  KOREAN_NUMBER_SIMPLE = 5,
 }
 
 export type objectType = {

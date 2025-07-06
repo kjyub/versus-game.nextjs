@@ -53,11 +53,11 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
     updateUserChoice();
   }, [userChoiceData, session.status, session]);
 
-  useEffect(() => {
-    if (isShowResult) {
-      getAnswerResults();
-    }
-  }, [isShowResult]);
+  // useEffect(() => {
+  //   if (isShowResult) {
+  //     getAnswerResults();
+  //   }
+  // }, [isShowResult]);
 
   // 유저가 선택한 데이터 세팅
   const updateUserChoice = async () => {
@@ -88,6 +88,7 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
     }
 
     if (isChoice) {
+      await getAnswerResults();
       setShowResult(true);
     } else {
       setShowResult(false);
@@ -167,16 +168,18 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
     };
 
     const { result, data: responseData } = await ApiUtils.request('/api/versus/game_choice', 'POST', { data });
-    setMyAnswerLoading(false);
 
     if (result) {
       setAnswerChoice(selectedChoice);
+      await getAnswerResults();
       setShowResult(true);
 
       StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId);
     } else {
       createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
+    
+    setMyAnswerLoading(false);
   };
   const handleReset = async () => {
     if (isShowResult) {

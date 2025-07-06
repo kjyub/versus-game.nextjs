@@ -1,225 +1,48 @@
 'use client';
 import * as S from '@/styles/VersusStyles';
-import { CookieConsts } from '@/types/ApiTypes';
-import { Dictionary } from '@/types/common/Dictionary';
 import VersusGame from '@/types/versus/VersusGame';
-import VersusGameChoice from '@/types/versus/VersusGameChoice';
-import ApiUtils from '@/utils/ApiUtils';
-import StorageUtils from '@/utils/StorageUtils';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
 import VersusGameHead from './VersusGameHead';
-import VersusChoiceView from './inputs/VersusChoiceView';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
+import Link from 'next/link';
 
 interface IVersusGameView {
   gameData: any | null;
-  userChoiceData: any | null;
 }
-export default function VersusGameEmbedView({ gameData = null, userChoiceData = null }: IVersusGameView) {
-  const session = useSession();
-
+export default function VersusGameEmbedView({ gameData = null }: IVersusGameView) {
   const game = new VersusGame();
   game.parseResponse(gameData);
-  const [choices, setChoices] = useState<Array<VersusGameChoice>>(game.choices);
-  const [totalVotes, setTotalVotes] = useState<number>(0);
-
-  // 선택할 예정인 선택지
-  const [selectedChoice, setSelectedChoice] = useState<VersusGameChoice>(new VersusGameChoice());
-  // 선택 확정한 선택지
-  const [answerChoice, setAnswerChoice] = useState<VersusGameChoice>(new VersusGameChoice());
-
-  const [isShowResult, setShowResult] = useState<boolean>(false);
-
-  const [isMyAnswerLoading, setMyAnswerLoading] = useState<boolean>(true);
-
-  const createSystemMessage = useSystemMessageStore((state) => state.createMessage);
-  const createToastMessage = useToastMessageStore((state) => state.createMessage);
-
-  useEffect(() => {
-    updateUserChoice();
-  }, [userChoiceData, session.status, session]);
-
-  useEffect(() => {
-    if (isShowResult) {
-      getAnswerResults();
-    }
-  }, [isShowResult]);
-
-  // 유저가 선택한 데이터 세팅
-  const updateUserChoice = async () => {
-    // 세션 불러오는 중에는 넘어가기
-    if (!session || session.status === 'loading') {
-      return;
-    }
-
-    setMyAnswerLoading(true);
-
-    // 유저가 선택한 선택지가 있는지 불러온다.
-    let isChoice = false;
-    if (userChoiceData !== null) {
-      const answerId = userChoiceData.gameChoiceId;
-      const answer = new VersusGameChoice();
-
-      for (let i = 0; i < game.choices.length; i++) {
-        const _choice: VersusGameChoice = game.choices[i];
-
-        // 선택한 선택지가 있으면 게임 결과 표시
-        if (_choice.id === answerId) {
-          isChoice = true;
-          setSelectedChoice(_choice);
-          setAnswerChoice(_choice);
-          break;
-        }
-      }
-    }
-
-    if (isChoice) {
-      setShowResult(true);
-    } else {
-      setShowResult(false);
-      setSelectedChoice(new VersusGameChoice());
-      setAnswerChoice(new VersusGameChoice());
-    }
-
-    setMyAnswerLoading(false);
-  };
-
-  const getAnswerResults = async () => {
-    const { result, data: responseData } = await ApiUtils.request('/api/versus/game_choice', 'GET', {
-      params: {
-        gameNanoId: game.nanoId,
-      },
-    });
-
-    if (!result) {
-      return;
-    }
-
-    // 데이터 정리
-    const totalDatas: Array<any> = responseData.totalCount ?? [];
-    if (totalDatas.length === 0) {
-      return;
-    }
-    const totalData: any = totalDatas[0];
-    const _totalVotes = totalData.total ?? 0;
-    const choicesData: Array<any> = responseData.choices ?? [];
-    if (choicesData.length === 0 || _totalVotes === 0) {
-      return;
-    }
-
-    setTotalVotes(_totalVotes);
-    const choiceDic: Dictionary<string, number> = new Dictionary<string, number>();
-    choicesData.map((choiceData) => {
-      choiceDic.push(choiceData._id ?? '', choiceData.count ?? 0);
-    });
-
-    // 선택지 결과 계산 및 값 설정
-    const _choices = choices.map((_choice) => {
-      if (choiceDic.contains(_choice.id)) {
-        _choice.voteCount = choiceDic.getValue(_choice.id);
-        _choice.voteRate = (_choice.voteCount / _totalVotes) * 100;
-      }
-
-      return _choice;
-    });
-    setChoices(_choices);
-  };
-
-  const handleSelectChoice = (choice: VersusGameChoice) => {
-    if (isShowResult) {
-      return;
-    }
-
-    if (selectedChoice.id === choice.id) {
-      setSelectedChoice(new VersusGameChoice());
-    } else {
-      setSelectedChoice(choice);
-    }
-  };
-
-  const handleAnswer = async () => {
-    if (!selectedChoice.id) {
-      createSystemMessage({
-        type: 'alert',
-        content: '선택지를 선택해주세요.',
-      });
-      return;
-    }
-
-    const data = {
-      gameId: game.id,
-      gameAnswerId: selectedChoice.id,
-    };
-
-    const { result, data: responseData } = await ApiUtils.request('/api/versus/game_choice', 'POST', { data });
-
-    if (result) {
-      setAnswerChoice(selectedChoice);
-      setShowResult(true);
-
-      StorageUtils.pushSessionStorageList(CookieConsts.GAME_CHOICED_SESSION, game.nanoId);
-    } else {
-      createToastMessage(responseData.message ?? '요청 실패했습니다.');
-    }
-  };
-  const handleReset = async () => {
-    if (isShowResult) {
-      // 이미 선택을 한 경우
-      if (!(await createSystemMessage({
-          type: 'confirm',
-          content: '선택을 취소하시겠습니까?',
-        }))
-      ) {
-        return;
-      }
-
-      setAnswerChoice(new VersusGameChoice());
-      setSelectedChoice(new VersusGameChoice());
-      setShowResult(false);
-    } else {
-      // 처음 선택하는 경우
-      setSelectedChoice(new VersusGameChoice());
-    }
-  };
 
   return (
     <S.GameViewLayout>
       <VersusGameHead game={game} isEmbed={true} />
 
-      <S.GameViewChoiceLayout>
-        <VersusChoiceView
-          game={game}
-          choices={choices}
-          selectChoice={handleSelectChoice}
-          selectedChoice={selectedChoice}
-          isShowResult={isShowResult}
-        />
-      </S.GameViewChoiceLayout>
+      <div className="grid grid-cols-2 gap-4 w-full p-4">
+        {game.choices.map((choice) => (
+          <S.GameViewChoiceBox key={choice.id}>
+            <div className="check-icon">
+              <i className="fa-solid fa-circle-check"></i>
+            </div>
+            <span
+              className="title"
+              style={{
+                textShadow: '-1px 0 #44403c, 0 1px #44403c, 1px 0 #44403c, 0 -1px #44403c',
+              }}
+            >
+              {choice.title}
+            </span>
+          </S.GameViewChoiceBox>
+        ))}
+      </div>
 
-      <S.GameViewSelectLayout>
-        <button
-          className="max-sm:w-20 sm:w-28 bg-stone-500/50 hover:bg-stone-600/50"
-          type="button"
-          onClick={() => {
-            handleReset();
-          }}
-          disabled={isMyAnswerLoading}
+      <div className="fixed bottom-4 flex justify-center w-full">
+        <Link
+          href={`/game/${game.nanoId}`}
+          target="_blank"
+          className="bg-indigo-600/70 hover:bg-indigo-700/70 text-white backdrop-blur-lg px-6 py-3 rounded-full text-lg font-medium flex items-center justify-center active:translate-y-2 transition-all duration-300"
         >
-          초기화
-        </button>
-        <button
-          className="grow bg-indigo-600/70 hover:bg-indigo-700/70"
-          type="button"
-          onClick={() => {
-            handleAnswer();
-          }}
-          disabled={isMyAnswerLoading || isShowResult}
-        >
-          선택하고 결과 보기
-        </button>
-      </S.GameViewSelectLayout>
+          투표하러 가기
+          <i className="fa-solid fa-arrow-up-right-from-square text-base ml-2"></i>
+        </Link>
+      </div>
     </S.GameViewLayout>
   );
 }
