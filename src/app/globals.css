@@ -8,6 +8,9 @@
   --font-pretendard: "Pretendard", sans-serif;
 }
 
+@custom-variant mouse (@media screen and (pointer: fine));
+@custom-variant touch (@media screen and (pointer: coarse));
+
 @layer base {
   *,
   ::after,
