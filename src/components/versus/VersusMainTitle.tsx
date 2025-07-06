@@ -12,7 +12,7 @@ const VersusMainTitle = () => {
   const openMenu = () => {
     setIsMenuShow(true);
   };
-  
+
   return (
     <VS.MainTitleLayout ref={menuRef}>
       <VersusMainSearch

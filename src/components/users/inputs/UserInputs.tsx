@@ -39,7 +39,7 @@ const UserInputText = ({
         <input
           ref={ref}
           onChange={(e) => {
-            setValue?.(e.target.value); 
+            setValue?.(e.target.value);
           }}
           onKeyDown={handleKeyDown}
           autoComplete={autoPassword ? 'new-password' : undefined}

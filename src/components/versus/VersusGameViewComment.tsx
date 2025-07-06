@@ -1,6 +1,7 @@
 'use client';
 
 import { useUser } from '@/hooks/useUser';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import * as VS from '@/styles/VersusStyles';
 import { Dictionary } from '@/types/common/Dictionary';
 import type { IPaginationResponse } from '@/types/common/Responses';
@@ -13,7 +14,6 @@ import type React from 'react';
 import { type Dispatch, type SetStateAction, useCallback, useEffect, useState } from 'react';
 import CommentBox from './CommentBox';
 import VersusCommentPagination from './VersusCommentPagination';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 const PAGE_SIZE = 5;
 

@@ -1,8 +1,8 @@
 'use client';
 
+import ModalContainer from '@/components/ModalContainer';
 import SystemMessagePopup from '@/components/commons/SystemMessagePopup';
 import ToastPopup from '@/components/commons/ToastPopup';
-import ModalContainer from '@/components/ModalContainer';
 import { CookieConsts } from '@/types/ApiTypes';
 import ApiUtils from '@/utils/ApiUtils';
 import BrowserUtils from '@/utils/BrowserUtils';
@@ -52,7 +52,7 @@ export default function AppClientLayout({ children }: { children?: React.ReactNo
           </button>
         </div>
       </ModalContainer>
-      
+
       <ToastPopup />
       <SystemMessagePopup />
 

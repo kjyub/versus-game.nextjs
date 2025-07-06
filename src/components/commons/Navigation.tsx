@@ -2,6 +2,7 @@
 
 import { useDetectClose } from '@/hooks/useDetectClose';
 import { useUser } from '@/hooks/useUser';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import * as MS from '@/styles/MainStyles';
 import { CookieConsts } from '@/types/ApiTypes';
 import { UserRole } from '@/types/UserTypes';
@@ -9,7 +10,6 @@ import Link from 'next/link';
 import type React from 'react';
 import LoginModal from '../users/LoginModal';
 import MyInfoModal from '../users/MyInfoModal';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 const Navigation = () => {
   const user = useUser();

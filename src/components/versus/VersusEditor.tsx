@@ -1,5 +1,7 @@
 'use client';
 import { usePreventLeave } from '@/hooks/usePreventLeave';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import * as VS from '@/styles/VersusStyles';
 import { GameState, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes } from '@/types/VersusTypes';
 import VersusGame from '@/types/versus/VersusGame';
@@ -8,12 +10,10 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ModalContainer from '../ModalContainer';
+import { ErrorMessageForm } from '../commons/SystemMessagePopup';
 import VersusChoiceEdit from './inputs/VersusChoiceEdit';
 import { VersusInputText, VersusInputTextArea } from './inputs/VersusInputs';
 import VersusPrivacyModal from './modals/VersusPrivacyModal';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
-import { ErrorMessageForm } from '../commons/SystemMessagePopup';
 
 interface IVersusEditor {
   isUpdate?: boolean;
@@ -153,7 +153,7 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
           createToastMessage('저장 실패했습니다.');
         }
 
-        return; 
+        return;
       }
 
       const newGame = new VersusGame();
@@ -188,7 +188,8 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
   };
 
   const handleDelete = async () => {
-    if (!(await createSystemMessage({
+    if (
+      !(await createSystemMessage({
         type: 'confirm',
         content: '정말 삭제하시겠습니까?',
       }))

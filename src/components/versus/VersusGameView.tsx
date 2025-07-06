@@ -1,6 +1,8 @@
 'use client';
 
 import { usePreventLeave } from '@/hooks/usePreventLeave';
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import * as S from '@/styles/VersusStyles';
 import { CookieConsts } from '@/types/ApiTypes';
 import { TextFormats } from '@/types/CommonTypes';
@@ -17,8 +19,6 @@ import VersusGameHead from './VersusGameHead';
 import VersusGameViewComment from './VersusGameViewComment';
 import VersusGameViewRelated from './VersusGameViewRelated';
 import VersusChoiceView from './inputs/VersusChoiceView';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 
 interface IVersusGameView {
   gameData?: any;
@@ -178,13 +178,14 @@ export default function VersusGameView({ gameData, userChoiceData }: IVersusGame
     } else {
       createToastMessage(responseData.message ?? '요청 실패했습니다.');
     }
-    
+
     setMyAnswerLoading(false);
   };
   const handleReset = async () => {
     if (isShowResult) {
       // 이미 선택을 한 경우
-      if (!(await createSystemMessage({
+      if (
+        !(await createSystemMessage({
           type: 'confirm',
           content: '선택을 취소하시겠습니까?',
         }))

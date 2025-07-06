@@ -2,14 +2,14 @@ import * as UserStyles from '@/styles/UserStyles';
 import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 import UserInputText from './inputs/UserInputs';
 
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import { SIGNUP_AGREEMENT } from '@/types/UserTypes';
 import ApiUtils from '@/utils/ApiUtils';
 import { AuthError } from 'next-auth';
 import { signIn } from 'next-auth/react';
 import MouseFloatingBox from '../atomics/MouseFloatingBox';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 import { ErrorMessageForm } from '../commons/SystemMessagePopup';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 
 export enum LoginModalPage {
   LOGIN = 0,

@@ -1,11 +1,11 @@
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import * as VS from '@/styles/VersusStyles';
 import { EditStateTypes } from '@/types/DataTypes';
 import type { Dictionary } from '@/types/common/Dictionary';
 import type User from '@/types/user/User';
 import VersusGameChoice from '@/types/versus/VersusGameChoice';
 import type VersusGameComment from '@/types/versus/VersusGameComment';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 import ApiUtils from '@/utils/ApiUtils';
 import CommonUtils from '@/utils/CommonUtils';
 import { useEffect, useRef, useState } from 'react';
@@ -92,7 +92,8 @@ const CommentBox = ({ comment, choiceDic, user, getCurrentComments }: ICommentBo
       return;
     }
 
-    if (!(await createSystemMessage({
+    if (
+      !(await createSystemMessage({
         type: 'confirm',
         content: '댓글을 삭제하시겠습니까?',
       }))

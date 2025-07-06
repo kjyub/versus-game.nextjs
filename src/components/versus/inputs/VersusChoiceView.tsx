@@ -6,10 +6,10 @@ import { ChoiceSelectStatus } from '@/types/VersusTypes';
 import type VersusGame from '@/types/versus/VersusGame';
 import type VersusGameChoice from '@/types/versus/VersusGameChoice';
 import CommonUtils from '@/utils/CommonUtils';
-import { useEffect, useState } from 'react';
 import { cn } from '@/utils/StyleUtils';
-import ChoiceRateBar from './ChoiceRateBar';
+import { useEffect, useState } from 'react';
 import CountUp from 'react-countup';
+import ChoiceRateBar from './ChoiceRateBar';
 
 interface IVersusChoiceView {
   game: VersusGame;
@@ -74,13 +74,13 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
 
   return (
     <VS.GameViewChoiceBox
-      className={cn(['content', { 'cursor-pointer': !isShowResult}])}
+      className={cn(['content', { 'cursor-pointer': !isShowResult }])}
       $status={selectStatus}
       onClick={() => {
         handleSelectChoice();
       }}
     >
-      <div className={cn(['check-icon', { 'active': selectStatus === ChoiceSelectStatus.SELECTED }])}>
+      <div className={cn(['check-icon', { active: selectStatus === ChoiceSelectStatus.SELECTED }])}>
         <i className="fa-solid fa-circle-check"></i>
       </div>
       {choice.title ? (
@@ -93,19 +93,19 @@ const ChoiceView = ({ index, choice, selectChoice, selectedChoice, isShowResult 
           {choice.title}
         </span>
       ) : (
-        <span className="title text-transparent!">
-          -
-        </span>
+        <span className="title text-transparent!">-</span>
       )}
 
-      <div className={cn(['result flex flex-col flex-center', { 'active': isShowResult }])}>
+      <div className={cn(['result flex flex-col flex-center', { active: isShowResult }])}>
         <span className="text-indigo-400 text-sm font-semibold">
-          <CountUp start={0} end={isShowResult ? choice.voteRate : 0} decimals={1} suffix='%' />
+          <CountUp start={0} end={isShowResult ? choice.voteRate : 0} decimals={1} suffix="%" />
         </span>
-        <span className="text-white/90 text-xs">{CommonUtils.textFormat(choice.voteCount, TextFormats.KOREAN_NUMBER_SIMPLE)}명</span>
+        <span className="text-white/90 text-xs">
+          {CommonUtils.textFormat(choice.voteCount, TextFormats.KOREAN_NUMBER_SIMPLE)}명
+        </span>
       </div>
 
-      <div className={cn(['rate', { 'active': isShowResult }])}>
+      <div className={cn(['rate', { active: isShowResult }])}>
         <ChoiceRateBar percentage={isShowResult ? choice.voteRate : 0} />
       </div>
     </VS.GameViewChoiceBox>

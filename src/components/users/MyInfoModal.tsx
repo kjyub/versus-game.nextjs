@@ -3,11 +3,11 @@ import CommonUtils from '@/utils/CommonUtils';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import UserInputText from './inputs/UserInputs';
 
+import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
+import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
 import User from '@/types/user/User';
 import ApiUtils from '@/utils/ApiUtils';
 import { signOut, useSession } from 'next-auth/react';
-import useToastMessageStore from '@/stores/zustands/useToastMessageStore';
-import useSystemMessageStore from '@/stores/zustands/useSystemMessageStore';
 import { ErrorMessageForm } from '../commons/SystemMessagePopup';
 
 export interface IMyInfoModal {
@@ -115,7 +115,8 @@ const MyInfoModal = ({ isModalShow }: IMyInfoModal) => {
   };
 
   const handleDelete = async () => {
-    if (!(await createSystemMessage({
+    if (
+      !(await createSystemMessage({
         type: 'confirm',
         content: '회원 탈퇴하시겠습니까?',
       }))

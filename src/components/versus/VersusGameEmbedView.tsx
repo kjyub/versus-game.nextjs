@@ -1,8 +1,8 @@
 'use client';
 import * as S from '@/styles/VersusStyles';
 import VersusGame from '@/types/versus/VersusGame';
-import VersusGameHead from './VersusGameHead';
 import Link from 'next/link';
+import VersusGameHead from './VersusGameHead';
 
 interface IVersusGameView {
   gameData: any | null;

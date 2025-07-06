@@ -1,7 +1,10 @@
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useRef, useState } from 'react';
 
-export default function MouseFloatingBox({ disabled = false, children }: { disabled?: boolean, children: React.ReactNode }) {
+export default function MouseFloatingBox({
+  disabled = false,
+  children,
+}: { disabled?: boolean; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isMouseEnter, setIsMouseEnter] = useState<boolean>(false);
@@ -42,8 +45,8 @@ export default function MouseFloatingBox({ disabled = false, children }: { disab
   }
 
   return (
-    <div 
-      ref={ref} 
+    <div
+      ref={ref}
       className={`transition-transform will-change-transform hover:scale-105 ${isMouseEnter ? '' : 'duration-1000'}`}
       style={{ transform: `translate(${position.x}px, ${position.y}px)` }}
       onMouseEnter={handleMouseEnter}
