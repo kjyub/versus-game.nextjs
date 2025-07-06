@@ -23,7 +23,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       router.push('/');
     }
 
-    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user?.userRole}`, 'GET');
+    const { result, data } = await ApiUtils.request(`/api/users/user_info/${session.data?.user?._id}`, 'GET');
 
     const newUser = new User();
     if (result) {
