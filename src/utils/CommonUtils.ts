@@ -48,7 +48,7 @@ namespace CommonUtils {
       result = `${number}원`;
     } else if (format === TextFormats.KOREAN_NUMBER_SIMPLE) {
       const number = Number(text);
-      if (number <= 0) return result;
+      if (number <= 0) return String(text);
 
       const units = ['', '만', '억', '조', '경', '해'];
       const unitIndex = Math.floor(Math.log10(number) / 4);
