@@ -7,7 +7,7 @@ import VersusMainSearch from './VersusMainSearch';
 
 const VersusMainTitle = () => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [menuRef, isMenuShow, setIsMenuShow] = useDetectClose();
+  const [menuRef, isMenuShow, setIsMenuShow] = useDetectClose<HTMLDivElement>();
 
   const openMenu = () => {
     setIsMenuShow(true);

@@ -68,17 +68,14 @@ namespace AuthUtils {
 
     // 유저 확인 없으면 게스트
     if (AuthUtils.isSessionAuth(session)) {
-      console.log('session', session);
       // @ts-ignore
       userId = session?.user._id;
     } else if (req.cookies.has(CookieConsts.GUEST_ID)) {
       const guestIdCookie = req.cookies.get(CookieConsts.GUEST_ID);
-      console.log('guestIdCookie', guestIdCookie);
       userId = new mongoose.Types.ObjectId(guestIdCookie?.value ?? '');
     } else {
       const newGuestId = randomUUID() as string;
       (await cookies()).set(CookieConsts.GUEST_ID, newGuestId, { httpOnly: true });
-      console.log('newGuestId', newGuestId);
     }
 
     return userId;

@@ -19,6 +19,7 @@ const debounce = (func: (...args: any[]) => void, delay: number) => {
 const Layout = ({ isModalShow, children }: { isModalShow: boolean; children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     const updatePosition = debounce(() => {
@@ -28,6 +29,7 @@ const Layout = ({ isModalShow, children }: { isModalShow: boolean; children: Rea
       }
     }, 100);
 
+    setIsClient(typeof window !== 'undefined');
     updatePosition();
 
     window.addEventListener('resize', updatePosition);
@@ -36,7 +38,7 @@ const Layout = ({ isModalShow, children }: { isModalShow: boolean; children: Rea
 
   return (
     <div ref={ref}>
-      {createPortal(
+      {isClient && createPortal(
         <div className={`fixed z-110 ${isModalShow ? 'pointer-events-auto' : 'pointer-events-none'}`} style={{ top: position.top, left: position.left }}>
           {children}
         </div>,

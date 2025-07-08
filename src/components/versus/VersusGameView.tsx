@@ -14,7 +14,7 @@ import CommonUtils from '@/utils/CommonUtils';
 import StorageUtils from '@/utils/StorageUtils';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import VersusGameHead from './VersusGameHead';
 import VersusGameViewComment from './VersusGameViewComment';
 import VersusGameViewRelated from './VersusGameViewRelated';
@@ -25,11 +25,14 @@ interface IVersusGameView {
   userChoiceData?: any;
 }
 export default function VersusGameView({ gameData, userChoiceData }: IVersusGameView) {
-  const router = useRouter();
   const session = useSession();
 
-  const game = new VersusGame();
-  game.parseResponse(gameData);
+  const game = useMemo(() => {
+    const game = new VersusGame();
+    game.parseResponse(gameData);
+    return game;
+  }, [gameData]);
+  
   const [choices, setChoices] = useState<Array<VersusGameChoice>>(game.choices);
   const [totalVotes, setTotalVotes] = useState<number>(0);
 

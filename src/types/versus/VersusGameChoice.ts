@@ -1,5 +1,3 @@
-import ApiUtils from '@/utils/ApiUtils';
-import CommonUtils from '@/utils/CommonUtils';
 import { AbsApiObject } from '../ApiTypes';
 
 export default class VersusGameChoice extends AbsApiObject {
