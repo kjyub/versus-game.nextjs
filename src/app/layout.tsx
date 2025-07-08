@@ -1,11 +1,10 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
 import AppClientLayout from '@/layouts/AppClientLayout';
 import * as MainStyles from '@/styles/MainStyles';
 import { SiteConsts } from '@/types/SiteTypes';
-import ApiUtils from '@/utils/ApiUtils';
+import { pretendard } from './fonts';
 
 export const metadata: Metadata = {
   title: SiteConsts.SITE_TITLE,
@@ -23,8 +22,9 @@ export default async function RootLayout({
     <html lang="ko">
       <head>
         <FrontHead />
-      </head>
+      </head> 
       <MainStyles.Body
+        className={`${pretendard.variable} font-pretendard`}
         style={{
           backgroundColor: 'repeating-linear-gradient(45deg, #444, #444 10px, #888 0, #888 20px)',
         }}

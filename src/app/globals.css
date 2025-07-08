@@ -5,7 +5,7 @@
   --breakpoint-zero: 0px;
   --breakpoint-3xl: 1800px;
 
-  --font-pretendard: "Pretendard", sans-serif;
+  --font-pretendard: var(--font-pretendard);
 }
 
 @custom-variant mouse (@media screen and (pointer: fine));
