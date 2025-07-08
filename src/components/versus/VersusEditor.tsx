@@ -7,7 +7,7 @@ import { GameState, PrivacyTypeIcons, PrivacyTypeNames, PrivacyTypes } from '@/t
 import VersusGame from '@/types/versus/VersusGame';
 import ApiUtils from '@/utils/ApiUtils';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ModalContainer from '../ModalContainer';
 import { ErrorMessageForm } from '../commons/SystemMessagePopup';
@@ -23,6 +23,7 @@ interface IVersusEditor {
 export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }: IVersusEditor) {
   const router = useRouter();
   const session = useSession();
+  const searchParams = useSearchParams();
 
   const [game, setGame] = useState<VersusGame>(new VersusGame());
 
@@ -40,6 +41,13 @@ export default function VersusEditor({ isUpdate = false, gameData, saveOnClose }
   useEffect(() => {
     loadGameData(gameData);
   }, [isUpdate, gameData, session.status]);
+
+  useEffect(() => {
+    const title = searchParams.get('title');
+    if (title && !isUpdate) {
+      setTitle(title);
+    }
+  }, [searchParams, isUpdate]);
 
   useEffect(() => {
     game.title = title;

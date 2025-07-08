@@ -13,6 +13,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import VersusGameBox from './VersusGameBox';
 import VersusGameBoxCloud from './VersusGameBoxCloud';
+import VersusListBlank from './VersusListBlank';
 
 const PAGE_SIZE = 50;
 
@@ -69,6 +70,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
   // 페이지네이션
   const searchParams = useSearchParams();
+  const [search, setSearch] = useState<string>('');
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [lastId, setLastId] = useState<string>('');
   const [itemCount, setItemCount] = useState<number>(0);
@@ -79,6 +81,13 @@ export default function VersusList({ versusGameData }: IVersusList) {
   // 무한 스크롤 관련
   const [listState, setListState] = useState<IListState>({} as IListState);
   const [rollbackScrollLocation, setRollbackScrollLocation] = useState<number>(-1); // 목록으로 되돌아 왔을 때 이동할 스크롤 위치
+
+  useEffect(() => {
+    const search = searchParams.get('search');
+    if (search) {
+      setSearch(search);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // 맨 위의 아이템이 보이면 업데이트
@@ -248,6 +257,8 @@ export default function VersusList({ versusGameData }: IVersusList) {
             <VersusGameBox game={game} storeListState={storeListState} />
           </VersusGameBoxCloud>
         ))}
+
+        {!!search && games.length === 0 && <VersusListBlank search={search} />}
       </VS.ListGrid>
       <VS.ListGameLoadingBox $is_active={isScrollLoading} ref={scrollRef}></VS.ListGameLoadingBox>
       <VS.ListScrollTopButton
