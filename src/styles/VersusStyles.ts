@@ -218,7 +218,7 @@ export const ListGrid = tw.div`
 
 export const ListGameBox = tw.div`
     flex flex-col w-full max-sm:p-3 sm:p-3 gap-2 [&>a]:flex [&>a]:flex-col [&>a]:gap-2
-    rounded-xl layer-bg layer-hover backdrop-blur-sm
+    rounded-xl layer-bg-1/2 layer-hover backdrop-blur-sm
     duration-300
 `;
 export const ListGameLoadingBox = tw(ListGameBox)`
@@ -404,12 +404,8 @@ export const GameViewRelatedLayout = tw(GameViewSectionLayoutSize)`
     flex-col max-md:p-0 md:p-0 space-y-4
 `;
 export const GameViewRelatedList = tw.div`
-    max-sm:grid max-sm:grid-cols-2 max-sm:gap-2
-    max-sm:overflow-y-auto
-    sm:flex sm:flex-row sm:space-x-3
+    grid grid-cols-2 gap-2
     w-full sm:pb-1
-    sm:overflow-x-scroll scroll-transparent scroll-overlay
-    sm:[&>div]:min-w-[12rem]
 `;
 
 export const PrivacyModalLayout = tw(ModalLayout)`

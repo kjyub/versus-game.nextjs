@@ -34,14 +34,7 @@ export default function VersusGameViewRelated({ game, isShowResult, commentHelpB
       </div>
       <VS.GameViewRelatedList>
         {relatedGames.map((relatedGame: VersusGame, index: number) => (
-          <div key={index}>
-            <div className="max-sm:hidden sm:block">
-              <VersusGameBox game={relatedGame} />
-            </div>
-            <div className="max-sm:block sm:hidden">
-              <VersusGameSimpleBox game={relatedGame} />
-            </div>
-          </div>
+          <VersusGameSimpleBox key={index} game={relatedGame} />
         ))}
       </VS.GameViewRelatedList>
     </VS.GameViewRelatedLayout>
