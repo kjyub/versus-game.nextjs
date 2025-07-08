@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { type ReactNode, useEffect, useState } from 'react';
 import VersusGameBox from './VersusGameBox';
 import VersusGameSimpleBox from './VersusGameSimpleBox';
+import { GameConsts } from '@/types/VersusTypes';
 
 const PAGE_SIZE = 5;
 
@@ -21,7 +22,7 @@ export default function VersusGameViewRelated({ game, isShowResult, commentHelpB
   const [relatedGames, setRelatedGames] = useState<Array<VersusGame>>([]);
 
   useEffect(() => {
-    setRelatedGames(game.relatedGames.filter((rg) => rg.id !== game.id));
+    setRelatedGames(game.relatedGames.filter((rg) => rg.id !== game.id).slice(0, GameConsts.VISIBLE_RELATED_GAME_COUNT));
   }, [game]);
 
   return (

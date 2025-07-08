@@ -34,5 +34,6 @@ export const CHOICE_COUNT_CONST = 100;
 export const DEFAULT_CHOICE_COUNT = 4;
 export const MAX_CHOICE = 10;
 export const GameConsts = {
-  RELATED_GAME_COUNT: 10,
+  VISIBLE_RELATED_GAME_COUNT: 10,
+  RELATED_GAME_COUNT: 15,
 };
