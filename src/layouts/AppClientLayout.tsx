@@ -1,18 +1,18 @@
 'use client';
 
-import ModalContainer from '@/components/ModalContainer';
+// import ModalContainer from '@/components/ModalContainer';
 import SystemMessagePopup from '@/components/commons/SystemMessagePopup';
 import ToastPopup from '@/components/commons/ToastPopup';
 import { CookieConsts } from '@/types/ApiTypes';
 import ApiUtils from '@/utils/ApiUtils';
-import BrowserUtils from '@/utils/BrowserUtils';
-import { usePathname } from 'next/navigation';
+// import BrowserUtils from '@/utils/BrowserUtils';
 import { useEffect, useState } from 'react';
+// import { usePathname } from 'next/navigation';
 
 export default function AppClientLayout({ children }: { children?: React.ReactNode }) {
-  const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false);
+  // const [isInAppBrowser, setIsInAppBrowser] = useState<boolean>(false);
 
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   useEffect(() => {
     requestGuestId();
@@ -21,23 +21,23 @@ export default function AppClientLayout({ children }: { children?: React.ReactNo
     sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
   }, []);
 
-  useEffect(() => {
-    if (pathname.includes('embed')) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (pathname.includes('embed')) {
+  //     return;
+  //   }
 
-    // 인앱 브라우저 인식 후 외부 브라우저로 이동
-    const isRedirect = BrowserUtils.goExternalBrowser();
-    setIsInAppBrowser(isRedirect);
-  }, [pathname]);
+  //   // 인앱 브라우저 인식 후 외부 브라우저로 이동
+  //   const isRedirect = BrowserUtils.goExternalBrowser();
+  //   setIsInAppBrowser(isRedirect);
+  // }, [pathname]);
 
-  const requestGuestId = async () => {
-    const response = await ApiUtils.request('/api/users/guest', 'POST');
+  const requestGuestId = () => {
+    void ApiUtils.request('/api/users/guest', 'POST');
   };
 
   return (
     <>
-      <ModalContainer isOpen={isInAppBrowser} setIsOpen={() => {}}>
+      {/* <ModalContainer isOpen={isInAppBrowser} setIsOpen={() => {}}>
         <div className="flex flex-col rounded-xl bg-white/70 backdrop-blur" style={{ padding: '1.5rem' }}>
           <span className="text-lg font-semibold text-stone-800">추즈밍은 외부 웹브라우저에서 사용 가능합니다</span>
 
@@ -51,7 +51,7 @@ export default function AppClientLayout({ children }: { children?: React.ReactNo
             웹브라우저 열기
           </button>
         </div>
-      </ModalContainer>
+      </ModalContainer> */}
 
       <ToastPopup />
       <SystemMessagePopup />
