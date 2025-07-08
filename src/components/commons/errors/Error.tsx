@@ -7,8 +7,8 @@ interface Props {
 }
 export default function ErrorComponent({ code, message, redirectUrl }: Props) {
   return (
-    <div className="flex flex-center w-full h-screen max-sm:px-8">
-      <div className="flex flex-col flex-center max-sm:px-8 sm:px-32 max-sm:py-10 sm:py-18 gap-8 max-sm:rounded-2xl sm:rounded-4xl layer-bg-2">
+    <div className="fixed inset-0 flex flex-center w-full h-dvh max-sm:px-8 pointer-events-none">
+      <div className="flex flex-col flex-center max-sm:px-8 sm:px-32 max-sm:py-10 sm:py-18 gap-8 max-sm:rounded-2xl sm:rounded-4xl layer-bg-2 pointer-events-auto">
         <div className="flex flex-col items-center gap-2">
           {code && <h1 className="text-4xl sm:text-6xl font-bold text-white text-center">{code}</h1>}
           {message && <h2 className="text-lg sm:text-xl text-white text-center">{message}</h2>}
