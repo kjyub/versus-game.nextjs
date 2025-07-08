@@ -36,7 +36,9 @@ export default function VersusGameBox({ game, storeListState }: IGameBox) {
               <i title={'이미 선택한 게임입니다.'} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
             )}
             {/* 제목 */}
-            {game.title}
+            <span className="truncate">
+              {game.title}
+            </span>
             {/* 상태 */}
             {game.state === GameState.BLOCK && (
               <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>

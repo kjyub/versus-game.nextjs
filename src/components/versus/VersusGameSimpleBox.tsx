@@ -28,18 +28,20 @@ export default function VersusGameSimpleBox({ game, storeListState }: IGameBox) 
       <VS.ListGameSimpleContentBox>
         <Link href={`/game/${game.nanoId}`} onClick={handleGame}>
           <VS.ListGameContentBox>
-            <span className={`title ${game.isView ? 'viewed' : ''}`}>
+            <div className={`title ${game.isView ? 'viewed' : ''}`}>
               {/* 선택했었는지 여부 */}
               {game.isChoice && (
                 <i title={'이미 선택한 게임입니다.'} className="fa-solid fa-circle-check text-indigo-400 mr-1" />
               )}
               {/* 제목 */}
-              {game.title}
+              <span className="truncate">
+                {game.title}
+              </span>
               {/* 상태 */}
               {game.state === GameState.BLOCK && (
                 <span className="ml-auto text-stone-300 text-sm font-normal">관리자에 의한 차단</span>
               )}
-            </span>
+            </div>
             <span className="content">{game.content}</span>
           </VS.ListGameContentBox>
         </Link>
