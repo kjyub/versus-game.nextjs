@@ -7,7 +7,7 @@ import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from 
 import { createPortal } from 'react-dom';
 
 // backdrop blur를 위해 portal 처리
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ isModalShow, children }: { isModalShow: boolean; children: React.ReactNode }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
@@ -21,7 +21,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div ref={ref}>
       {createPortal(
-        <div className="fixed z-110" style={{ top: position.top, left: position.left }}>
+        <div className={`fixed z-110 ${isModalShow ? 'pointer-events-auto' : 'pointer-events-none'}`} style={{ top: position.top, left: position.left }}>
           {children}
         </div>,
         document.body
@@ -37,7 +37,7 @@ export interface IMobileNav {
 }
 const MobileNav = ({ isModalShow, setModalShow, user }: IMobileNav) => {
   return (
-    <Layout>
+    <Layout isModalShow={isModalShow}>
       <MS.MobileNavContainer $is_show={isModalShow}>
         <MS.MobileNavList onClick={() => setModalShow(false)}>
           <Link
