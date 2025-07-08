@@ -7,16 +7,16 @@ interface Props {
 }
 export default function ErrorComponent({ code, message, redirectUrl }: Props) {
   return (
-    <div className="flex flex-center w-full h-screen">
-      <div className="flex flex-col flex-center px-32 py-18 gap-8 rounded-4xl layer-bg-2">
+    <div className="flex flex-center w-full h-screen max-sm:px-8">
+      <div className="flex flex-col flex-center max-sm:px-8 sm:px-32 max-sm:py-10 sm:py-18 gap-8 max-sm:rounded-2xl sm:rounded-4xl layer-bg-2">
         <div className="flex flex-col items-center gap-2">
-          {code && <h1 className="text-6xl font-bold text-white">{code}</h1>}
-          {message && <h2 className="text-xl text-white">{message}</h2>}
+          {code && <h1 className="text-4xl sm:text-6xl font-bold text-white text-center">{code}</h1>}
+          {message && <h2 className="text-lg sm:text-xl text-white text-center">{message}</h2>}
         </div>
         {redirectUrl && (
           <Link href={redirectUrl}>
             <button
-              className="px-8 py-4 text-xl font-medium text-white rounded-xl layer-bg layer-hover transition-colors"
+              className="px-8 py-4 max-sm:text-base sm:text-xl font-medium text-white rounded-xl layer-bg layer-hover transition-colors"
               type="button"
             >
               홈으로 돌아가기
