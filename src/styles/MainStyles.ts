@@ -63,18 +63,12 @@ export const LoginLayout = tw.div`
     duration-200
 `;
 
-export const MobileNavLayout = tw.div`  
-    absolute left-4 z-50
-    ${(props: StyleProps) => (props.$is_show ? 'top-13 opacity-100' : 'top-8 opacity-0 pointer-events-none')}
-    flex flex-center
-    md:duration-200
-`;
-export const MobileNavContainer = tw.div`
-    relative
-    flex flex-col w-64 p-4
-    rounded-lg bg-black/80
+export const MobileNavContainer = tw.div<StyleProps>`
+    flex flex-col w-48 p-4
+    rounded-xl layer-bg-2 backdrop-blur-xl
     drop-shadow-xl
-    overflow-hidden
+    ${(props: StyleProps) => (props.$is_show ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-4 opacity-0 pointer-events-none')}
+    duration-300
 `;
 export const MobileNavList = tw.div`
     flex flex-col w-full space-y-5

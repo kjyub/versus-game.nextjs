@@ -10,12 +10,14 @@ import Link from 'next/link';
 import type React from 'react';
 import LoginModal from '../users/LoginModal';
 import MyInfoModal from '../users/MyInfoModal';
+import MobileNav from './MobileNav';
 
 const Navigation = () => {
   const user = useUser();
 
   const [userRef, isUserShow, setUserShow] = useDetectClose<HTMLDivElement>();
   const [loginRef, isLoginShow, setLoginShow] = useDetectClose<HTMLDivElement>();
+  const [mobileNavRef, isMobileNavShow, setMobileNavShow] = useDetectClose<HTMLDivElement>();
 
   const createToastMessage = useToastMessageStore((state) => state.createMessage);
 
@@ -65,6 +67,22 @@ const Navigation = () => {
               </Link>
             </MS.NavButtonContainer>
           )}
+        </MS.NavButtonList>
+
+        {/* 내비게이션 메뉴 (모바일) */}
+        <MS.NavButtonList className="max-md:flex md:hidden">
+          <MS.NavButtonContainer $is_show={true} ref={mobileNavRef}>
+            <MS.NavMobileMenuButton
+              onClick={() => {
+                setMobileNavShow(!isMobileNavShow);
+              }}
+            >
+              <i className="fa-solid fa-bars text-lg mr-2 mt-[2px]"></i>
+              메뉴
+            </MS.NavMobileMenuButton>
+
+            <MobileNav isModalShow={isMobileNavShow} setModalShow={setMobileNavShow} user={user} />
+          </MS.NavButtonContainer>
         </MS.NavButtonList>
 
         {/* 내비게이션 로고 */}
