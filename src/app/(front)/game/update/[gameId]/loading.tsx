@@ -2,7 +2,7 @@ import * as VS from '@/styles/VersusStyles';
 
 export default function Loading() {
   return (
-    <VS.EditorLayout>
+    <VS.EditorLayout className="skeleton-container">
       <VS.EditorDataLayout className="animate-pulse">
         <VS.EditInfoBox className="max-sm:w-full max-lg:h-[348px]">
           <span className="title">기본 정보</span>

@@ -11,7 +11,7 @@ export default function Loading() {
   const choices = Array.from({ length: 4 }, () => new VersusGameChoice());
 
   return (
-    <S.GameViewLayout className="[&>div]:animate-pulse">
+    <S.GameViewLayout className="skeleton-container [&>div]:animate-pulse">
       <VersusGameHead game={game} />
 
       <S.GameViewChoiceLayout>

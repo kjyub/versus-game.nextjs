@@ -173,6 +173,18 @@
   .layer-bg-4.layer-hover {
     @apply hover:bg-black/70;
   }
+
+  .skeleton-container {
+    animation: fade-in 1s ease-in;
+  }
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 }
 
 @layer components {
