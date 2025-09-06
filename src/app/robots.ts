@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/csstaff/'],
     },
-    sitemap: 'https://chooseming.com/sitemap.xml',
+    sitemap: 'https://versus-game.vercel.app/sitemap.xml',
   };
 }

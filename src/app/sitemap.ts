@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const siteMaps = [
     {
-      url: 'https://chooseming.com',
+      url: 'https://versus-game.vercel.app',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const gameId of gameIds) {
     siteMaps.push({
-      url: `https://chooseming.com/game/${gameId}`,
+      url: `https://versus-game.vercel.app/game/${gameId}`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
