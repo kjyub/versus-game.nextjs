@@ -9,6 +9,7 @@ import DBUtils from '@/utils/DBUtils';
 import GameUtils from '@/utils/GameUtils';
 import mongoose, { type FilterQuery } from 'mongoose';
 import { nanoid } from 'nanoid';
+import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -192,6 +193,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const resultGame = await mGame.save();
+    revalidateTag('games:list');
 
     return ApiUtils.response(resultGame);
   } catch (err: any) {

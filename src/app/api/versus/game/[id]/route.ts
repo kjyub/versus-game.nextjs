@@ -6,6 +6,7 @@ import { GameConsts } from '@/types/VersusTypes';
 import ApiUtils from '@/utils/ApiUtils';
 import DBUtils from '@/utils/DBUtils';
 import GameUtils from '@/utils/GameUtils';
+import { revalidateTag } from 'next/cache';
 import type { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
@@ -95,6 +96,7 @@ export async function PUT(req: NextRequest, props: { params: Promise<{ id: strin
 
   try {
     const resultGame = await mGame.save();
+    revalidateTag(`games:view:${resultGame.nanoId}`);
 
     return ApiUtils.response(resultGame);
   } catch (err: any) {
@@ -131,6 +133,7 @@ export async function DELETE(req: NextRequest, props: { params: Promise<{ id: st
 
   try {
     const resultGame = await mGame.save();
+    revalidateTag('games:list');
 
     return ApiUtils.response(resultGame);
   } catch (err: any) {
