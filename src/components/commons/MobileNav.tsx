@@ -39,7 +39,7 @@ const Layout = ({ isModalShow, children }: { isModalShow: boolean; children: Rea
   return (
     <div ref={ref}>
       {isClient && createPortal(
-        <div className={`fixed z-110 ${isModalShow ? 'pointer-events-auto' : 'pointer-events-none'}`} style={{ top: position.top, left: position.left }}>
+        <div className={`fixed z-110 ${isModalShow ? 'pointer-events-auto' : 'pointer-events-none'}`} style={{ top: position.top + 4, left: position.left }}>
           {children}
         </div>,
         document.body
