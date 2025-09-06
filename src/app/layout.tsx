@@ -5,6 +5,7 @@ import AppClientLayout from '@/layouts/AppClientLayout';
 import * as MainStyles from '@/styles/MainStyles';
 import { SiteConsts } from '@/types/SiteTypes';
 import { pretendard } from './fonts';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: SiteConsts.SITE_TITLE,
@@ -35,6 +36,7 @@ export default async function RootLayout({
           {children}
         </Providers>
       </MainStyles.Body>
+      <Analytics />
     </html>
   );
 }
