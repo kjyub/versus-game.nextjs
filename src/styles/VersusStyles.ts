@@ -202,7 +202,7 @@ export const ChoiceAddBox = tw.button`
 `;
 
 export const ListLayout = tw.div`
-    flex flex-col items-center w-full max-w-200 max-md:p-4 md:p-4 space-y-4
+    flex flex-col w-full max-w-200 max-md:p-4 md:p-4 space-y-4
 `;
 export const ListScrollTopButton = tw.button`
     fixed max-md:bottom-4 max-md:right-4 md:bottom-8 md:right-8

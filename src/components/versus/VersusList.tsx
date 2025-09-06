@@ -236,14 +236,13 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
   return (
     <VS.ListLayout>
+      {!!search && games.length === 0 && <VersusListBlank search={search} />}
       <VS.ListGrid>
         {games.map((game: VersusGame, index: number) => (
           <VersusGameBoxCloud key={index} index={index}>
             <VersusGameBox game={game} storeListState={storeListState} />
           </VersusGameBoxCloud>
         ))}
-
-        {!!search && games.length === 0 && <VersusListBlank search={search} />}
       </VS.ListGrid>
       <VS.ListGameLoadingBox $is_active={isScrollLoading} ref={scrollRef}></VS.ListGameLoadingBox>
       <VS.ListScrollTopButton
