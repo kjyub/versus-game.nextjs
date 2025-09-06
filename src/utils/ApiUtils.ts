@@ -8,7 +8,7 @@ type RequestMethodTypes = 'GET' | 'POST' | 'PUT' | 'DELETE' | (string & {});
 interface RequestOption {
   params?: object;
   data?: object;
-  useCache?: boolean;
+  cache?: RequestInit['cache'];
   headers?: object;
 }
 
@@ -30,7 +30,7 @@ namespace ApiUtils {
       return { result: false, statusCode: 400, data: {} };
     }
 
-    const { params = undefined, data = undefined, useCache = false, headers = {} } = options;
+    const { params = undefined, data = undefined, cache, headers = {} } = options;
     let bResult = false;
     const statusCode = 200;
     let resultData: any = {};
@@ -61,13 +61,10 @@ namespace ApiUtils {
         credentials: 'include',
         ...headers,
       },
+      cache: cache,
     };
     if (next) {
       requestInit.next = next;
-    }
-
-    if (!useCache) {
-      requestInit.cache = 'no-store';
     }
 
     const response = await fetch(requestUrl, requestInit);

@@ -33,7 +33,7 @@ const getGameList = async (
     params.userId = userId;
   }
 
-  const { data } = await ApiUtils.request('/api/versus/game', 'GET', { params, useCache: true }, { revalidate: 60, tags: ['games:list'] });
+  const { data } = await ApiUtils.request('/api/versus/game', 'GET', { params }, { revalidate: 60, tags: ['games:list'] });
 
   return data as IPaginationResponse;
 };
