@@ -8,7 +8,7 @@ import type { IPaginationResponse } from '@/types/common/Responses';
 import VersusGame from '@/types/versus/VersusGame';
 import ApiUtils from '@/utils/ApiUtils';
 import StorageUtils from '@/utils/StorageUtils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import VersusGameBox from './VersusGameBox';
@@ -54,8 +54,6 @@ interface IVersusList {
   versusGameData: IPaginationResponse;
 }
 export default function VersusList({ versusGameData }: IVersusList) {
-  const router = useRouter();
-
   const user = useUser();
 
   // 서버렌더링용 초기 데이터 설정

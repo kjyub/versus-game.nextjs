@@ -24,6 +24,7 @@ namespace ApiUtils {
     url: string,
     method: RequestMethodTypes,
     options: RequestOption = {},
+    next?: RequestInit['next'],
   ): Promise<RequestResult> {
     if (!url) {
       return { result: false, statusCode: 400, data: {} };
@@ -61,10 +62,12 @@ namespace ApiUtils {
         ...headers,
       },
     };
+    if (next) {
+      requestInit.next = next;
+    }
+
     if (!useCache) {
       requestInit.cache = 'no-store';
-    } else {
-      requestInit.cache = 'force-cache';
     }
 
     const response = await fetch(requestUrl, requestInit);

@@ -13,7 +13,7 @@ const getGame = async (gameId: string, userId?: string) => {
     params.userId = userId;
   }
 
-  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET', { params });
+  const { data } = await ApiUtils.request(`/api/versus/game/${gameId}`, 'GET', { params, useCache: true }, { revalidate: 300, tags: [`games:view:${gameId}`] });
 
   return data as any;
 };
