@@ -71,10 +71,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
   // 페이지네이션
   const searchParams = useSearchParams();
   const [search, setSearch] = useState<string>('');
-  const [pageIndex, setPageIndex] = useState<number>(1);
   const [lastId, setLastId] = useState<string>('');
-  const [itemCount, setItemCount] = useState<number>(0);
-  const [maxPage, setMaxPage] = useState<number>(0);
   const [scrollRef, scrollInView] = useInView();
   const [isScrollLoading, setScrollLoading] = useState<boolean>(false);
 
@@ -82,6 +79,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
   const [listState, setListState] = useState<IListState>({} as IListState);
   const [rollbackScrollLocation, setRollbackScrollLocation] = useState<number>(-1); // 목록으로 되돌아 왔을 때 이동할 스크롤 위치
 
+  // 검색어 설정
   useEffect(() => {
     const search = searchParams.get('search');
     if (search) {
@@ -89,6 +87,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     }
   }, [searchParams]);
 
+  // 무한 스크롤 관련
   useEffect(() => {
     // 맨 위의 아이템이 보이면 업데이트
     if (scrollInView && games.length >= PAGE_SIZE - 3) {
@@ -96,6 +95,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     }
   }, [scrollInView]);
 
+  // 뒤로가기 기능
   useEffect(() => {
     // 목록으로 되돌아 왔을 때 이동할 스크롤 위치가 있다면 바로 이동한다.
     if (games.length > 0 && rollbackScrollLocation >= 0) {
@@ -108,6 +108,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     }
   }, [games, rollbackScrollLocation]);
 
+  // 초기 데이터 설정
   useEffect(() => {
     if (rollbackListState()) {
       sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
@@ -117,19 +118,11 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const newGames: Array<VersusGame> = convertGameDataToGame(initPagination.items);
 
     setGames(newGames);
-    setPageIndex(1);
-    let _lastId = '';
-    if (newGames.length > 0) {
-      _lastId = newGames[newGames.length - 1].id;
-    } else {
-      _lastId = '';
-    }
-    setLastId(_lastId);
-    setItemCount(initPagination.count);
-    setMaxPage(initPagination.maxPage);
+    const _lastId = newGames.length > 0 ? newGames[newGames.length - 1].id : '';
+    setLastId(newGames.length > 0 ? newGames[newGames.length - 1].id : '');
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState([], _lastId, versusGameData.items, initPagination.pageIndex);
+    updateListState([], _lastId, versusGameData.items);
     // 페이지를 처음 들어온 경우 이전 기억을 지운다.
     sessionStorage.removeItem(CookieConsts.GAME_LIST_DATA_SESSION);
   }, [versusGameData]);
@@ -140,7 +133,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
     }
 
     // 게임들이 이미 한번 이상 로딩되었는데 lastId가 없으면 에러 혹은 페이지 끝이라고 간주
-    if (pageIndex > 1 && !lastId) {
+    if (!lastId) {
       return;
     }
 
@@ -169,21 +162,18 @@ export default function VersusList({ versusGameData }: IVersusList) {
 
     const newGames: Array<VersusGame> = convertGameDataToGame(items);
 
-    setPageIndex(pageIndex + 1);
     setLastId(pagination.lastId);
     setGames([...games, ...newGames]);
-    setItemCount(pagination.itemCount);
-    setMaxPage(pagination.maxPage);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState(listState.items, pagination.lastId, items, pagination.pageIndex);
+    updateListState(listState.items, pagination.lastId, items);
 
     setScrollLoading(false);
-  }, [isScrollLoading, lastId, pageIndex, searchParams, user.id, games, listState]);
+  }, [isScrollLoading, lastId, searchParams, user.id, games, listState]);
 
   // 뒤로가기로 돌아왔을 때 사용할 데이터 업데이트
   const updateListState = useCallback(
-    (rawDataItems: Array<any>, lastId: string, newDataItems: Array<any>, pageIndex: number) => {
+    (rawDataItems: Array<any>, lastId: string, newDataItems: Array<any>) => {
       let scrollLocation = 0;
       const page = document.body;
       if (page) {
@@ -191,7 +181,7 @@ export default function VersusList({ versusGameData }: IVersusList) {
       }
 
       const newRawData: IListState = {
-        pageIndex: pageIndex,
+        pageIndex: -1,
         lastId: lastId,
         items: [...rawDataItems, ...newDataItems],
         scrollLocation: scrollLocation,
@@ -237,13 +227,10 @@ export default function VersusList({ versusGameData }: IVersusList) {
     const newGames: Array<VersusGame> = convertGameDataToGame(_rawData.items);
 
     setGames(newGames);
-    setPageIndex(1);
     setLastId(_rawData.lastId);
-    setItemCount(0);
-    setMaxPage(0);
 
     // 뒤로가기로 돌아왔을 때 사용할 데이터 설정
-    updateListState([], _rawData.lastId, _rawData.items, 1);
+    updateListState([], _rawData.lastId, _rawData.items);
     setRollbackScrollLocation(_rawData.scrollLocation);
 
     return true;
